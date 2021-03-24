@@ -1,0 +1,15 @@
+h1 {
+  color: black;
+}
+
+#grid {
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  grid-template-rows: 1fr 1fr 1fr 10fr;
+  grid-gap: 6px;
+}
+
+.label {
+  justify-self: end;
+  align-self: center;
+}
