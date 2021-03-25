@@ -29,16 +29,16 @@ document.addEventListener('DOMContentLoaded', function() {
                             .attr('width', lib.bar_width)
                             .attr('height', lib.bar_height)
                             .append('g')
-                            .attr('id', 'fitrep_canvas')
+                            .attr('id', 'rank_canvas')
                             .attr('transform', `translate(${lib.margin.left}, ${lib.margin.top})`);
+
     // Command bar canvas
-    // Rank bar canvas
     const command_canvas = d3.select('#command')
                             .append('svg')
                             .attr('width', lib.bar_width)
                             .attr('height', lib.bar_height)
                             .append('g')
-                            .attr('id', 'fitrep_canvas')
+                            .attr('id', 'command_canvas')
                             .attr('transform', `translate(${lib.margin.left}, ${lib.margin.top})`);
 
     // Reporting Senior bar canvas
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             .attr('width', lib.bar_width)
                             .attr('height', lib.bar_height)
                             .append('g')
-                            .attr('id', 'fitrep_canvas')
+                            .attr('id', 'frep_sen_canvas')
                             .attr('transform', `translate(${lib.margin.left}, ${lib.margin.top})`);
     
     const draw_fitreps = data => {
@@ -55,6 +55,17 @@ document.addEventListener('DOMContentLoaded', function() {
         // Extract member's name and update H1
         const member_name = data[0].name;
         if (member_name) d3.select('h1').text(`PSR - ${member_name}`);
+
+        // Rank Bar
+        var dates_of_rank = lib.get_dates_of_rank(data);
+        console.log(dates_of_rank);
+        rank_canvas.selectAll('rect')
+                    .data(dates_of_rank)
+                    .enter()
+                    .append('rect')
+                    .attr('transform', d => `translate(${time_scale(d.start)},0)`)
+                    .attr('height', lib.bar_height)
+                    .attr('width', d => time_scale(d.end)-time_scale(d.start));
         
         // Draw time axis
         fitrep_canvas.append('g')
