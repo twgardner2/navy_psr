@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             .attr('height', lib.bar_height)
                             .append('g')
                             .attr('id', 'command_canvas')
-                            .attr('transform', `translate(${lib.margin.left}, ${lib.margin.top})`);
+                            .attr('transform', `translate(${2*lib.margin.left}, 0)`);
 
     // Reporting Senior bar canvas
     const rep_sen_canvas = d3.select('#rep_sen')
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             .attr('height', lib.bar_height)
                             .append('g')
                             .attr('id', 'rep_sen_canvas')
-                            .attr('transform', `translate(${lib.margin.left}, ${lib.margin.top})`);
+                            .attr('transform', `translate(${2*lib.margin.left}, 0)`);
     
     const draw_fitreps = data => {
 
@@ -82,6 +82,30 @@ document.addEventListener('DOMContentLoaded', function() {
                         .style('text-anchor', 'middle')
                         .text(d => d.rank);
 
+        // Commands bar
+        var command_dates = lib.get_command_dates(data);
+        console.log(command_dates);
+
+        var command_bar_groups = command_canvas.selectAll('g')
+                    .data(command_dates)
+                    .enter()
+                    .append('g')
+                    .attr('transform', d => `translate(${time_scale(d.start)},0)`);
+
+        command_bar_groups.append('rect')
+                    .attr('height', 0.8*lib.bar_height)
+                    .attr('width', d => time_scale(d.end)-time_scale(d.start))
+                    .attr('fill', 'none')
+                    .attr('stroke', 'black')
+                    .attr('stroke-width', '2px')
+                    .attr('fill', 'lightgrey')
+                    .attr('rx', '10px')
+                    .attr('ry', '10px');
+
+        command_bar_groups.append('text')
+                        .attr('transform', d => `translate(${0.5*(time_scale(d.end)-time_scale(d.start))},${0.5*lib.bar_height})`)
+                        .style('text-anchor', 'middle')
+                        .text(d => d.command);
        
         // Draw time axis
         fitrep_canvas.append('g')
