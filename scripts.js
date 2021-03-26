@@ -51,6 +51,14 @@ document.addEventListener('DOMContentLoaded', function() {
                             .attr('id', 'rep_sen_canvas')
                             .attr('transform', `translate(${2*lib.margin.left}, 0)`);
     
+    d3.selectAll('#rank, #command, #rep_sen')
+        .append('defs')
+        .append('filter')
+        .attr('id', 'f2')
+        .attr('width', '150%')
+        .attr('height', '150%')
+        .append('feDropShadow');
+
     const draw_fitreps = data => {
 
         // Extract member's name and update H1
@@ -134,9 +142,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             return (val.toUpperCase());
                         });
     }
-
-
-
 
     const data = d3.csv('./data/gardner.csv', d3.autoType)
                 .then(data => {
