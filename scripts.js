@@ -166,6 +166,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
        // FITREPs
         {
+        // Create tooltip
+        var tooltip = d3.select("body").append("div")
+                    .attr("class", "tooltip")
+                    .style("opacity", 0);
         // Draw time axis
         fitreps_g.append('g')
                     .attr('class', 'x axis')
@@ -191,7 +195,21 @@ document.addEventListener('DOMContentLoaded', function() {
                             var val = d.prom_rec.toLowerCase();
                             val = val==="nob" ? "n" : val;
                             return (val.toUpperCase());
-                        });
+                        })
+                        .on("mouseover", function(event,d) {
+                            tooltip.transition()
+                              .duration(200)
+                              .style("opacity", .9);
+                            // tooltip.html(formatTime(d.end_date) + "<br/>" + formatTime(d.end_date))
+                            tooltip.html(d.end_date)
+                              .style("left", (event.pageX) + "px")
+                              .style("top", (event.pageY - 28) + "px");
+                            })
+                          .on("mouseout", function(d) {
+                            tooltip.transition()
+                              .duration(500)
+                              .style("opacity", 0);
+                            });
 
         var comparable_fitreps = lib.fitreps_grouped_by_paygrade_and_repsen(data);
         console.log(comparable_fitreps);
