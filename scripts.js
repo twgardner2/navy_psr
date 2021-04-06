@@ -4,16 +4,6 @@ import * as lib from './lib/lib.js';
 
 document.addEventListener('DOMContentLoaded', function() {
 
-    // Horizontal (time) scale
-    const time_scale = d3.scaleTime()
-                    .domain([Date.now() - 15*365*24*60*60*1000, Date.now()])
-                    .range([0, (lib.canvas_width-lib.labels_width-lib.margin.left-lib.margin.right)]);
-
-    // Vertical (RSCA) scale
-    const rsca_scale = d3.scaleLinear()
-                    .domain([-1,1])
-                    .range([lib.fitrep_height, 0]);
-
     // SVG canvas and main container groups
     const svg = d3.select('body')
                         .append('svg')
@@ -26,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             .append('g')
                             .attr('id', 'container_g')
                             .attr('transform', `translate(${lib.margin.left}, ${lib.margin.top})`);
-    
     
     const rank_g = container_g.append('g')
                                 .attr('id', 'rank_g')
@@ -62,16 +51,35 @@ document.addEventListener('DOMContentLoaded', function() {
     //     .attr('height', '150%')
     //     .append('feDropShadow');
 
-    const draw_fitreps = data => {
+    const draw_psr_viz = data => {
 
+        var fitrep_gaps = lib.fitrep_gaps(data);
+        console.log(fitrep_gaps);
         // Extract member's name and update H1
         const member_name = data[0].name;
         if (member_name) d3.select('h1').text(`PSR - ${member_name}`);
 
+        const start_dates = data.map(d=>d.start_date);
+        const end_dates = data.map(d=>d.end_date);
+
+        var min_start_date = new Date(Math.min(...start_dates));
+        var max_end_date = new Date(Math.max(...end_dates));
+
+        // Horizontal (time) scale
+        const time_scale = d3.scaleTime()
+            // .domain([Date.now() - 15*365*24*60*60*1000, Date.now()])
+            .domain([min_start_date, max_end_date])
+            .range([0, (lib.canvas_width-lib.labels_width-lib.margin.left-lib.margin.right)]);
+
+// Vertical (RSCA) scale
+const rsca_scale = d3.scaleLinear()
+    .domain([-1,1])
+    .range([lib.fitrep_height, 0]);
+
         // Rank Bar
+        {
         /// Get dates of rank
         var dates_of_rank = lib.get_dates_of_rank(data);
-        console.log(dates_of_rank);
 
         /// Create <g> for each rank
         var rank_bar_groups = rank_g.selectAll('g')
@@ -95,17 +103,30 @@ document.addEventListener('DOMContentLoaded', function() {
         rank_bar_groups.append('text')
                         .attr('transform', d => `translate(${0.5*(time_scale(d.end)-time_scale(d.start))},${0.5*lib.bar_height})`)
                         .style('text-anchor', 'middle')
-                        .text(d => d.rank);
+                        .text(d => d.rank)
+                        .style('font-size', function(d) {
+                            // var box = this.parentNode;
+                            var rect_height = this.parentNode.children[0].getBBox().height;
+                            var rect_width = this.parentNode.children[0].getBBox().width;
+                            var num_chars = 0.65 * this.getNumberOfChars();
+
+                            var return_val_in_px = Math.min(
+                                0.65 * rect_height,
+                                rect_width/num_chars
+                            );
+
+                            // return '10px';
+                            return (`${return_val_in_px}px`);
+                            
+                        });
+        }
 
         // Regular Commands bar
         {
-            var command_dates = lib.get_command_dates(data, new RegExp('^(?!.*(AT|CC)).*$', 'g'));
-            // var command_dates = lib.get_command_dates(data, new RegExp('![AT|CC]', 'g'));
-            // var command_dates = lib.get_command_dates(data, new RegExp('.', 'g'));
+        var command_dates = lib.get_command_dates(data, new RegExp('^(?!.*(AT|CC)).*$', 'g'));
+        // var command_dates = lib.get_command_dates(data, new RegExp('![AT|CC]', 'g'));
+        // var command_dates = lib.get_command_dates(data, new RegExp('.', 'g'));
 
-
-
-        // console.log(command_dates);
 
         var command_bar_groups = command_g.selectAll('g')
                     .data(command_dates)
@@ -126,7 +147,28 @@ document.addEventListener('DOMContentLoaded', function() {
         command_bar_groups.append('text')
                         .attr('transform', d => `translate(${0.5*(time_scale(d.end)-time_scale(d.start))},${0.5*lib.bar_height})`)
                         .style('text-anchor', 'middle')
-                        .text(d => d.command);
+                        .text(d => d.command)
+                        .style('font-size', function(d) {
+                            // var box = this.parentNode;
+                            var rect_height = this.parentNode.children[0].getBBox().height;
+                            var rect_width = this.parentNode.children[0].getBBox().width;
+                            var num_chars = 0.65 * this.getNumberOfChars();
+
+                            // console.log(rect_width);
+                            // console.log(num_chars);
+                            // console.log(rect_width/num_chars);
+                            // console.log('---------------');
+
+
+                            var return_val_in_px = Math.min(
+                                0.65 * rect_height,
+                                rect_width/num_chars
+                            );
+
+                            // return '10px';
+                            return (`${return_val_in_px}px`);
+                            
+                        });
         }
 
         // Concurrent Command bar
@@ -158,10 +200,27 @@ document.addEventListener('DOMContentLoaded', function() {
         command_cc_bar_groups.append('text')
                         .attr('transform', d => `translate(${0.5*(time_scale(d.end)-time_scale(d.start))},${0.5*lib.bar_height})`)
                         .style('text-anchor', 'middle')
-                        .text(d => d.command);
+                        .text(d => d.command)
+                        .style('font-size', function(d) {
+                            // var box = this.parentNode;
+                            var rect_height = this.parentNode.children[0].getBBox().height;
+                            var rect_width = this.parentNode.children[0].getBBox().width;
+                            var num_chars = 0.65 * this.getNumberOfChars();
+
+                            console.log(rect_width);
+                            console.log(num_chars);
+                            console.log(rect_width/num_chars);
+
+                            var return_val_in_px = Math.min(
+                                0.65 * rect_height,
+                                rect_width/num_chars
+                            );
+
+                            // return '10px';
+                            return (`${return_val_in_px}px`);
+                            
+                        });
         }
-
-
 
 
        // FITREPs
@@ -179,6 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Draw "Trait Avg - RSCA" axis
         fitreps_g.append('g')
                     .attr('class', 'y axis')
+                    .attr('transform', `translate(${time_scale(min_start_date)}, 0)`)
                     .call(d3.axisLeft(rsca_scale));
 
         // Draw FITREPs
@@ -190,6 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             return `translate(${time_scale(d.end_date)}, ${rsca_scale(d.trait_avg-d.rsca)})`
                         })
                         .append('text')
+                        .style('text-anchor', 'middle')
                         // .attr("dy", "o.5em")
                         .text(d => {
                             var val = d.prom_rec.toLowerCase();
@@ -198,21 +259,21 @@ document.addEventListener('DOMContentLoaded', function() {
                         })
                         .on("mouseover", function(event,d) {
                             tooltip.transition()
-                              .duration(200)
+                              .duration(400)
                               .style("opacity", .9);
-                            // tooltip.html(formatTime(d.end_date) + "<br/>" + formatTime(d.end_date))
-                            tooltip.html(d.end_date)
+
+                            tooltip.html(lib.fitrep_tooltip(d))
                               .style("left", (event.pageX) + "px")
                               .style("top", (event.pageY - 28) + "px");
                             })
                           .on("mouseout", function(d) {
                             tooltip.transition()
-                              .duration(500)
+                              .duration(400)
                               .style("opacity", 0);
                             });
 
         var comparable_fitreps = lib.fitreps_grouped_by_paygrade_and_repsen(data);
-        console.log(comparable_fitreps);
+        // console.log(comparable_fitreps);
 
         const line = d3.line()
                         .x(d => time_scale(d.end_date))
@@ -225,7 +286,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         .attr('d', d => line(d))
                         .attr('fill', 'none')
                         .attr('stroke', '#000')
-                        .attr('stroke-width', '3px');
+                        .attr('stroke-width', '2.5px')
+                        .attr('opacity', 0.5);
 
 
     }
@@ -236,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log(data);
                     return(data);
                 })
-                .then(data => draw_fitreps(data));
+                .then(data => draw_psr_viz(data));
 
 
 })
