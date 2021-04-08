@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var fitrep_gaps = lib.fitrep_gaps(data);
         console.log(fitrep_gaps);
+
         // Extract member's name and update H1
         const member_name = data[0].name;
         if (member_name) d3.select('h1').text(`PSR - ${member_name}`);
@@ -290,7 +291,33 @@ const rsca_scale = d3.scaleLinear()
                         .attr('opacity', 0.5);
 
 
-    }
+        }
+
+        // FITREP Gaps
+        {
+        // fitreps_g.selectAll('rect')
+        //     .data(fitrep_gaps)
+        //     // .append('g')
+        //     .append('rect')
+        
+        fitreps_g.append('g')
+            .selectAll('rect')
+            .data(fitrep_gaps)
+            .enter()
+            // // .append('g')
+            .append('rect')
+            .attr('transform', d => `translate(${time_scale(d[0])},0)`)
+            .attr('height', rsca_scale.range()[0])
+            .attr('width', d => `${time_scale(d[1])-time_scale(d[0])}px`)
+            // .attr('width', '50px')
+            .attr('fill', 'red')
+            .attr('opacity', 0.2);
+        // .attr('transform', d => `translate(${time_scale(d[0])},0)`)
+            // .attr('height', d => '500px')
+            // .attr('width', d => lib.time_scale(d[1]-d[0]))
+            // .attr('fill', 'blue')
+        }
+
 }
 
     const data = d3.csv('./data/gardner.csv', d3.autoType)
