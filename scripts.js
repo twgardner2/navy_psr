@@ -42,6 +42,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         .attr('id', 'fitreps_g')
                         .attr('transform', `translate(${lib.labels_width}, ${5*lib.bar_height + 5*lib.margin.gap})`);
 
+    // Append form
+    const form_div = d3.select('body')
+                        .append('div')
+                        .attr('id', 'form_div');
 
     // d3.selectAll('#rank, #command, #rep_sen')
     //     .append('defs')
@@ -54,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const draw_psr_viz = data => {
 
         var fitrep_gaps = lib.fitrep_gaps(data);
+        console.log('fitrep_gaps');
         console.log(fitrep_gaps);
 
         // Extract member's name and update H1
@@ -72,10 +77,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .domain([min_start_date, max_end_date])
             .range([0, (lib.canvas_width-lib.labels_width-lib.margin.left-lib.margin.right)]);
 
-// Vertical (RSCA) scale
-const rsca_scale = d3.scaleLinear()
-    .domain([-1,1])
-    .range([lib.fitrep_height, 0]);
+        // Vertical (RSCA) scale
+        const rsca_scale = d3.scaleLinear()
+            .domain([-1,1])
+            .range([lib.fitrep_height, 0]);
 
         // Rank Bar
         {
@@ -320,9 +325,129 @@ const rsca_scale = d3.scaleLinear()
 
 }
 
+
+    const populate_form = data => {
+        console.log('populate form');
+
+        var schema = {
+            fields: [
+                {name: 'name', type: 'text', display: 'Name'},
+                {name: 'paygrade', type: 'text', display: 'Paygrade'},
+                {name: 'station', type: 'text', display: 'Station'},
+                {name: 'duty', type: 'text', display: 'Duty'},
+                {name: 'start_date', type: 'date', display: 'Start Date'},
+                {name: 'end_date', type: 'date', display: 'End Date'},
+                {name: 'months', type: 'number', display: 'Months'},
+                {name: 'rs_name', type: 'text', display: 'Reporting Senior Name'},
+                {name: 'rs_paygrade', type: 'text', display: 'Reporting Senior Paygrade'},
+                {name: 'rs_title', type: 'text', display: 'Reporting Title'},
+                {name: 'trait_avg', type: 'number', display: 'Trait Avg'},
+                {name: 'rsca', type: 'number', display: 'Reporting Senior Cumulative Avg'},
+                {name: 'prom_rec', type: 'text', display: 'Reporting Title'},
+                {name: 'n_sp', type: 'number', display: '# SP'},
+                {name: 'n_pr', type: 'number', display: '# PR'},
+                {name: 'n_p', type: 'number', display: '# P'},
+                {name: 'n_mp', type: 'number', display: '# MP'},
+                {name: 'n_ep', type: 'number', display: '# EP'},
+                {name: 'prt', type: 'text', display: 'PRT'},
+                {name: 'rpt_type', type: 'text', display: 'Report Type'},
+            ]
+        };
+
+        // Add form header row
+        var header = form_div.append('div')
+                                .attr('class', 'form_row header')
+                                .style('display', 'flex')
+                                .selectAll('div')                                
+                                .data(schema.fields)
+                                .enter()
+                                .append('div')
+                                .attr('class', 'header_items')
+                                .text(d => d.display)
+                                .style('margin', '10px')
+
+
+        // Add form rows for each FITREP
+        //// http://jsfiddle.net/ZRQPP/
+        var form_rows = form_div.selectAll('div.form_row')
+                    .data(data)
+                    .enter()
+                    .append('div')
+                    .attr('class', 'form_row')
+                    .style('display', 'flex')
+
+
+
+                    .selectAll('div')
+                    .data(  d => Object.entries(d)  )
+                    .enter()
+                    .append('div')
+                    .classed('form_field', true)
+                    // .text(d => d[1])
+                    .text(d => {
+                        var schema_entry = schema.fields.filter(el => el.name == d[0]);
+                        console.log(schema_entry);
+
+                        var type = schema_entry[0] ? schema_entry[0].type : null;
+                        console.log(type);
+
+
+                        // console.log(d[0]);
+                        return d[1];
+                    })
+                    // .attr('class', 'form_field')
+                    // .text(d=> d.start_date)
+
+
+
+
+                    // .each(d => {
+                    //     // const self = d3.select(this);
+                    //     // for (const property in d) {
+                    //     //     console.log(`${property}: ${d[property]}`);
+                    //     //   }
+                    //     console.log(Object.entries(d));
+                    // })
+
+
+                //     .each(function(d){
+                //         var self = d3.select(this);
+                //         console.log(this);
+                //         var label = self.append("label")
+                //             .text(d.display)
+                //             .style("width", "100px")
+                //             .style("display", "inline-block");
+        
+                //         if(d.type == 'text'){
+                //             var input = self.append("input")
+                //                 .attr({
+                //                     type: function(d){ return d.type; },
+                //                     name: function(d){ return d.name; }
+                //                 });
+                //         }
+        
+                //         if(d.type == 'dropdown'){
+                //         var select = self.append("select")
+                //                 .attr("name", "country")
+                //                 .selectAll("option")
+                //                 .data(d.values)
+                //                 .enter()
+                //                 .append("option")
+                //                 .text(function(d) { return d; });
+                //         }
+        
+                //     });
+        
+                // form_div.append("button").attr('type', 'submit').text('Save');
+    }
+
     const data = d3.csv('./data/gardner.csv', d3.autoType)
                 .then(data => {
                     console.log(data);
+                    return(data);
+                })
+                .then(data => {
+                    populate_form(data);
                     return(data);
                 })
                 .then(data => draw_psr_viz(data));
