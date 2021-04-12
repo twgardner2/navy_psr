@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var header = form_div.append('div')
                                 .attr('class', 'form_row header')
                                 .style('display', 'flex')
-                                .selectAll('div')                                
+                                .selectAll('div')
                                 .data(schema.fields)
                                 .enter()
                                 .append('div')
@@ -383,17 +383,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     .enter()
                     .append('div')
                     .classed('form_field', true)
+                    .style('margin', '10px')
                     // .text(d => d[1])
                     .text(d => {
+                        console.log(d);
+                        var [field, val] = d
+                        // var val = d[1];
                         var schema_entry = schema.fields.filter(el => el.name == d[0]);
-                        console.log(schema_entry);
-
+                        // console.log(schema_entry);
                         var type = schema_entry[0] ? schema_entry[0].type : null;
                         console.log(type);
 
+                        if(type == 'date') val = lib.date_formatter(d[1]);
+                        if(field == 'trait_avg') {
+                            console.log(parseFloat(val));
+                            val = val ? Number.parseFloat(val).toFixed(2) : 0;
+                        }
+
 
                         // console.log(d[0]);
-                        return d[1];
+                        return val;
                     })
                     // .attr('class', 'form_field')
                     // .text(d=> d.start_date)
