@@ -47,6 +47,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         .append('div')
                         .attr('id', 'form_div');
 
+    // Append FITREP table
+    const table = d3.select('body')
+                    .append('table')
+                    .attr('id', 'fitrep_table');
+
+    
+
     // d3.selectAll('#rank, #command, #rep_sen')
     //     .append('defs')
     //     .append('filter')
@@ -326,8 +333,9 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 
-    const populate_form = data => {
-        console.log('populate form');
+
+    const populate_table = data => {
+        console.log('populate table');
 
         var schema = {
             fields: [
@@ -340,10 +348,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 {name: 'months', type: 'number', display: 'Months'},
                 {name: 'rs_name', type: 'text', display: 'Reporting Senior Name'},
                 {name: 'rs_paygrade', type: 'text', display: 'Reporting Senior Paygrade'},
-                {name: 'rs_title', type: 'text', display: 'Reporting Title'},
+                {name: 'rs_title', type: 'text', display: 'Reporting Senior Title'},
+
+                {name: 'trait_1', type: 'number', display: '# of 1s'},
+                {name: 'trait_2', type: 'number', display: '# of 2s'},
+                {name: 'trait_3', type: 'number', display: '# of 3s'},
+                {name: 'trait_4', type: 'number', display: '# of 4s'},
+                {name: 'trait_5', type: 'number', display: '# of 5s'},
+
+
                 {name: 'trait_avg', type: 'number', display: 'Trait Avg'},
                 {name: 'rsca', type: 'number', display: 'Reporting Senior Cumulative Avg'},
-                {name: 'prom_rec', type: 'text', display: 'Reporting Title'},
+                {name: 'prom_rec', type: 'text', display: 'Promotion Recommendation'},
                 {name: 'n_sp', type: 'number', display: '# SP'},
                 {name: 'n_pr', type: 'number', display: '# PR'},
                 {name: 'n_p', type: 'number', display: '# P'},
@@ -355,108 +371,59 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         // Add form header row
-        var header = form_div.append('div')
-                                .attr('class', 'form_row header')
-                                .style('display', 'flex')
-                                .selectAll('div')
+        var header = table.append('tr')
+                                .attr('class', 'table_row header')
+                                // .style('border-collapse', 'collapse')
+                                .selectAll('th')
                                 .data(schema.fields)
                                 .enter()
-                                .append('div')
+                                .append('th')
                                 .attr('class', 'header_items')
                                 .text(d => d.display)
-                                .style('margin', '10px')
+                                // .style('margin', '10px')        
 
-
-        // Add form rows for each FITREP
-        //// http://jsfiddle.net/ZRQPP/
-        var form_rows = form_div.selectAll('div.form_row')
-                    .data(data)
-                    .enter()
-                    .append('div')
-                    .attr('class', 'form_row')
-                    .style('display', 'flex')
-
-
-
-                    .selectAll('div')
-                    .data(  d => Object.entries(d)  )
-                    .enter()
-                    .append('div')
-                    .classed('form_field', true)
-                    .style('margin', '10px')
-                    // .text(d => d[1])
-                    .text(d => {
-                        console.log(d);
-                        var [field, val] = d
-                        // var val = d[1];
-                        var schema_entry = schema.fields.filter(el => el.name == d[0]);
-                        // console.log(schema_entry);
-                        var type = schema_entry[0] ? schema_entry[0].type : null;
-                        console.log(type);
-
-                        if(type == 'date') val = lib.date_formatter(d[1]);
-                        if(field == 'trait_avg') {
-                            console.log(parseFloat(val));
-                            val = val ? Number.parseFloat(val).toFixed(2) : 0;
-                        }
-
-
-                        // console.log(d[0]);
-                        return val;
-                    })
-                    // .attr('class', 'form_field')
-                    // .text(d=> d.start_date)
-
-
-
-
-                    // .each(d => {
-                    //     // const self = d3.select(this);
-                    //     // for (const property in d) {
-                    //     //     console.log(`${property}: ${d[property]}`);
-                    //     //   }
-                    //     console.log(Object.entries(d));
-                    // })
-
-
-                //     .each(function(d){
-                //         var self = d3.select(this);
-                //         console.log(this);
-                //         var label = self.append("label")
-                //             .text(d.display)
-                //             .style("width", "100px")
-                //             .style("display", "inline-block");
+        // Add table rows
+        var table_rows = table
+                            // Enter a table row for each FITREP
+                            .selectAll('tr.form_row')
+                            .data(data)
+                            .enter()
+                            .append('tr')
+                            .attr('class', 'table_row')
+                            // Enter a table data for each key of the FITREP object
+                            .selectAll('td')
+                            .data(  d => Object.entries(d)  )
+                            .enter()
+                            .append('td')
+                            .classed('table_field', true)
+                            // Format and enter values for each field
+                            .text(d => {
+                                var [field, val] = d;
+                                var schema_entry = schema.fields.filter(el => el.name == d[0]);
+                                var type = schema_entry[0] ? schema_entry[0].type : null;
         
-                //         if(d.type == 'text'){
-                //             var input = self.append("input")
-                //                 .attr({
-                //                     type: function(d){ return d.type; },
-                //                     name: function(d){ return d.name; }
-                //                 });
-                //         }
-        
-                //         if(d.type == 'dropdown'){
-                //         var select = self.append("select")
-                //                 .attr("name", "country")
-                //                 .selectAll("option")
-                //                 .data(d.values)
-                //                 .enter()
-                //                 .append("option")
-                //                 .text(function(d) { return d; });
-                //         }
-        
-                //     });
-        
-                // form_div.append("button").attr('type', 'submit').text('Save');
-    }
+                                if(type == 'text') val = val.toUpperCase();
+                                if(type == 'date') val = lib.date_formatter(d[1]);
+                                if(field == 'trait_avg') {
+                                    console.log(parseFloat(val));
+                                    val = val ? Number.parseFloat(val).toFixed(2) : 0;
+                                }
+
+                                return val;
+                            });
+                }
 
     const data = d3.csv('./data/gardner.csv', d3.autoType)
                 .then(data => {
                     console.log(data);
                     return(data);
                 })
+                // .then(data => {
+                //     populate_form(data);
+                //     return(data);
+                // })
                 .then(data => {
-                    populate_form(data);
+                    populate_table(data);
                     return(data);
                 })
                 .then(data => draw_psr_viz(data));

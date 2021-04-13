@@ -30,3 +30,12 @@ div.tooltip {
   border-radius: 8px;
   pointer-events: none;
 }
+
+table {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: thin solid black;
+}
