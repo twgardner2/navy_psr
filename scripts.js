@@ -390,6 +390,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             .enter()
                             .append('tr')
                             .attr('class', 'table_row');
+
+        // Add table row data cells
         var table_data_cells = table_rows
                             // Enter a table data for each key of the FITREP object
                             .selectAll('td')
@@ -411,10 +413,15 @@ document.addEventListener('DOMContentLoaded', function() {
                                 }
                                 return val;
                             });
-        var row_buttons = table_rows.append('td').attr('class', 'button');
 
-        row_buttons        
-        .append('button').attr('type', 'button').text('edit');
+        // Add table row edit/save buttons
+        var row_buttons = table_rows.append('td')
+                                    .attr('class', 'button')
+                                    .append('button')
+                                    .attr('type', 'button')
+                                    .attr('row_index', (d, i) => i)
+                                    .text('edit')
+                                    .on('click', lib.toggle_rows);
 
         }
 
