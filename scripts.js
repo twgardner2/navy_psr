@@ -389,7 +389,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             .data(data)
                             .enter()
                             .append('tr')
-                            .attr('class', 'table_row')
+                            .attr('class', 'table_row');
+        var table_data_cells = table_rows
                             // Enter a table data for each key of the FITREP object
                             .selectAll('td')
                             .data(  d => Object.entries(d)  )
@@ -408,10 +409,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                     console.log(parseFloat(val));
                                     val = val ? Number.parseFloat(val).toFixed(2) : 0;
                                 }
-
                                 return val;
                             });
-                }
+        var row_buttons = table_rows.append('td').attr('class', 'button');
+
+        row_buttons        
+        .append('button').attr('type', 'button').text('edit');
+
+        }
 
     const data = d3.csv('./data/gardner.csv', d3.autoType)
                 .then(data => {
