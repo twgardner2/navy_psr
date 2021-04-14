@@ -337,45 +337,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const populate_table = data => {
         console.log('populate table');
 
-        var schema = {
-            fields: [
-                {name: 'name', type: 'text', display: 'Name'},
-                {name: 'paygrade', type: 'text', display: 'Paygrade'},
-                {name: 'station', type: 'text', display: 'Station'},
-                {name: 'duty', type: 'text', display: 'Duty'},
-                {name: 'start_date', type: 'date', display: 'Start Date'},
-                {name: 'end_date', type: 'date', display: 'End Date'},
-                {name: 'months', type: 'number', display: 'Months'},
-                {name: 'rs_name', type: 'text', display: 'Reporting Senior Name'},
-                {name: 'rs_paygrade', type: 'text', display: 'Reporting Senior Paygrade'},
-                {name: 'rs_title', type: 'text', display: 'Reporting Senior Title'},
-
-                {name: 'trait_1', type: 'number', display: '# of 1s'},
-                {name: 'trait_2', type: 'number', display: '# of 2s'},
-                {name: 'trait_3', type: 'number', display: '# of 3s'},
-                {name: 'trait_4', type: 'number', display: '# of 4s'},
-                {name: 'trait_5', type: 'number', display: '# of 5s'},
-
-
-                {name: 'trait_avg', type: 'number', display: 'Trait Avg'},
-                {name: 'rsca', type: 'number', display: 'Reporting Senior Cumulative Avg'},
-                {name: 'prom_rec', type: 'text', display: 'Promotion Recommendation'},
-                {name: 'n_sp', type: 'number', display: '# SP'},
-                {name: 'n_pr', type: 'number', display: '# PR'},
-                {name: 'n_p', type: 'number', display: '# P'},
-                {name: 'n_mp', type: 'number', display: '# MP'},
-                {name: 'n_ep', type: 'number', display: '# EP'},
-                {name: 'prt', type: 'text', display: 'PRT'},
-                {name: 'rpt_type', type: 'text', display: 'Report Type'},
-            ]
-        };
-
         // Add form header row
         var header = table.append('tr')
                                 .attr('class', 'table_row header')
                                 // .style('border-collapse', 'collapse')
                                 .selectAll('th')
-                                .data(schema.fields)
+                                .data(lib.schema.fields)
                                 .enter()
                                 .append('th')
                                 .attr('class', 'header_items')
@@ -402,7 +369,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Format and enter values for each field
                             .text(d => {
                                 var [field, val] = d;
-                                var schema_entry = schema.fields.filter(el => el.name == d[0]);
+                                var schema_entry = lib.schema.fields.filter(el => el.name == d[0]);
                                 var type = schema_entry[0] ? schema_entry[0].type : null;
         
                                 if(type == 'text') val = val.toUpperCase();
