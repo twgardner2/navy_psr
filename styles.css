@@ -39,3 +39,7 @@ th,
 td {
   border: thin solid black;
 }
+
+tr {
+  height: 50px;
+}

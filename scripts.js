@@ -43,10 +43,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         .attr('transform', `translate(${lib.labels_width}, ${5*lib.bar_height + 5*lib.margin.gap})`);
 
     // Append form
-    const form_div = d3.select('body')
-                        .append('div')
-                        .attr('id', 'form_div');
+    // const form_div = d3.select('body')
+    //                     .append('div')
+    //                     .attr('id', 'form_div');
 
+    // Append rerender button
+    const rerender_button = d3.select('body')
+                              .append('div')
+                              .append('button')
+                              .text('Re-Render')
+                              .on('click', function(event) {
+                                lib.parse_data_from_table();
+                              });
     // Append FITREP table
     const table = d3.select('body')
                     .append('table')
@@ -352,11 +360,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add table rows
         var table_rows = table
                             // Enter a table row for each FITREP
-                            .selectAll('tr.form_row')
+                            .selectAll('tr.data_row')
                             .data(data)
                             .enter()
                             .append('tr')
-                            .attr('class', 'table_row');
+                            .attr('class', 'data_row');
 
         // Add table row data cells
         var table_data_cells = table_rows
