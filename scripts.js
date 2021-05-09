@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         .attr('width', lib.canvas_width)
                         .attr('height', lib.canvas_height);
                         
-                        
     const container_g = d3.select('#canvas')
                             .append('g')
                             .attr('id', 'container_g')
@@ -42,10 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         .attr('id', 'fitreps_g')
                         .attr('transform', `translate(${lib.labels_width}, ${5*lib.bar_height + 5*lib.margin.gap})`);
 
-    // Append form
-    // const form_div = d3.select('body')
-    //                     .append('div')
-    //                     .attr('id', 'form_div');
 
     // Append rerender button
     const rerender_button = d3.select('body')
@@ -53,14 +48,17 @@ document.addEventListener('DOMContentLoaded', function() {
                               .append('button')
                               .text('Re-Render')
                               .on('click', function(event) {
-                                lib.parse_data_from_table();
+                                var table_data = lib.parse_data_from_table();
+                                console.log(table_data);
+                                console.log('clearing psr...')
+                                clear_psr_viz(document.getElementById('canvas'));
+                                console.log('drawing again');
+                                draw_psr_viz(table_data);
                               });
     // Append FITREP table
     const table = d3.select('body')
                     .append('table')
                     .attr('id', 'fitrep_table');
-
-    
 
     // d3.selectAll('#rank, #command, #rep_sen')
     //     .append('defs')
@@ -71,10 +69,12 @@ document.addEventListener('DOMContentLoaded', function() {
     //     .append('feDropShadow');
 
     const draw_psr_viz = data => {
+        // console.log('redrawing...');
+        // console.log(data);
 
         var fitrep_gaps = lib.fitrep_gaps(data);
-        console.log('fitrep_gaps');
-        console.log(fitrep_gaps);
+        // console.log('fitrep_gaps');
+        // console.log(fitrep_gaps);
 
         // Extract member's name and update H1
         const member_name = data[0].name;
@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
         /// Get dates of rank
         var dates_of_rank = lib.get_dates_of_rank(data);
+        // console.log(dates_of_rank);
 
         /// Create <g> for each rank
         var rank_bar_groups = rank_g.selectAll('g')
@@ -228,9 +229,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             var rect_width = this.parentNode.children[0].getBBox().width;
                             var num_chars = 0.65 * this.getNumberOfChars();
 
-                            console.log(rect_width);
-                            console.log(num_chars);
-                            console.log(rect_width/num_chars);
+                            // console.log(rect_width);
+                            // console.log(num_chars);
+                            // console.log(rect_width/num_chars);
 
                             var return_val_in_px = Math.min(
                                 0.65 * rect_height,
@@ -267,6 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         .data(data)
                         .enter()
                         .append('g')
+                        .attr('class', 'fitrep dot')
                         .attr('transform', function(d) {
                             return `translate(${time_scale(d.end_date)}, ${rsca_scale(d.trait_avg-d.rsca)})`
                         })
@@ -303,6 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         .data(comparable_fitreps)
                         .enter()
                         .append('g')
+                        .attr('class', 'fitrep line')
                         .append('path')
                         .attr('d', d => line(d))
                         .attr('fill', 'none')
@@ -310,37 +313,24 @@ document.addEventListener('DOMContentLoaded', function() {
                         .attr('stroke-width', '2.5px')
                         .attr('opacity', 0.5);
 
-
         }
 
         // FITREP Gaps
         {
-        // fitreps_g.selectAll('rect')
-        //     .data(fitrep_gaps)
-        //     // .append('g')
-        //     .append('rect')
-        
         fitreps_g.append('g')
+            .attr('class', 'fitrep gap')
             .selectAll('rect')
             .data(fitrep_gaps)
             .enter()
-            // // .append('g')
             .append('rect')
             .attr('transform', d => `translate(${time_scale(d[0])},0)`)
             .attr('height', rsca_scale.range()[0])
             .attr('width', d => `${time_scale(d[1])-time_scale(d[0])}px`)
-            // .attr('width', '50px')
             .attr('fill', 'red')
             .attr('opacity', 0.2);
-        // .attr('transform', d => `translate(${time_scale(d[0])},0)`)
-            // .attr('height', d => '500px')
-            // .attr('width', d => lib.time_scale(d[1]-d[0]))
-            // .attr('fill', 'blue')
         }
 
 }
-
-
 
     const populate_table = data => {
         console.log('populate table');
@@ -370,10 +360,15 @@ document.addEventListener('DOMContentLoaded', function() {
         var table_data_cells = table_rows
                             // Enter a table data for each key of the FITREP object
                             .selectAll('td')
-                            .data(  d => Object.entries(d)  )
+                            .data(function(d) {
+                                console.log(Object.entries(d));
+                                return(Object.entries(d));
+                            })
+                            // .data(  d => Object.entries(d)  )
                             .enter()
                             .append('td')
                             .classed('table_field', true)
+                            .attr('key', d => d[0])
                             // Format and enter values for each field
                             .text(d => {
                                 var [field, val] = d;
@@ -383,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 if(type == 'text') val = val.toUpperCase();
                                 if(type == 'date') val = lib.date_formatter(d[1]);
                                 if(field == 'trait_avg') {
-                                    console.log(parseFloat(val));
+                                    // console.log(parseFloat(val));
                                     val = val ? Number.parseFloat(val).toFixed(2) : 0;
                                 }
                                 return val;
@@ -400,20 +395,63 @@ document.addEventListener('DOMContentLoaded', function() {
 
         }
 
+
+    const clear_psr_viz = () => {
+        d3.select(canvas)
+            .select('#rank_g')
+            .selectAll('g')
+            .remove();
+
+        d3.select(canvas)
+            .select('#command_g')
+            .selectAll('g')
+            .remove();
+
+        d3.select(canvas)
+            .select('#rep_sen_g')
+            .selectAll('g')
+            .remove();
+
+        d3.select(canvas)
+            .select('#command_cc_g')
+            .selectAll('g')
+            .remove();
+
+        d3.select(canvas)
+            // .select('#command_cc_g')
+            .selectAll('g.fitrep')
+            .remove();
+        
+        d3.select(canvas)
+            .selectAll('g.x.axis')
+            .remove();     
+               
+        d3.select(canvas)
+            .selectAll('g.y.axis')
+            .remove();
+    } 
+
+    // const data = d3.csv('./data/helm.csv', d3.autoType)
     const data = d3.csv('./data/gardner.csv', d3.autoType)
-                .then(data => {
-                    console.log(data);
-                    return(data);
-                })
-                // .then(data => {
-                //     populate_form(data);
-                //     return(data);
-                // })
-                .then(data => {
-                    populate_table(data);
-                    return(data);
-                })
-                .then(data => draw_psr_viz(data));
+        .then(data => {
+            // Attach original data to ghost <g> to retain it
+            d3.select('body')
+              .append('g')
+              .attr('id', 'original_data')
+              .attr('original_data', data)
+              .data(data);
+
+            // Log data to console
+            // console.log(data);
+            return(data);
+        })
+        .then(data => {
+            // Build table with PSR data
+            populate_table(data);
+            return(data);
+        })
+        // Draw viz
+        .then(data => draw_psr_viz(data));
 
 
 })
