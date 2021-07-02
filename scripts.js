@@ -97,6 +97,12 @@ document.addEventListener('DOMContentLoaded', function() {
             .domain([-1,1])
             .range([lib.fitrep_height, 0]);
 
+        // FITREP Promotion Recommendation Text Size Scale
+        const text_size_scale = d3.scaleLinear()
+            .domain([1,10])
+            .range([9,16])
+            .clamp(true);
+
         // Rank Bar
         {
         /// Get dates of rank
@@ -276,10 +282,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         .style('text-anchor', 'middle')
                         // .attr("dy", "o.5em")
                         .text(d => {
-                            var val = d.prom_rec.toLowerCase();
-                            val = val==="nob" ? "n" : val;
-                            return (val.toUpperCase());
+                            var prom_rec = d.prom_rec.toUpperCase();
+                            prom_rec = prom_rec==="NOB" ? "N" : prom_rec;
+                            
+                            var n = d.n_sp + d.n_pr + d.n_p + d.n_mp + d.n_ep;
+                            
+                            return (`${prom_rec.toUpperCase()}-${n}`);
                         })
+                        .style('font-size', d => text_size_scale( d.n_sp + d.n_pr + d.n_p + d.n_mp + d.n_ep))
                         .on("mouseover", function(event,d) {
                             tooltip.transition()
                               .duration(400)
@@ -311,7 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         .attr('fill', 'none')
                         .attr('stroke', '#000')
                         .attr('stroke-width', '2.5px')
-                        .attr('opacity', 0.5);
+                        .attr('opacity', 0.2);
 
         }
 
@@ -425,7 +435,7 @@ document.addEventListener('DOMContentLoaded', function() {
         d3.select(canvas)
             .selectAll('g.x.axis')
             .remove();     
-               
+
         d3.select(canvas)
             .selectAll('g.y.axis')
             .remove();
