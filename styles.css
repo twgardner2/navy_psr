@@ -21,11 +21,11 @@ h1 {
 div.tooltip {
   position: absolute;
   text-align: center;
-  width: 160px;
+  width: 60px;
   height: 128px;
   padding: 2px;
   font: 12px sans-serif;
-  background: lightsteelblue;
+  background: grey;
   border: 0px;
   border-radius: 8px;
   pointer-events: none;
