@@ -290,19 +290,20 @@ document.addEventListener('DOMContentLoaded', function() {
                             return (`${prom_rec.toUpperCase()}-${n}`);
                         })
                         .style('font-size', d => text_size_scale( d.n_sp + d.n_pr + d.n_p + d.n_mp + d.n_ep))
-                        .on("mouseover", function(event,d) {
+                        .on('mouseover', function(event,d) {
+                            
                             tooltip.transition()
-                              .duration(400)
-                              .style("opacity", .9);
-
+                                .duration(400)
+                                .style('opacity', 0.9);
+                            
                             tooltip.html(lib.fitrep_tooltip(d))
-                              .style("left", (event.pageX) + "px")
-                              .style("top", (event.pageY - 28) + "px");
+                                .style('left', (event.pageX) + 'px')
+                                .style('top', (event.pageY - 28) + 'px');
                             })
-                          .on("mouseout", function(d) {
+                          .on('mouseout', function(d) {
                             tooltip.transition()
                               .duration(400)
-                              .style("opacity", 0);
+                              .style('opacity', 0);
                             });
 
         var comparable_fitreps = lib.fitreps_grouped_by_paygrade_and_repsen(data);
