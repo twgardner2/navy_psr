@@ -43,3 +43,16 @@ td {
 tr {
   height: 50px;
 }
+
+div.tooltip > table {
+  font: 12px san-serif;
+  /* width: 1px;
+  height: 1px; */
+  white-space: nowrap;
+  border-collapse: collapse;
+}
+
+div.tooltip table tr {
+  width: 1px;
+  height: 1px;
+}
