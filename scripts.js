@@ -106,8 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Rank Bar
         {
         /// Get dates of rank
-        var dates_of_rank = lib.get_dates_of_rank(data);
-        // console.log(dates_of_rank);
+        var dates_of_rank = lib.get_dates_for_values_of_column(data, 'paygrade');
 
         /// Create <g> for each rank
         var rank_bar_groups = rank_g.selectAll('g')
@@ -131,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
         rank_bar_groups.append('text')
                         .attr('transform', d => `translate(${0.5*(time_scale(d.end)-time_scale(d.start))},${0.5*lib.bar_height})`)
                         .style('text-anchor', 'middle')
-                        .text(d => d.rank)
+                        .text(d => d.value)
                         .style('font-size', function(d) {
                             // var box = this.parentNode;
                             var rect_height = this.parentNode.children[0].getBBox().height;
@@ -151,10 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Regular Commands bar
         {
-        var command_dates = lib.get_command_dates(data, new RegExp('^(?!.*(AT|CC)).*$', 'g'));
-        // var command_dates = lib.get_command_dates(data, new RegExp('![AT|CC]', 'g'));
-        // var command_dates = lib.get_command_dates(data, new RegExp('.', 'g'));
-
+        var command_dates = lib.get_dates_for_values_of_column(data, 'station', new RegExp('^(?!.*(AT|CC)).*$', 'g'), 'rpt_type');
 
         var command_bar_groups = command_g.selectAll('g')
                     .data(command_dates)
@@ -175,18 +171,13 @@ document.addEventListener('DOMContentLoaded', function() {
         command_bar_groups.append('text')
                         .attr('transform', d => `translate(${0.5*(time_scale(d.end)-time_scale(d.start))},${0.5*lib.bar_height})`)
                         .style('text-anchor', 'middle')
-                        .text(d => d.command)
+                        // .text(d => d.command)
+                        .text(d => d.value)
                         .style('font-size', function(d) {
                             // var box = this.parentNode;
                             var rect_height = this.parentNode.children[0].getBBox().height;
                             var rect_width = this.parentNode.children[0].getBBox().width;
                             var num_chars = 0.65 * this.getNumberOfChars();
-
-                            // console.log(rect_width);
-                            // console.log(num_chars);
-                            // console.log(rect_width/num_chars);
-                            // console.log('---------------');
-
 
                             var return_val_in_px = Math.min(
                                 0.65 * rect_height,
@@ -199,15 +190,57 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
         }
 
+        // Reporting Senior bar
+        // {
+    //         var reporting_senior_dates = lib.get_reporting_senior_dates(data, new RegExp('^(?!.*(AT|CC)).*$', 'g'));
+    // console.log(reporting_senior_dates);
+        //     var command_bar_groups = command_g.selectAll('g')
+        //                 .data(command_dates)
+        //                 .enter()
+        //                 .append('g')
+        //                 .attr('transform', d => `translate(${time_scale(d.start)},0)`);
+    
+        //     command_bar_groups.append('rect')
+        //                 .attr('height', 0.8*lib.bar_height)
+        //                 .attr('width', d => time_scale(d.end)-time_scale(d.start))
+        //                 .attr('fill', 'none')
+        //                 .attr('stroke', 'black')
+        //                 .attr('stroke-width', '2px')
+        //                 .attr('fill', 'lightblue')
+        //                 .attr('rx', '10px')
+        //                 .attr('ry', '10px');
+    
+        //     command_bar_groups.append('text')
+        //                     .attr('transform', d => `translate(${0.5*(time_scale(d.end)-time_scale(d.start))},${0.5*lib.bar_height})`)
+        //                     .style('text-anchor', 'middle')
+        //                     .text(d => d.command)
+        //                     .style('font-size', function(d) {
+        //                         // var box = this.parentNode;
+        //                         var rect_height = this.parentNode.children[0].getBBox().height;
+        //                         var rect_width = this.parentNode.children[0].getBBox().width;
+        //                         var num_chars = 0.65 * this.getNumberOfChars();
+    
+        //                         // console.log(rect_width);
+        //                         // console.log(num_chars);
+        //                         // console.log(rect_width/num_chars);
+        //                         // console.log('---------------');
+    
+    
+        //                         var return_val_in_px = Math.min(
+        //                             0.65 * rect_height,
+        //                             rect_width/num_chars
+        //                         );
+    
+        //                         // return '10px';
+        //                         return (`${return_val_in_px}px`);
+                                
+        //                     });
+        //     }
+    
+
         // Concurrent Command bar
         {
-            var non_regular_command_dates = lib.get_command_dates(data, new RegExp('(AT|CC)', 'g'));
-            // var command_dates = lib.get_command_dates(data, new RegExp('![AT|CC]', 'g'));
-            // var command_dates = lib.get_command_dates(data, new RegExp('.', 'g'));
-
-
-
-        // console.log(non_regular_command_dates);
+        var non_regular_command_dates = lib.get_dates_for_values_of_column(data, 'station', new RegExp('(AT|CC)', 'g'), 'rpt_type');
 
         var command_cc_bar_groups = command_cc_g.selectAll('g')
                     .data(non_regular_command_dates)
@@ -291,7 +324,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         })
                         .style('font-size', d => text_size_scale( d.n_sp + d.n_pr + d.n_p + d.n_mp + d.n_ep))
                         .on('mouseover', function(event,d) {
-                            
+                            // console.log(event);
                             tooltip.transition()
                                 .duration(400)
                                 .style('opacity', 0.9);
@@ -372,7 +405,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Enter a table data for each key of the FITREP object
                             .selectAll('td')
                             .data(function(d) {
-                                console.log(Object.entries(d));
+                                // console.log(Object.entries(d));
                                 return(Object.entries(d));
                             })
                             // .data(  d => Object.entries(d)  )
