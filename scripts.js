@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const rep_sen_g = container_g.append('g')
                                     .attr('id', 'rep_sen_g ')
-                                    .attr('transform', `translate(${lib.labels_width}, ${2*lib.bar_height + 2*lib.margin.gap})`);
+                                    .attr('transform', `translate(${lib.labels_width}, ${2*lib.bar_height + lib.margin.gap})`);
 
     const command_cc_g = container_g.append('g')
                                     .attr('id', 'command_cc_g')
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const rep_sen_cc_g = container_g.append('g')
                                     .attr('id', 'rep_sen_cc_g ')
-                                    .attr('transform', `translate(${lib.labels_width}, ${4*lib.bar_height + 4*lib.margin.gap})`);
+                                    .attr('transform', `translate(${lib.labels_width}, ${4*lib.bar_height + 3*lib.margin.gap})`);
 
     const fitreps_g = container_g
                         .append('g')
@@ -191,51 +191,44 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Reporting Senior bar
-        // {
-    //         var reporting_senior_dates = lib.get_reporting_senior_dates(data, new RegExp('^(?!.*(AT|CC)).*$', 'g'));
-    // console.log(reporting_senior_dates);
-        //     var command_bar_groups = command_g.selectAll('g')
-        //                 .data(command_dates)
-        //                 .enter()
-        //                 .append('g')
-        //                 .attr('transform', d => `translate(${time_scale(d.start)},0)`);
+        {
+        var reporting_senior_dates = lib.get_dates_for_values_of_column(data, 'rs_name', new RegExp('^(?!.*(AT|CC)).*$', 'g'));
+
+        var reporting_senior_groups = rep_sen_g.selectAll('g')
+                    .data(reporting_senior_dates)
+                    .enter()
+                    .append('g')
+                    .attr('transform', d => `translate(${time_scale(d.start)},0)`);
     
-        //     command_bar_groups.append('rect')
-        //                 .attr('height', 0.8*lib.bar_height)
-        //                 .attr('width', d => time_scale(d.end)-time_scale(d.start))
-        //                 .attr('fill', 'none')
-        //                 .attr('stroke', 'black')
-        //                 .attr('stroke-width', '2px')
-        //                 .attr('fill', 'lightblue')
-        //                 .attr('rx', '10px')
-        //                 .attr('ry', '10px');
+        reporting_senior_groups.append('rect')
+                        .attr('height', 0.8*lib.bar_height)
+                        .attr('width', d => time_scale(d.end)-time_scale(d.start))
+                        .attr('fill', 'none')
+                        .attr('stroke', 'black')
+                        .attr('stroke-width', '2px')
+                        .attr('fill', 'lightblue')
+                        .attr('rx', '10px')
+                        .attr('ry', '10px');
     
-        //     command_bar_groups.append('text')
-        //                     .attr('transform', d => `translate(${0.5*(time_scale(d.end)-time_scale(d.start))},${0.5*lib.bar_height})`)
-        //                     .style('text-anchor', 'middle')
-        //                     .text(d => d.command)
-        //                     .style('font-size', function(d) {
-        //                         // var box = this.parentNode;
-        //                         var rect_height = this.parentNode.children[0].getBBox().height;
-        //                         var rect_width = this.parentNode.children[0].getBBox().width;
-        //                         var num_chars = 0.65 * this.getNumberOfChars();
+        reporting_senior_groups.append('text')
+                        .attr('transform', d => `translate(${0.5*(time_scale(d.end)-time_scale(d.start))},${0.5*lib.bar_height})`)
+                        .style('text-anchor', 'middle')
+                        .text(d => {console.log(d.value); return(d.value)})
+                        .style('font-size', function(d) {
+                            // var box = this.parentNode;
+                            var rect_height = this.parentNode.children[0].getBBox().height;
+                            var rect_width = this.parentNode.children[0].getBBox().width;
+                            var num_chars = 0.65 * this.getNumberOfChars();
     
-        //                         // console.log(rect_width);
-        //                         // console.log(num_chars);
-        //                         // console.log(rect_width/num_chars);
-        //                         // console.log('---------------');
-    
-    
-        //                         var return_val_in_px = Math.min(
-        //                             0.65 * rect_height,
-        //                             rect_width/num_chars
-        //                         );
-    
-        //                         // return '10px';
-        //                         return (`${return_val_in_px}px`);
-                                
-        //                     });
-        //     }
+                            var return_val_in_px = Math.min(
+                                0.65 * rect_height,
+                                rect_width/num_chars
+                            );
+
+                            // return '10px';
+                            return (`${return_val_in_px}px`);
+                            });
+        }
     
 
         // Concurrent Command bar
@@ -261,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function() {
         command_cc_bar_groups.append('text')
                         .attr('transform', d => `translate(${0.5*(time_scale(d.end)-time_scale(d.start))},${0.5*lib.bar_height})`)
                         .style('text-anchor', 'middle')
-                        .text(d => d.command)
+                        .text(d => d.value)
                         .style('font-size', function(d) {
                             // var box = this.parentNode;
                             var rect_height = this.parentNode.children[0].getBBox().height;
@@ -283,8 +276,47 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
         }
 
+        // Concurrent Command Reporting Senior bar
+        {
+            var concurrent_command_reporting_senior_dates = lib.get_dates_for_values_of_column(data, 'rs_name', new RegExp('(AT|CC)', 'g'));
+    console.log(concurrent_command_reporting_senior_dates);
+            var rep_sen_cc_bar_groups = rep_sen_cc_g.selectAll('g')
+                        .data(concurrent_command_reporting_senior_dates)
+                        .enter()
+                        .append('g')
+                        .attr('transform', d => `translate(${time_scale(d.start)},0)`);
+        
+            rep_sen_cc_bar_groups.append('rect')
+                            .attr('height', 0.8*lib.bar_height)
+                            .attr('width', d => time_scale(d.end)-time_scale(d.start))
+                            .attr('fill', 'none')
+                            .attr('stroke', 'black')
+                            .attr('stroke-width', '2px')
+                            .attr('fill', 'lightblue')
+                            .attr('rx', '10px')
+                            .attr('ry', '10px');
+        
+            rep_sen_cc_bar_groups.append('text')
+                            .attr('transform', d => `translate(${0.5*(time_scale(d.end)-time_scale(d.start))},${0.5*lib.bar_height})`)
+                            .style('text-anchor', 'middle')
+                            .text(d => {console.log(d.value); return(d.value)})
+                            .style('font-size', function(d) {
+                                // var box = this.parentNode;
+                                var rect_height = this.parentNode.children[0].getBBox().height;
+                                var rect_width = this.parentNode.children[0].getBBox().width;
+                                var num_chars = 0.65 * this.getNumberOfChars();
+        
+                                var return_val_in_px = Math.min(
+                                    0.65 * rect_height,
+                                    rect_width/num_chars
+                                );
+    
+                                // return '10px';
+                                return (`${return_val_in_px}px`);
+                                });
+            }
 
-       // FITREPs
+        // FITREPs
         {
         // Create tooltip
         var tooltip = d3.select("body").append("div")
