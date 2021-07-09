@@ -103,6 +103,15 @@ document.addEventListener('DOMContentLoaded', function() {
             .range([9,16])
             .clamp(true);
 
+        // Command and Reporting Senior Bar Hover Rect
+        {
+            var fitrep_highlight = fitreps_g.append('rect')
+            .attr('width', '50px')
+            .attr('height', '50px')
+            .attr('fill', 'blue')
+            .attr('opacity', 0.0);
+        }
+
         // Rank Bar
         {
         /// Get dates of rank
@@ -125,6 +134,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr('fill', 'lightgrey')
                     .attr('rx', '10px')
                     .attr('ry', '10px');
+                    // .on('mouseover', function(event,d) {
+                    //     // console.log(event);
+                    //     // console.log(d.start);
+                    //     // console.log(time_scale(d.start));
+                    //     fitrep_highlight
+                    //         .attr('transform', `translate(${time_scale(d.start)}, 0)`)
+                    //         .attr('width', `${time_scale(d.end)-time_scale(d.start)}`)
+                    //         .attr('height', `${rsca_scale.range()[0] - rsca_scale.range()[1]}`)
+                    //         .transition()
+                    //         .duration(200)
+                    //         .style('opacity', 0.2);
+                    //     })
+                    //   .on('mouseout', function(d) {
+                    //     fitrep_highlight
+                    //       .style('opacity', 0);
+                    //     });
 
         /// Create <text> for each rank
         rank_bar_groups.append('text')
@@ -142,10 +167,30 @@ document.addEventListener('DOMContentLoaded', function() {
                                 rect_width/num_chars
                             );
 
-                            // return '10px';
-                            return (`${return_val_in_px}px`);
-                            
+                            return (`${return_val_in_px}px`)
                         });
+
+        rank_bar_groups
+            .on('mouseover', function(event,d) {
+                fitrep_highlight
+                    .attr('transform', `translate(${time_scale(d.start)}, 0)`)
+                    .attr('width', `${time_scale(d.end)-time_scale(d.start)}`)
+                    // .attr('transform', `translate(${time_scale(lib.add_days_to_date(d.start, 100))}, 0)`)
+                    // .attr('width', `${time_scale(d.end)-time_scale(lib.add_days_to_date(d.start, 100))}`)
+                    .attr('height', `${rsca_scale.range()[0] - rsca_scale.range()[1]}`)
+                    .transition()
+                    .duration(200)
+                    .style('opacity', 0.2);
+                })
+                .on('mouseout', function(d) {
+                fitrep_highlight
+                    .transition()
+                    .duration(200)
+                    .style('opacity', 0);
+                });
+                // .on('mouseout', lib.clear_fitrep_highlight(fitrep_highlight));
+        
+                            
         }
 
         // Regular Commands bar
@@ -161,7 +206,6 @@ document.addEventListener('DOMContentLoaded', function() {
         command_bar_groups.append('rect')
                     .attr('height', 0.8*lib.bar_height)
                     .attr('width', d => time_scale(d.end)-time_scale(d.start))
-                    .attr('fill', 'none')
                     .attr('stroke', 'black')
                     .attr('stroke-width', '2px')
                     .attr('fill', 'lightblue')
@@ -299,7 +343,7 @@ document.addEventListener('DOMContentLoaded', function() {
             rep_sen_cc_bar_groups.append('text')
                             .attr('transform', d => `translate(${0.5*(time_scale(d.end)-time_scale(d.start))},${0.5*lib.bar_height})`)
                             .style('text-anchor', 'middle')
-                            .text(d => {console.log(d.value); return(d.value)})
+                            .text(d => d.value)
                             .style('font-size', function(d) {
                                 // var box = this.parentNode;
                                 var rect_height = this.parentNode.children[0].getBBox().height;
@@ -314,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 // return '10px';
                                 return (`${return_val_in_px}px`);
                                 });
-            }
+        }
 
         // FITREPs
         {
