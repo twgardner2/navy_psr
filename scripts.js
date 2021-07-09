@@ -103,13 +103,33 @@ document.addEventListener('DOMContentLoaded', function() {
             .range([9,16])
             .clamp(true);
 
+        
+        // FITREP Highlight Interaction
+        function update_highlight_element(e, d, element) {
+
+            element
+                .attr('transform', `translate(${time_scale(d.start)}, 0)`)
+                .attr('width', `${time_scale(d.end)-time_scale(d.start)}`)
+                // .attr('transform', `translate(${time_scale(lib.add_days_to_date(d.start, 100))}, 0)`)
+                // .attr('width', `${time_scale(d.end)-time_scale(lib.add_days_to_date(d.start, 100))}`)
+                .attr('height', `${rsca_scale.range()[0] - rsca_scale.range()[1]}`)
+                .transition()
+                .duration(200)
+                .style('opacity', 0.2);
+        
+        }
+        function clear_fitrep_highlight(element_to_clear) {
+            element_to_clear.style('opacity', 0);
+        }
+
         // Command and Reporting Senior Bar Hover Rect
         {
-            var fitrep_highlight = fitreps_g.append('rect')
-            .attr('width', '50px')
-            .attr('height', '50px')
-            .attr('fill', 'blue')
-            .attr('opacity', 0.0);
+            var fitrep_highlight = fitreps_g
+                                        .append('rect')
+                                        .attr('width', '50px')
+                                        .attr('height', '50px')
+                                        .attr('fill', 'blue')
+                                        .attr('opacity', 0.0);
         }
 
         // Rank Bar
@@ -172,23 +192,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         rank_bar_groups
             .on('mouseover', function(event,d) {
-                fitrep_highlight
-                    .attr('transform', `translate(${time_scale(d.start)}, 0)`)
-                    .attr('width', `${time_scale(d.end)-time_scale(d.start)}`)
-                    // .attr('transform', `translate(${time_scale(lib.add_days_to_date(d.start, 100))}, 0)`)
-                    // .attr('width', `${time_scale(d.end)-time_scale(lib.add_days_to_date(d.start, 100))}`)
-                    .attr('height', `${rsca_scale.range()[0] - rsca_scale.range()[1]}`)
-                    .transition()
-                    .duration(200)
-                    .style('opacity', 0.2);
-                })
-                .on('mouseout', function(d) {
-                fitrep_highlight
-                    .transition()
-                    .duration(200)
-                    .style('opacity', 0);
-                });
-                // .on('mouseout', lib.clear_fitrep_highlight(fitrep_highlight));
+                update_highlight_element(event, d, fitrep_highlight);
+                }
+            )
+            .on('mouseout', function() {clear_fitrep_highlight(fitrep_highlight)});
         
                             
         }
@@ -215,10 +222,8 @@ document.addEventListener('DOMContentLoaded', function() {
         command_bar_groups.append('text')
                         .attr('transform', d => `translate(${0.5*(time_scale(d.end)-time_scale(d.start))},${0.5*lib.bar_height})`)
                         .style('text-anchor', 'middle')
-                        // .text(d => d.command)
                         .text(d => d.value)
                         .style('font-size', function(d) {
-                            // var box = this.parentNode;
                             var rect_height = this.parentNode.children[0].getBBox().height;
                             var rect_width = this.parentNode.children[0].getBBox().width;
                             var num_chars = 0.65 * this.getNumberOfChars();
@@ -228,11 +233,17 @@ document.addEventListener('DOMContentLoaded', function() {
                                 rect_width/num_chars
                             );
 
-                            // return '10px';
                             return (`${return_val_in_px}px`);
                             
                         });
-        }
+
+        command_bar_groups
+            .on('mouseover', function(event,d) {
+                update_highlight_element(event, d, fitrep_highlight);
+                }
+            )
+            .on('mouseout', function() {clear_fitrep_highlight(fitrep_highlight)});
+            }
 
         // Reporting Senior bar
         {
@@ -272,6 +283,14 @@ document.addEventListener('DOMContentLoaded', function() {
                             // return '10px';
                             return (`${return_val_in_px}px`);
                             });
+                        
+        reporting_senior_groups
+            .on('mouseover', function(event,d) {
+                update_highlight_element(event, d, fitrep_highlight);
+                }
+            )
+            .on('mouseout', function() {clear_fitrep_highlight(fitrep_highlight)});
+        
         }
     
 
@@ -318,12 +337,19 @@ document.addEventListener('DOMContentLoaded', function() {
                             return (`${return_val_in_px}px`);
                             
                         });
+
+        command_cc_bar_groups
+            .on('mouseover', function(event,d) {
+                update_highlight_element(event, d, fitrep_highlight);
+                }
+            )
+            .on('mouseout', function() {clear_fitrep_highlight(fitrep_highlight)});
         }
 
         // Concurrent Command Reporting Senior bar
         {
             var concurrent_command_reporting_senior_dates = lib.get_dates_for_values_of_column(data, 'rs_name', new RegExp('(AT|CC)', 'g'));
-    console.log(concurrent_command_reporting_senior_dates);
+
             var rep_sen_cc_bar_groups = rep_sen_cc_g.selectAll('g')
                         .data(concurrent_command_reporting_senior_dates)
                         .enter()
@@ -358,7 +384,15 @@ document.addEventListener('DOMContentLoaded', function() {
                                 // return '10px';
                                 return (`${return_val_in_px}px`);
                                 });
-        }
+
+
+            rep_sen_cc_bar_groups
+                .on('mouseover', function(event,d) {
+                    update_highlight_element(event, d, fitrep_highlight);
+                    }
+                )
+                .on('mouseout', function() {clear_fitrep_highlight(fitrep_highlight)});
+    }
 
         // FITREPs
         {
