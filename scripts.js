@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         .style('text-anchor', 'middle')
                         .text(d => d.value)
                         .style('font-size', function(d) {
-                            // var box = this.parentNode;
+
                             var rect_height = this.parentNode.children[0].getBBox().height;
                             var rect_width = this.parentNode.children[0].getBBox().width;
                             var num_chars = 0.65 * this.getNumberOfChars();
@@ -280,7 +280,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                 rect_width/num_chars
                             );
 
-                            // return '10px';
                             return (`${return_val_in_px}px`);
                             });
                         
@@ -323,10 +322,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             var rect_height = this.parentNode.children[0].getBBox().height;
                             var rect_width = this.parentNode.children[0].getBBox().width;
                             var num_chars = 0.65 * this.getNumberOfChars();
-
-                            // console.log(rect_width);
-                            // console.log(num_chars);
-                            // console.log(rect_width/num_chars);
 
                             var return_val_in_px = Math.min(
                                 0.65 * rect_height,
@@ -371,7 +366,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             .style('text-anchor', 'middle')
                             .text(d => d.value)
                             .style('font-size', function(d) {
-                                // var box = this.parentNode;
                                 var rect_height = this.parentNode.children[0].getBBox().height;
                                 var rect_width = this.parentNode.children[0].getBBox().width;
                                 var num_chars = 0.65 * this.getNumberOfChars();
@@ -381,9 +375,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                     rect_width/num_chars
                                 );
     
-                                // return '10px';
                                 return (`${return_val_in_px}px`);
-                                });
+                            });
 
 
             rep_sen_cc_bar_groups
