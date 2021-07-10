@@ -578,8 +578,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .remove();
     } 
 
-    // const data = d3.csv('./data/helm.csv', d3.autoType)
-    const data = d3.csv('./data/gardner.csv', d3.autoType)
+    const data = d3.csv('./gardner_anon.csv', d3.autoType)
         .then(data => {
             // Attach original data to ghost <g> to retain it
             d3.select('body')
