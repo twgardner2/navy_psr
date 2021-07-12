@@ -167,7 +167,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const text_size_scale = d3
       .scaleLinear()
       .domain([1, 10])
-      .range([9, 16])
+      //   .range([9, 16])
+      .range([50, 300])
       .clamp(true);
 
     // FITREP Highlight Interaction
@@ -341,22 +342,60 @@ document.addEventListener("DOMContentLoaded", function () {
             d.end_date
           )}, ${rsca_scale(d.trait_avg - d.rsca)})`;
         })
-        .append("text")
-        .style("text-anchor", "middle")
-        // .attr('dy', 'o.5em')
-        .text((d) => {
-          var prom_rec = d.prom_rec.toUpperCase();
-          prom_rec = prom_rec === "NOB" ? "N" : prom_rec;
+        .append("path")
+        .attr("d", function (d) {
+          var symbol;
+          switch (d.prom_rec.toUpperCase()) {
+            case "EP":
+              symbol = d3.symbol().type(d3.symbolStar);
+              break;
+            case "MP":
+              symbol = d3.symbol().type(d3.symbolDiamond);
+              break;
+            case "P":
+              symbol = d3.symbol().type(d3.symbolCross);
+              break;
+            case "PR":
+              symbol = d3.symbol().type(d3.symbolDiamond);
+              break;
+            case "SP":
+              symbol = d3.symbol().type(d3.symbolDiamond);
+              break;
+            default:
+              symbol = d3.symbol().type(d3.symbolCircle);
+          }
+          var size = text_size_scale(d.n_sp + d.n_pr + d.n_p + d.n_mp + d.n_ep);
 
-          var n = d.n_sp + d.n_pr + d.n_p + d.n_mp + d.n_ep;
-
-          return `${prom_rec.toUpperCase()}:${n}`;
+          return symbol.size(size)();
         })
-        .style("font-size", (d) =>
-          text_size_scale(d.n_sp + d.n_pr + d.n_p + d.n_mp + d.n_ep)
-        )
+        .attr("fill", function (d) {
+          console.log(d.prom_rec);
+          switch (d.prom_rec.toUpperCase()) {
+            case "EP":
+              return lib.ep_color;
+              break;
+            case "MP":
+              return lib.mp_color;
+              break;
+            case "P":
+              return lib.p_color;
+              break;
+            case "PR":
+              return lib.pr_color;
+              break;
+            case "SP":
+              return lib.sp_color;
+              break;
+            case "NOB":
+              return lib.nob_color;
+              break;
+
+            default:
+              return "black";
+          }
+        })
+
         .on("mouseover", function (event, d) {
-          // console.log(event);
           tooltip.transition().duration(400).style("opacity", 0.9);
 
           tooltip
@@ -407,8 +446,6 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const populate_table = (data) => {
-    console.log("populate table");
-
     // Add form header row
     var header = table
       .append("tr")
