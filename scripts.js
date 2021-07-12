@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .scaleLinear()
       .domain([1, 10])
       //   .range([9, 16])
-      .range([50, 200])
+      .range([50, 300])
       .clamp(true);
 
     // FITREP Highlight Interaction
@@ -352,8 +352,17 @@ document.addEventListener("DOMContentLoaded", function () {
             case "MP":
               symbol = d3.symbol().type(d3.symbolDiamond);
               break;
+            case "P":
+              symbol = d3.symbol().type(d3.symbolCross);
+              break;
+            case "PR":
+              symbol = d3.symbol().type(d3.symbolDiamond);
+              break;
+            case "SP":
+              symbol = d3.symbol().type(d3.symbolDiamond);
+              break;
             default:
-              symbol = d3.symbol().type(d3.symbolSquare);
+              symbol = d3.symbol().type(d3.symbolCircle);
           }
           var size = text_size_scale(d.n_sp + d.n_pr + d.n_p + d.n_mp + d.n_ep);
 
@@ -370,6 +379,15 @@ document.addEventListener("DOMContentLoaded", function () {
               break;
             case "P":
               return lib.p_color;
+              break;
+            case "PR":
+              return lib.pr_color;
+              break;
+            case "SP":
+              return lib.sp_color;
+              break;
+            case "NOB":
+              return lib.nob_color;
               break;
 
             default:
