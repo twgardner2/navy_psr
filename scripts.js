@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Create reference to <div> defining the grid
   const grid = d3.select("body").select(".grid");
 
-  // SVG canvas and main container groups
+  // Fitrep SVG canvas and main container groups
   const svg = grid
     .append("svg")
     .attr("id", "canvas")
@@ -17,13 +17,11 @@ document.addEventListener("DOMContentLoaded", function () {
     .select("#canvas")
     .append("g")
     .attr("id", "container_g");
-  // .attr("transform", `translate(${lib.margin.left}, ${lib.margin.top})`);
 
   const rank_g = container_g
     .append("g")
     .attr("id", "rank_g")
     .attr("transform", `translate(${lib.y_axis_width}, ${lib.margin.gap})`);
-  // .attr("transform", `translate(${lib.y_axis_width}, 0)`);
 
   const command_g = container_g
     .append("g")
@@ -70,6 +68,13 @@ document.addEventListener("DOMContentLoaded", function () {
       })`
     );
 
+  // Legend SVG canvas
+  const legend_canvas = grid
+    .append("div")
+    .attr("id", "fitreps_legend")
+    .append("svg")
+    .attr("width", "100%");
+
   // Append rerender button
   const table_container = d3
     .select(".grid")
@@ -88,6 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("drawing again");
       draw_psr_viz(table_data);
     });
+
   // Append FITREP table
   const table = table_container.append("table").attr("id", "fitrep_table");
 
@@ -264,12 +270,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /// Add legend
     {
-      // <svg> in the legend <div>
-      const legend_canvas = grid
-        .append("div")
-        .attr("id", "fitreps_legend")
-        .append("svg")
-        .attr("width", "100%");
       // 2 groups in the legend canvas, 1 for the promotion recommendation legend, 1 for the traffic size legend
       const prom_rec_g = legend_canvas
         .append("g")
