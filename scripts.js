@@ -357,7 +357,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 )
               })`
           );
-        /// Outlines
+        /// Markers
         fitrep_traffic_legend_marker_groups
           .append("path")
           .attr("d", function (d) {
@@ -377,8 +377,7 @@ document.addEventListener("DOMContentLoaded", function () {
           })
           .attr("fill", "none")
           .attr("stroke", "black")
-          .attr("stroke-width", lib.fitrep_marker_stroke_width)
-          .attr("opacity", lib.fitrep_marker_opacity);
+          .attr("stroke-width", lib.fitrep_marker_stroke_width);
         /// Labels
         fitrep_traffic_legend_marker_groups
           .append("text")
@@ -403,7 +402,8 @@ document.addEventListener("DOMContentLoaded", function () {
         .append("div")
         .attr("class", "tooltip")
         .style("border-style", "solid")
-        .style("opacity", 0);
+        .style("opacity", 0)
+        .style("pointer-events", "none");
       // Draw time axis
       fitreps_g
         .append("g")
@@ -520,7 +520,8 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("height", lib.rsca_scale.range()[0])
         .attr("width", (d) => `${time_scale(d[1]) - time_scale(d[0])}px`)
         .attr("fill", "red")
-        .attr("opacity", 0.2);
+        .attr("opacity", 0.2)
+        .style("pointer-events", "none");
     }
   };
 
