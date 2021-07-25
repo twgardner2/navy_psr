@@ -264,45 +264,136 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /// Add legend
     {
-      // const colorLegend = d3
-      //   .legendColor()
-      //   .labelFormat(d3.format(".2f"))
-      //   // .labels(d3.legendHelpers.thresholdLabels)
-      //   .cells(LIKERT_MAX)
-      //   .title("FITREP Markers")
-      //   .labels(["EP", "MP", "P", "PR", "SP", "NOB"])
-      //   .scale(z);
-
-      // svg.select(".legend").call(colorLegend);
-
+      // <svg> in the legend <div>
       const legend_canvas = grid
         .append("div")
         .attr("id", "fitreps_legend")
         .append("svg")
         .attr("width", "100%");
+      // 2 groups in the legend canvas, 1 for the promotion recommendation legend, 1 for the traffic size legend
       const prom_rec_g = legend_canvas
         .append("g")
         .attr("transform", `translate(10,${8 * lib.bar_height})`);
       const traffic_g = legend_canvas
         .append("g")
-        .attr("transform", `translate(50,${8 * lib.bar_height})`);
+        .attr("transform", `translate(100,${8 * lib.bar_height})`);
 
-      prom_rec_g
-        .selectAll("g")
-        .data(lib.prom_rec_categories)
-        .enter()
-        .append("g")
-        .attr(
-          "transform",
-          (d, i) => `translate(0, ${i * 1.2 * lib.fitrep_marker_size(5)})`
-        );
-
-      // legend_g.append("text").text("EP");
-      // fitrep_legend
-      //   .append("path")
-      //   .attr("d", d3.symbol().type(d3.symbolStar).size(100)())
-      //   .attr("fill", lib.ep_color);
-      // fitrep_legend.append("text").text("= EP");
+      // Draw the promotion recommendation legend
+      {
+        /// Markers
+        const prom_rec_legend_marker_groups = prom_rec_g
+          .selectAll("g")
+          .data(lib.prom_rec_categories)
+          .enter()
+          .append("g")
+          .attr(
+            "transform",
+            (d, i) =>
+              `translate(0, ${
+                i *
+                1.2 *
+                Math.sqrt(
+                  (4 * lib.fitrep_marker_size(lib.fitrep_legend_marker_size)) /
+                    Math.PI
+                )
+              })`
+          );
+        /// Outlines
+        prom_rec_legend_marker_groups
+          .append("path")
+          .attr("d", function (d) {
+            var symbol = lib.fitrep_shape_scale(d.toUpperCase());
+            var size = lib.fitrep_marker_size(lib.fitrep_legend_marker_size);
+            return symbol.size(size)();
+          })
+          .attr("fill", (d) => lib.fitrep_color_scale(d.toUpperCase()))
+          .attr("opacity", lib.fitrep_marker_opacity);
+        /// Marker outlines
+        prom_rec_legend_marker_groups
+          .append("path")
+          .attr("d", function (d) {
+            var symbol = lib.fitrep_shape_scale(d.toUpperCase());
+            var size = lib.fitrep_marker_size(lib.fitrep_legend_marker_size);
+            return symbol.size(size)();
+          })
+          .attr("fill", "none")
+          .attr("stroke", "black")
+          .attr("stroke-width", lib.fitrep_marker_stroke_width);
+        /// Labels
+        prom_rec_legend_marker_groups
+          .append("text")
+          .attr(
+            "transform",
+            `translate(${
+              1.1 *
+              Math.sqrt(
+                (4 * lib.fitrep_marker_size(lib.fitrep_legend_marker_size)) /
+                  Math.PI
+              )
+            })`
+          )
+          .text((d) => d);
+      }
+      // Draw the "traffic" legend
+      {
+        /// Markers
+        const fitrep_traffic_legend_marker_groups = traffic_g
+          .selectAll("g")
+          .data(lib.fitrep_traffic_legend_sizes)
+          .enter()
+          .append("g")
+          .attr(
+            "transform",
+            (d, i) =>
+              `translate(0, ${
+                i *
+                1.2 *
+                Math.sqrt(
+                  (4 *
+                    lib.fitrep_marker_size(
+                      Math.max(...lib.fitrep_traffic_legend_sizes)
+                    )) /
+                    Math.PI
+                )
+              })`
+          );
+        /// Outlines
+        fitrep_traffic_legend_marker_groups
+          .append("path")
+          .attr("d", function (d) {
+            var symbol = d3.symbol(d3.symbolCircle);
+            var size = lib.fitrep_marker_size(d);
+            return symbol.size(size)();
+          })
+          .attr("fill", (d) => lib.fitrep_color_scale("EP"))
+          .attr("opacity", lib.fitrep_marker_opacity);
+        /// Marker outlines
+        fitrep_traffic_legend_marker_groups
+          .append("path")
+          .attr("d", function (d) {
+            var symbol = d3.symbol(d3.symbolCircle);
+            var size = lib.fitrep_marker_size(d);
+            return symbol.size(size)();
+          })
+          .attr("fill", "none")
+          .attr("stroke", "black")
+          .attr("stroke-width", lib.fitrep_marker_stroke_width)
+          .attr("opacity", lib.fitrep_marker_opacity);
+        /// Labels
+        fitrep_traffic_legend_marker_groups
+          .append("text")
+          .attr(
+            "transform",
+            `translate(${
+              1.1 *
+              Math.sqrt(
+                (4 * lib.fitrep_marker_size(lib.fitrep_legend_marker_size)) /
+                  Math.PI
+              )
+            })`
+          )
+          .text((d) => d);
+      }
     }
 
     {
@@ -381,7 +472,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("fill", "none")
         .attr("stroke", (d) => lib.fitrep_color_scale(d.prom_rec.toUpperCase()))
         .attr("stroke", (d) => "black")
-        .attr("stroke-width", 2)
+        .attr("stroke-width", lib.fitrep_marker_stroke_width)
         .attr("opacity", 1)
         .on("mouseover", function (event, d) {
           tooltip.transition().duration(400).style("opacity", 0.9);
