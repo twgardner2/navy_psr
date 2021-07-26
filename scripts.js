@@ -268,261 +268,276 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // FITREPs
 
-    /// Add legend
-    {
-      // 2 groups in the legend canvas, 1 for the promotion recommendation legend, 1 for the traffic size legend
-      const prom_rec_g = legend_canvas
-        .append("g")
-        .attr("transform", `translate(10,${8 * lib.bar_height})`);
-      const traffic_g = legend_canvas
-        .append("g")
-        .attr("transform", `translate(100,${8 * lib.bar_height})`);
+    // #region Add FITREP plot legend
+    // 2 groups in the legend canvas, 1 for the promotion recommendation legend, 1 for the traffic size legend
+    const prom_rec_g = legend_canvas
+      .append("g")
+      .attr("transform", `translate(10,${8 * lib.bar_height})`);
+    const traffic_g = legend_canvas
+      .append("g")
+      .attr("transform", `translate(100,${8 * lib.bar_height})`);
 
-      // Draw the promotion recommendation legend
-      {
-        /// Markers
-        const prom_rec_legend_marker_groups = prom_rec_g
-          .selectAll("g")
-          .data(lib.prom_rec_categories)
-          .enter()
-          .append("g")
-          .attr(
-            "transform",
-            (d, i) =>
-              `translate(0, ${
-                i *
-                1.2 *
-                Math.sqrt(
-                  (4 * lib.fitrep_marker_size(lib.fitrep_legend_marker_size)) /
-                    Math.PI
-                )
-              })`
-          );
-        /// Outlines
-        prom_rec_legend_marker_groups
-          .append("path")
-          .attr("d", function (d) {
-            var symbol = lib.fitrep_shape_scale(d.toUpperCase());
-            var size = lib.fitrep_marker_size(lib.fitrep_legend_marker_size);
-            return symbol.size(size)();
-          })
-          .attr("fill", (d) => lib.fitrep_color_scale(d.toUpperCase()))
-          .attr("opacity", lib.fitrep_marker_opacity);
-        /// Marker outlines
-        prom_rec_legend_marker_groups
-          .append("path")
-          .attr("d", function (d) {
-            var symbol = lib.fitrep_shape_scale(d.toUpperCase());
-            var size = lib.fitrep_marker_size(lib.fitrep_legend_marker_size);
-            return symbol.size(size)();
-          })
-          .attr("fill", "none")
-          .attr("stroke", "black")
-          .attr("stroke-width", lib.fitrep_marker_stroke_width);
-        /// Labels
-        prom_rec_legend_marker_groups
-          .append("text")
-          .attr(
-            "transform",
-            `translate(${
-              1.1 *
-              Math.sqrt(
-                (4 * lib.fitrep_marker_size(lib.fitrep_legend_marker_size)) /
-                  Math.PI
-              )
-            })`
+    // Draw the promotion recommendation legend
+    /// Markers
+    const prom_rec_legend_marker_groups = prom_rec_g
+      .selectAll("g")
+      .data(lib.prom_rec_categories)
+      .enter()
+      .append("g")
+      .attr(
+        "transform",
+        (d, i) =>
+          `translate(0, ${
+            i *
+            1.2 *
+            Math.sqrt(
+              (4 * lib.fitrep_marker_size(lib.fitrep_legend_marker_size)) /
+                Math.PI
+            )
+          })`
+      );
+    /// Outlines
+    prom_rec_legend_marker_groups
+      .append("path")
+      .attr("d", function (d) {
+        var symbol = lib.fitrep_shape_scale(d.toUpperCase());
+        var size = lib.fitrep_marker_size(lib.fitrep_legend_marker_size);
+        return symbol.size(size)();
+      })
+      .attr("fill", (d) => lib.fitrep_color_scale(d.toUpperCase()))
+      .attr("opacity", lib.fitrep_marker_opacity);
+    /// Marker outlines
+    prom_rec_legend_marker_groups
+      .append("path")
+      .attr("d", function (d) {
+        var symbol = lib.fitrep_shape_scale(d.toUpperCase());
+        var size = lib.fitrep_marker_size(lib.fitrep_legend_marker_size);
+        return symbol.size(size)();
+      })
+      .attr("fill", "none")
+      .attr("stroke", "black")
+      .attr("stroke-width", lib.fitrep_marker_stroke_width);
+    /// Labels
+    prom_rec_legend_marker_groups
+      .append("text")
+      .attr(
+        "transform",
+        `translate(${
+          1.1 *
+          Math.sqrt(
+            (4 * lib.fitrep_marker_size(lib.fitrep_legend_marker_size)) /
+              Math.PI
           )
-          .text((d) => d);
-      }
-      // Draw the "traffic" legend
-      {
-        /// Markers
-        const fitrep_traffic_legend_marker_groups = traffic_g
-          .selectAll("g")
-          .data(lib.fitrep_traffic_legend_sizes)
-          .enter()
-          .append("g")
-          .attr(
-            "transform",
-            (d, i) =>
-              `translate(0, ${
-                i *
-                1.2 *
-                Math.sqrt(
-                  (4 *
-                    lib.fitrep_marker_size(
-                      Math.max(...lib.fitrep_traffic_legend_sizes)
-                    )) /
-                    Math.PI
-                )
-              })`
-          );
-        /// Markers
-        fitrep_traffic_legend_marker_groups
-          .append("path")
-          .attr("d", function (d) {
-            var symbol = d3.symbol(d3.symbolCircle);
-            var size = lib.fitrep_marker_size(d);
-            return symbol.size(size)();
-          })
-          .attr("fill", (d) => lib.fitrep_color_scale("EP"))
-          .attr("opacity", lib.fitrep_marker_opacity);
-        /// Marker outlines
-        fitrep_traffic_legend_marker_groups
-          .append("path")
-          .attr("d", function (d) {
-            var symbol = d3.symbol(d3.symbolCircle);
-            var size = lib.fitrep_marker_size(d);
-            return symbol.size(size)();
-          })
-          .attr("fill", "none")
-          .attr("stroke", "black")
-          .attr("stroke-width", lib.fitrep_marker_stroke_width);
-        /// Labels
-        fitrep_traffic_legend_marker_groups
-          .append("text")
-          .attr(
-            "transform",
-            `translate(${
-              1.1 *
-              Math.sqrt(
-                (4 * lib.fitrep_marker_size(lib.fitrep_legend_marker_size)) /
-                  Math.PI
-              )
-            })`
+        })`
+      )
+      .text((d) => d);
+
+    // Draw the "traffic" legend
+    /// Markers
+    const fitrep_traffic_legend_marker_groups = traffic_g
+      .selectAll("g")
+      .data(lib.fitrep_traffic_legend_sizes)
+      .enter()
+      .append("g")
+      .attr(
+        "transform",
+        (d, i) =>
+          `translate(0, ${
+            i *
+            1.2 *
+            Math.sqrt(
+              (4 *
+                lib.fitrep_marker_size(
+                  Math.max(...lib.fitrep_traffic_legend_sizes)
+                )) /
+                Math.PI
+            )
+          })`
+      );
+    /// Markers
+    fitrep_traffic_legend_marker_groups
+      .append("path")
+      .attr("d", function (d) {
+        var symbol = d3.symbol(d3.symbolCircle);
+        var size = lib.fitrep_marker_size(d);
+        return symbol.size(size)();
+      })
+      .attr("fill", (d) => lib.fitrep_color_scale("EP"))
+      .attr("opacity", lib.fitrep_marker_opacity);
+    /// Marker outlines
+    fitrep_traffic_legend_marker_groups
+      .append("path")
+      .attr("d", function (d) {
+        var symbol = d3.symbol(d3.symbolCircle);
+        var size = lib.fitrep_marker_size(d);
+        return symbol.size(size)();
+      })
+      .attr("fill", "none")
+      .attr("stroke", "black")
+      .attr("stroke-width", lib.fitrep_marker_stroke_width);
+    /// Labels
+    fitrep_traffic_legend_marker_groups
+      .append("text")
+      .attr(
+        "transform",
+        `translate(${
+          1.1 *
+          Math.sqrt(
+            (4 * lib.fitrep_marker_size(lib.fitrep_legend_marker_size)) /
+              Math.PI
           )
-          .text((d) => d);
-      }
-    }
+        })`
+      )
+      .text((d) => d);
 
-    {
-      // Create tooltip
-      var tooltip = d3
-        .select("body")
-        .append("div")
-        .attr("class", "tooltip")
-        .style("border-style", "solid")
-        .style("opacity", 0)
-        .style("pointer-events", "none");
-      // Draw time axis
-      fitreps_g
-        .append("g")
-        .attr("class", "x axis")
-        .attr(
-          "transform",
-          `translate(0, ${lib.fitrep_height - lib.rsca_scale(0)})`
-        )
-        .call(d3.axisBottom(time_scale));
+    // #endregion
 
-      // Draw 'Trait Avg - RSCA' axis
-      fitreps_g
-        .append("g")
-        .attr("class", "y axis")
-        .attr("transform", `translate(${time_scale(min_start_date)}, 0)`)
-        .call(d3.axisLeft(lib.rsca_scale));
+    // #region Draw FITREPs plot
+    // Create tooltip
+    var tooltip = d3
+      .select("body")
+      .append("div")
+      .attr("class", "tooltip")
+      .style("border-style", "solid")
+      .style("opacity", 0)
+      .style("pointer-events", "none");
+    // Draw time axis
+    fitreps_g
+      .append("g")
+      .attr("class", "x axis")
+      .attr(
+        "transform",
+        `translate(0, ${lib.fitrep_height - lib.rsca_scale(0)})`
+      )
+      .call(d3.axisBottom(time_scale));
 
-      fitreps_g.on("mouseenter", function () {
-        clear_fitrep_highlight(fitrep_highlight);
+    // Draw 'Trait Avg - RSCA' axis
+    fitreps_g
+      .append("g")
+      .attr("class", "y axis")
+      .attr("transform", `translate(${time_scale(min_start_date)}, 0)`)
+      .call(d3.axisLeft(lib.rsca_scale));
+
+    fitreps_g.on("mouseenter", function () {
+      clear_fitrep_highlight(fitrep_highlight);
+    });
+
+    // Append FITREP marker groups
+    const fitrep_marker_gs = fitreps_g
+      .selectAll("g.fitrep")
+      .data(data)
+      .enter()
+      .append("g")
+      .attr("class", "fitrep dot")
+      .attr("transform", function (d) {
+        return `translate(${time_scale(
+          d.end_date
+        )}, ${lib.rsca_scale(d.trait_avg - d.rsca)})`;
+      });
+    // Draw FITREP markers
+    fitrep_marker_gs
+      .append("path")
+      .attr("d", function (d) {
+        var symbol = lib.fitrep_shape_scale(d.prom_rec.toUpperCase());
+        var size = lib.fitrep_marker_size(
+          d.n_sp + d.n_pr + d.n_p + d.n_mp + d.n_ep
+        );
+        return symbol.size(size)();
+      })
+      .attr("fill", (d) => lib.fitrep_color_scale(d.prom_rec.toUpperCase()))
+      .attr("opacity", lib.fitrep_marker_opacity)
+      .on("mouseover", function (event, d) {
+        tooltip.transition().duration(400).style("opacity", 0.9);
+        tooltip
+          .html(lib.fitrep_tooltip(d))
+          .style("left", event.pageX + "px")
+          .style("top", event.pageY - 28 + "px");
+      })
+      .on("mouseout", function (d) {
+        tooltip.transition().duration(400).style("opacity", 0);
+      });
+    // Draw FITREP marker outlines
+    fitrep_marker_gs
+      .append("path")
+      .attr("d", function (d) {
+        var symbol = lib.fitrep_shape_scale(d.prom_rec.toUpperCase());
+        var size = lib.fitrep_marker_size(
+          d.n_sp + d.n_pr + d.n_p + d.n_mp + d.n_ep
+        );
+        return symbol.size(size)();
+      })
+      .attr("fill", "none")
+      .attr("stroke", (d) => lib.fitrep_color_scale(d.prom_rec.toUpperCase()))
+      .attr("stroke", (d) => "black")
+      .attr("stroke-width", lib.fitrep_marker_stroke_width)
+      .attr("opacity", 1)
+      .on("mouseover", function (event, d) {
+        tooltip.transition().duration(400).style("opacity", 0.9);
+        tooltip
+          .html(lib.fitrep_tooltip(d))
+          .style("left", event.pageX + "px")
+          .style("top", event.pageY - 28 + "px");
+      })
+      .on("mouseout", function (d) {
+        tooltip.transition().duration(400).style("opacity", 0);
       });
 
-      // Append FITREP marker groups
-      const fitrep_marker_gs = fitreps_g
-        .selectAll("g.fitrep")
-        .data(data)
-        .enter()
-        .append("g")
-        .attr("class", "fitrep dot")
-        .attr("transform", function (d) {
-          return `translate(${time_scale(
-            d.end_date
-          )}, ${lib.rsca_scale(d.trait_avg - d.rsca)})`;
-        });
-      // Draw FITREP markers
-      fitrep_marker_gs
-        .append("path")
-        .attr("d", function (d) {
-          var symbol = lib.fitrep_shape_scale(d.prom_rec.toUpperCase());
-          var size = lib.fitrep_marker_size(
-            d.n_sp + d.n_pr + d.n_p + d.n_mp + d.n_ep
-          );
-          return symbol.size(size)();
-        })
-        .attr("fill", (d) => lib.fitrep_color_scale(d.prom_rec.toUpperCase()))
-        .attr("opacity", lib.fitrep_marker_opacity)
-        .on("mouseover", function (event, d) {
-          tooltip.transition().duration(400).style("opacity", 0.9);
-          tooltip
-            .html(lib.fitrep_tooltip(d))
-            .style("left", event.pageX + "px")
-            .style("top", event.pageY - 28 + "px");
-        })
-        .on("mouseout", function (d) {
-          tooltip.transition().duration(400).style("opacity", 0);
-        });
-      // Draw FITREP marker outlines
-      fitrep_marker_gs
-        .append("path")
-        .attr("d", function (d) {
-          var symbol = lib.fitrep_shape_scale(d.prom_rec.toUpperCase());
-          var size = lib.fitrep_marker_size(
-            d.n_sp + d.n_pr + d.n_p + d.n_mp + d.n_ep
-          );
-          return symbol.size(size)();
-        })
-        .attr("fill", "none")
-        .attr("stroke", (d) => lib.fitrep_color_scale(d.prom_rec.toUpperCase()))
-        .attr("stroke", (d) => "black")
-        .attr("stroke-width", lib.fitrep_marker_stroke_width)
-        .attr("opacity", 1)
-        .on("mouseover", function (event, d) {
-          tooltip.transition().duration(400).style("opacity", 0.9);
-          tooltip
-            .html(lib.fitrep_tooltip(d))
-            .style("left", event.pageX + "px")
-            .style("top", event.pageY - 28 + "px");
-        })
-        .on("mouseout", function (d) {
-          tooltip.transition().duration(400).style("opacity", 0);
-        });
+    // Draw comparable FITREP lines
+    var comparable_fitreps = lib.fitreps_grouped_by_paygrade_and_repsen(data);
 
-      // Draw comparable FITREP lines
-      var comparable_fitreps = lib.fitreps_grouped_by_paygrade_and_repsen(data);
+    const line = d3
+      .line()
+      .x((d) => time_scale(d.end_date))
+      .y((d) => lib.rsca_scale(d.trait_avg - d.rsca));
 
-      const line = d3
-        .line()
-        .x((d) => time_scale(d.end_date))
-        .y((d) => lib.rsca_scale(d.trait_avg - d.rsca));
+    fitreps_g
+      .selectAll("lines")
+      .data(comparable_fitreps)
+      .enter()
+      .append("g")
+      .attr("class", "fitrep line")
+      .append("path")
+      .attr("d", (d) => line(d))
+      .attr("fill", "none")
+      .attr("stroke", "#000")
+      .attr("stroke-width", "2.5px")
+      .attr("opacity", 0.5)
+      .attr("pointer-events", "none");
 
-      const comparable_fitrep_lines = fitreps_g
-        .selectAll("lines")
-        .data(comparable_fitreps)
-        .enter()
-        .append("g")
-        .attr("class", "fitrep line")
-        .append("path")
-        .attr("d", (d) => line(d))
-        .attr("fill", "none")
-        .attr("stroke", "#000")
-        .attr("stroke-width", "2.5px")
-        .attr("opacity", 0.5);
-    }
+    // Draw dotted line for same Reporting Senior, different Rank
+    var fitreps_same_rs_new_rank = lib.fitreps_same_rs_new_rank(data);
+    console.log(fitreps_same_rs_new_rank);
+
+    fitreps_g
+      .selectAll("lines")
+      .data(fitreps_same_rs_new_rank)
+      .enter()
+      .append("g")
+      .attr("class", "fitrep line")
+      .append("path")
+      .attr("d", (d) => line(d))
+      .attr("fill", "none")
+      .attr("stroke", "#000")
+      .attr("stroke-width", "2.5px")
+      .attr("opacity", 0.5)
+      .attr("stroke-dasharray", "5,3")
+      .attr("pointer-events", "none");
 
     // FITREP Gaps
-    {
-      fitreps_g
-        .append("g")
-        .attr("class", "fitrep gap")
-        .selectAll("rect")
-        .data(fitrep_gaps)
-        .enter()
-        .append("rect")
-        .attr("transform", (d) => `translate(${time_scale(d[0])},0)`)
-        .attr("height", lib.rsca_scale.range()[0])
-        .attr("width", (d) => `${time_scale(d[1]) - time_scale(d[0])}px`)
-        .attr("fill", "red")
-        .attr("opacity", 0.2)
-        .style("pointer-events", "none");
-    }
+    fitreps_g
+      .append("g")
+      .attr("class", "fitrep gap")
+      .selectAll("rect")
+      .data(fitrep_gaps)
+      .enter()
+      .append("rect")
+      .attr("transform", (d) => `translate(${time_scale(d[0])},0)`)
+      .attr("height", lib.rsca_scale.range()[0])
+      .attr("width", (d) => `${time_scale(d[1]) - time_scale(d[0])}px`)
+      .attr("fill", "red")
+      .attr("opacity", 0.2)
+      .style("pointer-events", "none");
+    // #endregion
   };
 
   const populate_table = (data) => {
