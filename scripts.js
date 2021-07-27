@@ -102,49 +102,49 @@ document.addEventListener("DOMContentLoaded", function () {
   rank_bars_label_g
     .append("text")
     .text("Rank")
-    .attr("dominant-baseline", "center");
+    .style("dominant-baseline", "middle");
 
   const command_rg_label_g = legend_canvas
     .append("g")
     .attr("transform", `translate(0, ${lib.margin.gap + 1.5 * lib.bar_height})`)
     .append("text")
     .text("Regular Commands")
-    .attr("dominant-baseline", "center");
+    .style("dominant-baseline", "middle");
 
   const rep_sen_rg_label_g = legend_canvas
     .append("g")
     .attr("transform", `translate(0, ${lib.margin.gap + 2.5 * lib.bar_height})`)
     .append("text")
     .text("Regular Reporting Seniors")
-    .attr("dominant-baseline", "center");
+    .style("dominant-baseline", "middle");
 
   const command_idt_label_g = legend_canvas
     .append("g")
     .attr("transform", `translate(0, ${lib.margin.gap + 3.5 * lib.bar_height})`)
     .append("text")
     .text("IDT Commands")
-    .attr("dominant-baseline", "center");
+    .style("dominant-baseline", "middle");
 
   const rep_sen_idt_label_g = legend_canvas
     .append("g")
     .attr("transform", `translate(0, ${lib.margin.gap + 4.5 * lib.bar_height})`)
     .append("text")
     .text("IDT Reporting Seniors")
-    .attr("dominant-baseline", "center");
+    .style("dominant-baseline", "middle");
 
   const command_at_label_g = legend_canvas
     .append("g")
     .attr("transform", `translate(0, ${lib.margin.gap + 5.5 * lib.bar_height})`)
     .append("text")
     .text("AT Commands")
-    .attr("dominant-baseline", "center");
+    .style("dominant-baseline", "middle");
 
   const rep_sen_at_label_g = legend_canvas
     .append("g")
     .attr("transform", `translate(0, ${lib.margin.gap + 6.5 * lib.bar_height})`)
     .append("text")
     .text("AT Reporting Seniors")
-    .attr("dominant-baseline", "center");
+    .style("dominant-baseline", "middle");
   // Append rerender button
   const table_container = d3
     .select(".grid")
