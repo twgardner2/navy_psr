@@ -104,14 +104,14 @@ document.addEventListener("DOMContentLoaded", function () {
     .text("Rank")
     .attr("dominant-baseline", "center");
 
-  const command_at_label_g = legend_canvas
+  const command_rg_label_g = legend_canvas
     .append("g")
     .attr("transform", `translate(0, ${lib.margin.gap + 1.5 * lib.bar_height})`)
     .append("text")
     .text("Regular Commands")
     .attr("dominant-baseline", "center");
 
-  const rep_sen_at_label_g = legend_canvas
+  const rep_sen_rg_label_g = legend_canvas
     .append("g")
     .attr("transform", `translate(0, ${lib.margin.gap + 2.5 * lib.bar_height})`)
     .append("text")
@@ -132,6 +132,19 @@ document.addEventListener("DOMContentLoaded", function () {
     .text("IDT Reporting Seniors")
     .attr("dominant-baseline", "center");
 
+  const command_at_label_g = legend_canvas
+    .append("g")
+    .attr("transform", `translate(0, ${lib.margin.gap + 5.5 * lib.bar_height})`)
+    .append("text")
+    .text("AT Commands")
+    .attr("dominant-baseline", "center");
+
+  const rep_sen_at_label_g = legend_canvas
+    .append("g")
+    .attr("transform", `translate(0, ${lib.margin.gap + 6.5 * lib.bar_height})`)
+    .append("text")
+    .text("AT Reporting Seniors")
+    .attr("dominant-baseline", "center");
   // Append rerender button
   const table_container = d3
     .select(".grid")
