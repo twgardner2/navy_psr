@@ -90,3 +90,16 @@ div.tooltip table tr {
 .header_items {
   background: #efefef;
 }
+
+text {
+  font-family: "Roboto", serif;
+}
+
+table {
+  font-family: "Roboto", serif;
+}
+
+h1,
+h2 {
+  font-family: "Roboto", serif;
+}
