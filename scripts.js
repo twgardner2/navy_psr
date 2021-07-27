@@ -330,7 +330,8 @@ document.addEventListener("DOMContentLoaded", function () {
           )
         })`
       )
-      .text((d) => d);
+      .text((d) => d)
+      .attr("dominant-baseline", "middle");
 
     // Draw the "traffic" legend
     /// Markers
@@ -362,7 +363,8 @@ document.addEventListener("DOMContentLoaded", function () {
         var size = lib.fitrep_marker_size(d);
         return symbol.size(size)();
       })
-      .attr("fill", (d) => lib.fitrep_color_scale("EP"))
+      // .attr("fill", (d) => lib.fitrep_color_scale("EP"))
+      .attr("fill", (d) => "none")
       .attr("opacity", lib.fitrep_marker_opacity);
     /// Marker outlines
     fitrep_traffic_legend_marker_groups
@@ -388,7 +390,8 @@ document.addEventListener("DOMContentLoaded", function () {
           )
         })`
       )
-      .text((d) => d);
+      .text((d) => d)
+      .attr("dominant-baseline", "middle");
 
     // #endregion
 

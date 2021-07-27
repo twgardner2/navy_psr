@@ -86,3 +86,7 @@ div.tooltip table tr {
 #fitreps_legend {
   display: flex;
 }
+
+.header_items {
+  background: #efefef;
+}
