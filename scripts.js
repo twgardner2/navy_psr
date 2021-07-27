@@ -324,7 +324,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("transform", `translate(100,${8 * lib.bar_height})`);
 
     // Draw the promotion recommendation legend
-    /// Markers
+    /// Groups
     const prom_rec_legend_marker_groups = prom_rec_g
       .selectAll("g")
       .data(lib.prom_rec_categories)
@@ -342,7 +342,7 @@ document.addEventListener("DOMContentLoaded", function () {
             )
           })`
       );
-    /// Outlines
+    /// Markers
     prom_rec_legend_marker_groups
       .append("path")
       .attr("d", function (d) {
@@ -377,10 +377,10 @@ document.addEventListener("DOMContentLoaded", function () {
         })`
       )
       .text((d) => d)
-      .attr("dominant-baseline", "middle");
+      .attr("dominant-baseline", "central");
 
     // Draw the "traffic" legend
-    /// Markers
+    /// Groups
     const fitrep_traffic_legend_marker_groups = traffic_g
       .selectAll("g")
       .data(lib.fitrep_traffic_legend_sizes)
@@ -437,7 +437,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })`
       )
       .text((d) => d)
-      .attr("dominant-baseline", "middle");
+      .attr("dominant-baseline", "central");
 
     // #endregion
 
