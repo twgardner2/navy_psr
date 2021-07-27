@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const grid = d3.select("body").select(".grid");
 
   // Fitrep SVG canvas and main container groups
+  // #region Make page sections
   const svg = grid
     .append("svg")
     .attr("id", "canvas")
@@ -23,39 +24,55 @@ document.addEventListener("DOMContentLoaded", function () {
     .attr("id", "rank_g")
     .attr("transform", `translate(${lib.y_axis_width}, ${lib.margin.gap})`);
 
-  const command_g = container_g
+  // Regular (Active Duty) Commands
+  const command_rg_g = container_g
     .append("g")
-    .attr("id", "command_g")
+    .attr("id", "command_rg_g")
     .attr("class", "bar_container")
     .attr(
       "transform",
       `translate(${lib.y_axis_width}, ${lib.bar_height + lib.margin.gap})`
     );
-  const rep_sen_g = container_g
+  // Regular (Active Duty) Reporting Seniors
+  const rep_sen_rg_g = container_g
     .append("g")
-    .attr("id", "rep_sen_g ")
+    .attr("id", "rep_sen_rg_g ")
     .attr(
       "transform",
       `translate(${lib.y_axis_width}, ${2 * lib.bar_height + lib.margin.gap})`
     );
-  const command_cc_g = container_g
+  // IDT (SELRES) Commands
+  const command_idt_g = container_g
     .append("g")
-    .attr("id", "command_cc_g")
+    .attr("id", "command_idt_g")
+    .attr("class", "bar_container")
     .attr(
       "transform",
-      `translate(${lib.y_axis_width}, ${
-        3 * lib.bar_height + 3 * lib.margin.gap
-      })`
+      `translate(${lib.y_axis_width}, ${3 * lib.bar_height + lib.margin.gap})`
     );
-
-  const rep_sen_cc_g = container_g
+  // IDT (SELRES) Reporting Seniors
+  const rep_sen_idt_g = container_g
     .append("g")
-    .attr("id", "rep_sen_cc_g ")
+    .attr("id", "rep_sen_idt_g ")
     .attr(
       "transform",
-      `translate(${lib.y_axis_width}, ${
-        4 * lib.bar_height + 3 * lib.margin.gap
-      })`
+      `translate(${lib.y_axis_width}, ${4 * lib.bar_height + lib.margin.gap})`
+    );
+  // AT (Mobilization/ADSW/ADT) Commands
+  const command_at_g = container_g
+    .append("g")
+    .attr("id", "command_at_g")
+    .attr(
+      "transform",
+      `translate(${lib.y_axis_width}, ${5 * lib.bar_height + lib.margin.gap})`
+    );
+  // AT (Mobilization/ADSW/ADT) Reporting Seniors
+  const rep_sen_at_g = container_g
+    .append("g")
+    .attr("id", "rep_sen_at_g ")
+    .attr(
+      "transform",
+      `translate(${lib.y_axis_width}, ${6 * lib.bar_height + lib.margin.gap})`
     );
 
   const fitreps_g = container_g
@@ -96,6 +113,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Append FITREP table
   const table = table_container.append("table").attr("id", "fitrep_table");
+
+  // #endregion
 
   // d3.selectAll('#rank, #command, #rep_sen')
   //     .append('defs')
@@ -221,48 +240,75 @@ document.addEventListener("DOMContentLoaded", function () {
     var dates_of_rank = lib.get_dates_for_values_of_column(data, "paygrade");
     make_bars(dates_of_rank, rank_g, lib.rank_bar_color);
 
-    // Regular Command Bars
+    // Regular (Active Duty) Command Bars
     var command_dates = lib.get_dates_for_values_of_column(
       data,
       "station",
-      new RegExp("^(?!.*(AT|CC)).*$", "g"),
+      new RegExp("^RG$", "g"),
       "rpt_type"
     );
-    make_bars(command_dates, command_g, lib.regular_command_bar_color, "white");
-    // Regular Reporting Senior Bars
-    var reporting_senior_dates = lib.get_dates_for_values_of_column(
-      data,
-      "rs_name",
-      new RegExp("^(?!.*(AT|CC)).*$", "g")
-    );
     make_bars(
-      reporting_senior_dates,
-      rep_sen_g,
+      command_dates,
+      command_rg_g,
       lib.regular_command_bar_color,
       "white"
     );
-    // AT/CC Command Bars
-    var non_regular_command_dates = lib.get_dates_for_values_of_column(
+    // Regular (Active Duty) Reporting Senior Bars
+    var reporting_senior_dates = lib.get_dates_for_values_of_column(
+      data,
+      "rs_name",
+      // new RegExp("^(?!.*(AT|CC)).*$", "g")
+      new RegExp("^RG$", "g")
+    );
+    make_bars(
+      reporting_senior_dates,
+      rep_sen_rg_g,
+      lib.regular_command_bar_color,
+      "white"
+    );
+    // IDT (SELRES) Command Bars
+    var idt_command_dates = lib.get_dates_for_values_of_column(
+      data,
+      "station",
+      new RegExp("^IDT", "g"),
+      "rpt_type"
+    );
+    make_bars(
+      idt_command_dates,
+      command_idt_g,
+      lib.idt_command_bar_color,
+      "white"
+    );
+    // IDT (SELRES) Reporting Senior Bars
+    var idt_reporting_senior_dates = lib.get_dates_for_values_of_column(
+      data,
+      "rs_name",
+      // new RegExp("^(?!.*(AT|CC)).*$", "g")
+      new RegExp("^IDT", "g")
+    );
+    make_bars(
+      idt_reporting_senior_dates,
+      rep_sen_idt_g,
+      lib.idt_command_bar_color,
+      "white"
+    );
+    // AT (Mobilization/ADSW/ADT) Command Bars
+    var at_command_dates = lib.get_dates_for_values_of_column(
       data,
       "station",
       new RegExp("(AT|CC)", "g"),
       "rpt_type"
     );
-    make_bars(
-      non_regular_command_dates,
-      command_cc_g,
-      lib.at_cc_command_bar_color
+    make_bars(at_command_dates, command_at_g, lib.at_cc_command_bar_color);
+    // AT (Mobilization/ADSW/ADT) Reporting Senior Bars
+    var at_reporting_senior_dates = lib.get_dates_for_values_of_column(
+      data,
+      "rs_name",
+      new RegExp("(AT|CC)", "g")
     );
-    // AT/CC Reporting Senior Bars
-    var concurrent_command_reporting_senior_dates =
-      lib.get_dates_for_values_of_column(
-        data,
-        "rs_name",
-        new RegExp("(AT|CC)", "g")
-      );
     make_bars(
-      concurrent_command_reporting_senior_dates,
-      rep_sen_cc_g,
+      at_reporting_senior_dates,
+      rep_sen_at_g,
       lib.at_cc_command_bar_color
     );
 
@@ -608,14 +654,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const clear_psr_viz = () => {
     d3.select(canvas).select("#rank_g").selectAll("g").remove();
 
-    d3.select(canvas).select("#command_g").selectAll("g").remove();
+    d3.select(canvas).select("#command_rg_g").selectAll("g").remove();
 
-    d3.select(canvas).select("#rep_sen_g").selectAll("g").remove();
+    d3.select(canvas).select("#rep_sen_rg_g").selectAll("g").remove();
 
-    d3.select(canvas).select("#command_cc_g").selectAll("g").remove();
+    d3.select(canvas).select("#command_at_g").selectAll("g").remove();
 
     d3.select(canvas)
-      // .select('#command_cc_g')
+      // .select('#command_at_g')
       .selectAll("g.fitrep")
       .remove();
 
