@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .append("g")
     .attr("id", "container_g");
 
+  // Rank bar group
   const rank_g = container_g
     .append("g")
     .attr("id", "rank_g")
@@ -92,6 +93,45 @@ document.addEventListener("DOMContentLoaded", function () {
     .append("svg")
     .attr("width", "100%");
 
+  const rank_bars_label_g = legend_canvas
+    .append("g")
+    .attr(
+      "transform",
+      `translate(0, ${lib.margin.gap + 0.5 * lib.bar_height})`
+    );
+  rank_bars_label_g
+    .append("text")
+    .text("Rank")
+    .attr("dominant-baseline", "center");
+
+  const command_at_label_g = legend_canvas
+    .append("g")
+    .attr("transform", `translate(0, ${lib.margin.gap + 1.5 * lib.bar_height})`)
+    .append("text")
+    .text("Regular Commands")
+    .attr("dominant-baseline", "center");
+
+  const rep_sen_at_label_g = legend_canvas
+    .append("g")
+    .attr("transform", `translate(0, ${lib.margin.gap + 2.5 * lib.bar_height})`)
+    .append("text")
+    .text("Regular Reporting Seniors")
+    .attr("dominant-baseline", "center");
+
+  const command_idt_label_g = legend_canvas
+    .append("g")
+    .attr("transform", `translate(0, ${lib.margin.gap + 3.5 * lib.bar_height})`)
+    .append("text")
+    .text("IDT Commands")
+    .attr("dominant-baseline", "center");
+
+  const rep_sen_idt_label_g = legend_canvas
+    .append("g")
+    .attr("transform", `translate(0, ${lib.margin.gap + 4.5 * lib.bar_height})`)
+    .append("text")
+    .text("IDT Reporting Seniors")
+    .attr("dominant-baseline", "center");
+
   // Append rerender button
   const table_container = d3
     .select(".grid")
@@ -155,8 +195,6 @@ document.addEventListener("DOMContentLoaded", function () {
       element
         .attr("transform", `translate(${time_scale(d.start)}, 0)`)
         .attr("width", `${time_scale(d.end) - time_scale(d.start)}`)
-        // .attr('transform', `translate(${time_scale(lib.add_days_to_date(d.start, 100))}, 0)`)
-        // .attr('width', `${time_scale(d.end)-time_scale(lib.add_days_to_date(d.start, 100))}`)
         .attr(
           "height",
           `${lib.rsca_scale.range()[0] - lib.rsca_scale.range()[1]}`
