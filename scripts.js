@@ -6,6 +6,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // Create reference to <div> defining the grid
   const grid = d3.select("body").select(".grid");
 
+  grid
+    .append("div")
+    .attr("id", "filters")
+    .append("text")
+    .text("put filters here");
+
   // Fitrep SVG canvas and main container groups
   // #region Make page sections
   const svg = grid
