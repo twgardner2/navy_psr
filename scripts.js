@@ -220,15 +220,14 @@ document.addEventListener("DOMContentLoaded", function () {
       element_to_clear.style("opacity", 0);
     }
 
-    // FITREP Highlight Hover Rect
-    {
-      var fitrep_highlight = fitreps_g
-        .append("rect")
-        .attr("width", "50px")
-        .attr("height", "50px")
-        .attr("fill", "blue")
-        .attr("opacity", 0.0);
-    }
+    // #region FITREP Highlight Hover Rect
+    var fitrep_highlight = fitreps_g
+      .append("rect")
+      .attr("width", "50px")
+      .attr("height", "50px")
+      .attr("fill", "blue")
+      .attr("opacity", 0.0);
+    // #endregion
 
     function make_bars(
       data,
