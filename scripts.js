@@ -229,66 +229,9 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("opacity", 0.0);
     // #endregion
 
-    function make_bars(
-      data,
-      parent_g,
-      bar_color = "lightgrey",
-      font_color = "black"
-    ) {
-      // Create <g> for each value
-      var g = parent_g
-        .selectAll("g")
-        .data(data)
-        .enter()
-        .append("g")
-        .attr("transform", (d) => `translate(${time_scale(d.start)},0)`);
-
-      // Draw <rect> for each value
-      var bars = g
-        .append("rect")
-        .attr("height", 0.8 * lib.bar_height)
-        .attr("width", (d) => time_scale(d.end) - time_scale(d.start))
-        .attr("fill", "none")
-        .attr("stroke", "black")
-        .attr("stroke-width", "2px")
-        .attr("fill", bar_color)
-        .attr("rx", "10px")
-        .attr("ry", "10px")
-        .on("mouseover", function (event, d) {
-          update_highlight_element(event, d, fitrep_highlight);
-        })
-        .on("mouseleave", function () {
-          clear_fitrep_highlight(fitrep_highlight);
-        });
-
-      // Create <text> for each value
-      g.append("text")
-        .attr(
-          "transform",
-          (d) =>
-            `translate(${0.5 * (time_scale(d.end) - time_scale(d.start))},${
-              0.5 * lib.bar_height
-            })`
-        )
-        .style("text-anchor", "middle")
-        .style("pointer-events", "none")
-        .style("fill", font_color)
-        .text((d) => d.value)
-        .style("font-size", function (d) {
-          var rect_height = this.parentNode.children[0].getBBox().height;
-          var rect_width = this.parentNode.children[0].getBBox().width;
-          var num_chars = 0.65 * this.getNumberOfChars();
-
-          var return_val_in_px = Math.min(
-            0.65 * rect_height,
-            rect_width / num_chars
-          );
-          return `${return_val_in_px}px`;
-        });
-    }
     // Rank Bars
     var dates_of_rank = lib.get_dates_for_values_of_column(data, "paygrade");
-    make_bars(dates_of_rank, rank_g, lib.rank_bar_color);
+    lib.make_bars(dates_of_rank, rank_g, time_scale, lib.rank_bar_color);
 
     // Regular (Active Duty) Command Bars
     var command_dates = lib.get_dates_for_values_of_column(
@@ -297,9 +240,10 @@ document.addEventListener("DOMContentLoaded", function () {
       new RegExp("^RG$", "g"),
       "rpt_type"
     );
-    make_bars(
+    lib.make_bars(
       command_dates,
       command_rg_g,
+      time_scale,
       lib.regular_command_bar_color,
       "white"
     );
@@ -310,9 +254,10 @@ document.addEventListener("DOMContentLoaded", function () {
       // new RegExp("^(?!.*(AT|CC)).*$", "g")
       new RegExp("^RG$", "g")
     );
-    make_bars(
+    lib.make_bars(
       reporting_senior_dates,
       rep_sen_rg_g,
+      time_scale,
       lib.regular_command_bar_color,
       "white"
     );
@@ -323,9 +268,10 @@ document.addEventListener("DOMContentLoaded", function () {
       new RegExp("^IDT", "g"),
       "rpt_type"
     );
-    make_bars(
+    lib.make_bars(
       idt_command_dates,
       command_idt_g,
+      time_scale,
       lib.idt_command_bar_color,
       "white"
     );
@@ -336,9 +282,10 @@ document.addEventListener("DOMContentLoaded", function () {
       // new RegExp("^(?!.*(AT|CC)).*$", "g")
       new RegExp("^IDT", "g")
     );
-    make_bars(
+    lib.make_bars(
       idt_reporting_senior_dates,
       rep_sen_idt_g,
+      time_scale,
       lib.idt_command_bar_color,
       "white"
     );
@@ -349,16 +296,22 @@ document.addEventListener("DOMContentLoaded", function () {
       new RegExp("(AT|CC)", "g"),
       "rpt_type"
     );
-    make_bars(at_command_dates, command_at_g, lib.at_cc_command_bar_color);
+    lib.make_bars(
+      at_command_dates,
+      command_at_g,
+      time_scale,
+      lib.at_cc_command_bar_color
+    );
     // AT (Mobilization/ADSW/ADT) Reporting Senior Bars
     var at_reporting_senior_dates = lib.get_dates_for_values_of_column(
       data,
       "rs_name",
       new RegExp("(AT|CC)", "g")
     );
-    make_bars(
+    lib.make_bars(
       at_reporting_senior_dates,
       rep_sen_at_g,
+      time_scale,
       lib.at_cc_command_bar_color
     );
 
