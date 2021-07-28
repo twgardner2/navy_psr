@@ -203,22 +203,22 @@ document.addEventListener("DOMContentLoaded", function () {
           lib.margin.left -
           lib.margin.right,
       ]);
-    // FITREP Highlight Interaction
-    function update_highlight_element(e, d, element) {
-      element
-        .attr("transform", `translate(${time_scale(d.start)}, 0)`)
-        .attr("width", `${time_scale(d.end) - time_scale(d.start)}`)
-        .attr(
-          "height",
-          `${lib.rsca_scale.range()[0] - lib.rsca_scale.range()[1]}`
-        )
-        .transition()
-        .duration(200)
-        .style("opacity", 0.2);
-    }
-    function clear_fitrep_highlight(element_to_clear) {
-      element_to_clear.style("opacity", 0);
-    }
+    // // FITREP Highlight Interaction
+    // function update_highlight_element(e, d, element) {
+    //   element
+    //     .attr("transform", `translate(${time_scale(d.start)}, 0)`)
+    //     .attr("width", `${time_scale(d.end) - time_scale(d.start)}`)
+    //     .attr(
+    //       "height",
+    //       `${lib.rsca_scale.range()[0] - lib.rsca_scale.range()[1]}`
+    //     )
+    //     .transition()
+    //     .duration(200)
+    //     .style("opacity", 0.2);
+    // }
+    // function clear_fitrep_highlight(element_to_clear) {
+    //   element_to_clear.style("opacity", 0);
+    // }
 
     // #region FITREP Highlight Hover Rect
     var fitrep_highlight = fitreps_g
@@ -231,7 +231,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Rank Bars
     var dates_of_rank = lib.get_dates_for_values_of_column(data, "paygrade");
-    lib.make_bars(dates_of_rank, rank_g, time_scale, lib.rank_bar_color);
+    lib.make_bars(
+      dates_of_rank,
+      rank_g,
+      time_scale,
+      fitrep_highlight,
+      lib.rank_bar_color
+    );
 
     // Regular (Active Duty) Command Bars
     var command_dates = lib.get_dates_for_values_of_column(
@@ -244,6 +250,7 @@ document.addEventListener("DOMContentLoaded", function () {
       command_dates,
       command_rg_g,
       time_scale,
+      fitrep_highlight,
       lib.regular_command_bar_color,
       "white"
     );
@@ -258,6 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {
       reporting_senior_dates,
       rep_sen_rg_g,
       time_scale,
+      fitrep_highlight,
       lib.regular_command_bar_color,
       "white"
     );
@@ -272,6 +280,7 @@ document.addEventListener("DOMContentLoaded", function () {
       idt_command_dates,
       command_idt_g,
       time_scale,
+      fitrep_highlight,
       lib.idt_command_bar_color,
       "white"
     );
@@ -286,6 +295,7 @@ document.addEventListener("DOMContentLoaded", function () {
       idt_reporting_senior_dates,
       rep_sen_idt_g,
       time_scale,
+      fitrep_highlight,
       lib.idt_command_bar_color,
       "white"
     );
@@ -300,6 +310,7 @@ document.addEventListener("DOMContentLoaded", function () {
       at_command_dates,
       command_at_g,
       time_scale,
+      fitrep_highlight,
       lib.at_cc_command_bar_color
     );
     // AT (Mobilization/ADSW/ADT) Reporting Senior Bars
@@ -312,6 +323,7 @@ document.addEventListener("DOMContentLoaded", function () {
       at_reporting_senior_dates,
       rep_sen_at_g,
       time_scale,
+      fitrep_highlight,
       lib.at_cc_command_bar_color
     );
 
