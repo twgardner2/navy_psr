@@ -133,6 +133,7 @@ input[type="range"]::-webkit-slider-thumb {
   /* Makes a rectangular thumb */
   height: 36px;
   width: 16px;
+  border: 2px solid rgba(0, 0, 0, 0.75);
   border-radius: 3px;
 
   /* background-color: var(--navy-dark-blue); */
@@ -143,7 +144,7 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
   appearance: none;
   pointer-events: all;
-  box-shadow: 0 1px 4px 0.5px rgba(0, 0, 0, 0.25);
+  box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0);
   /* box-shadow: 1px 1px 4px 0.5px var(--navy-gold); */
 }
 
