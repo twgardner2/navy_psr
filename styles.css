@@ -1,9 +1,9 @@
-/* #grid {
-  display: grid;
-  grid-template-columns: 1fr 5fr;
-  grid-template-rows: 1fr 1fr 1fr 10fr;
-  grid-gap: 6px;
-} */
+:root {
+  --navy-grey: #c6ccd0;
+  --navy-dark-blue: #003b4f;
+  --navy-light-blue: #088199;
+  --navy-gold: #e8b00f;
+}
 
 .grid {
   display: grid;
@@ -11,11 +11,7 @@
   grid-template-rows: 0.15fr 0.15fr 1fr 5fr;
   gap: 3px 3px;
   grid-auto-flow: row;
-  grid-template-areas:
-    "name name name gh_link gh_link"
-    "filters filters filters filters filters"
-    "legend canvas canvas canvas ."
-    "table table table table table";
+  grid-template-areas: "name name name gh_link gh_link" "filters filters filters filters filters" "legend canvas canvas canvas ." "table table table table table";
 }
 
 #name {
@@ -104,4 +100,71 @@ table {
 h1,
 h2 {
   font-family: "Roboto", serif;
+}
+
+input[type="range"] {
+  box-sizing: border-box;
+  appearance: none;
+  width: 400px;
+  margin: 0;
+  padding: 0 2px;
+  /* Add some L/R padding to ensure box shadow of handle is shown */
+  overflow: hidden;
+  border: 0;
+  border-radius: 1px;
+  outline: none;
+  background: linear-gradient(#e8b00f, #e8b00f) no-repeat center;
+  /* background: linear-gradient(grey, grey) no-repeat center; */
+  /* Use a linear gradient to generate only the 2px height background */
+  background-size: 100% 2px;
+  pointer-events: none;
+}
+
+input[type="range"]:active,
+input[type="range"]:focus {
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  /* Makes a circular thumb */
+  /* height: 28px;
+  width: 28px;
+  border-radius: 28px; */
+  /* Makes a rectangular thumb */
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+
+  /* background-color: var(--navy-dark-blue); */
+  background-color: lightgrey;
+  position: relative;
+  margin: 15px 0;
+  /* Add some margin to ensure box shadow is shown */
+  cursor: pointer;
+  appearance: none;
+  pointer-events: all;
+  box-shadow: 0 1px 4px 0.5px rgba(0, 0, 0, 0.25);
+  /* box-shadow: 1px 1px 4px 0.5px var(--navy-gold); */
+}
+
+.multi-range {
+  position: relative;
+  height: 50px;
+}
+
+.multi-range input[type="range"] {
+  position: absolute;
+}
+
+.multi-range input[type="range"]:nth-child(1)::-webkit-slider-thumb::before {
+  /* background-color: red; */
+  background-color: var(--navy-grey);
+}
+
+.multi-range input[type="range"]:nth-child(2) {
+  background: none;
+}
+
+.multi-range input[type="range"]:nth-child(2)::-webkit-slider-thumb::before {
+  background-color: purple;
 }
