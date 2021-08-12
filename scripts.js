@@ -6,6 +6,48 @@ document.addEventListener("DOMContentLoaded", function () {
   // Create reference to <div> defining the grid
   const grid = d3.select("body").select(".grid");
 
+  const filters_div = grid
+    .append("div")
+    .attrs({ id: "filters" })
+    .style("display", "flex")
+    .style("justify-content", "flex-start")
+    .style("align-items", "center");
+
+  filters_div.append("text").text("lower").attr("id", "lower_value");
+  const multi_range_span = filters_div
+    .append("span")
+    .attr("class", "multi-range")
+    .style("width", "400px");
+  const lower_slider = multi_range_span
+    .append("input")
+    .attrs({ id: "lower", type: "range", min: 0, max: 50, value: 5, step: 1 });
+  const upper_slider = multi_range_span
+    .append("input")
+    .attrs({ id: "upper", type: "range", min: 0, max: 50, value: 45, step: 1 });
+  filters_div.append("text").text("upper").attr("id", "upper_value");
+  const button = d3
+    .select("#name")
+    .append("button")
+    .text("Apply Year Filter")
+    .on("click", function () {
+      // Gather filtering parameters
+      var filters = new Map();
+      var start_year = d3.select("#lower").node().value;
+      var end_year = d3.select("#upper").node().value;
+
+      filters.set("start_year", start_year);
+      filters.set("end_year", end_year);
+
+      var table_data = lib.parse_data_from_table();
+      console.log("clearing psr...");
+      clear_psr_viz(document.getElementById("canvas"));
+      console.log("drawing again");
+      console.log(table_data);
+      console.log(filters);
+      // draw_psr_viz(table_data);
+      draw_psr_viz(table_data, filters);
+    });
+
   // Fitrep SVG canvas and main container groups
   // #region Make page sections
   const svg = grid
@@ -37,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Regular (Active Duty) Reporting Seniors
   const rep_sen_rg_g = container_g
     .append("g")
-    .attr("id", "rep_sen_rg_g ")
+    .attr("id", "rep_sen_rg_g")
     .attr(
       "transform",
       `translate(${lib.y_axis_width}, ${2 * lib.bar_height + lib.margin.gap})`
@@ -54,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // IDT (SELRES) Reporting Seniors
   const rep_sen_idt_g = container_g
     .append("g")
-    .attr("id", "rep_sen_idt_g ")
+    .attr("id", "rep_sen_idt_g")
     .attr(
       "transform",
       `translate(${lib.y_axis_width}, ${4 * lib.bar_height + lib.margin.gap})`
@@ -70,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // AT (Mobilization/ADSW/ADT) Reporting Seniors
   const rep_sen_at_g = container_g
     .append("g")
-    .attr("id", "rep_sen_at_g ")
+    .attr("id", "rep_sen_at_g")
     .attr(
       "transform",
       `translate(${lib.y_axis_width}, ${6 * lib.bar_height + lib.margin.gap})`
@@ -177,25 +219,95 @@ document.addEventListener("DOMContentLoaded", function () {
   //     .attr('height', '150%')
   //     .append('feDropShadow');
 
-  const draw_psr_viz = (data) => {
-    var fitrep_gaps = lib.fitrep_gaps(data);
-    // console.log('fitrep_gaps');
-    // console.log(fitrep_gaps);
+  const draw_psr_viz = (data, filters = new Map()) => {
+    // Save copy of original data
+    var original_data = data;
 
     // Extract member's name and update H1
     const member_name = data[0].name;
     if (member_name) d3.select("h1").text(`PSR - ${member_name}`);
 
-    const start_dates = data.map((d) => d.start_date);
-    const end_dates = data.map((d) => d.end_date);
+    // Apply filters to data
+    if (filters.has("start_year")) {
+      data = data.filter(
+        (d) => d.start_date.getFullYear() >= filters.get("start_year")
+      );
+    }
+
+    if (filters.has("end_year")) {
+      data = data.filter(
+        (d) => d.end_date.getFullYear() <= filters.get("end_year")
+      );
+    }
+
+    // Extract dates
+    const start_dates = original_data.map((d) => d.start_date);
+    const end_dates = original_data.map((d) => d.end_date);
 
     var min_start_date = new Date(Math.min(...start_dates));
     var max_end_date = new Date(Math.max(...end_dates));
 
+    d3.select("#lower_value").text(
+      filters.get("start_year") || min_start_date.getFullYear()
+    );
+    d3.select("#upper_value").text(
+      filters.get("end_year") || max_end_date.getFullYear()
+    );
+
+    const filtered_start_dates = data.map((d) => d.start_date);
+    const filtered_end_dates = data.map((d) => d.end_date);
+
+    var filtered_min_start_date = new Date(Math.min(...filtered_start_dates));
+    var filtered_max_end_date = new Date(Math.max(...filtered_end_dates));
+
+    // Filter behavior
+    lower_slider.attrs({
+      min: min_start_date.getFullYear(),
+      max: max_end_date.getFullYear(),
+      value: min_start_date.getFullYear(),
+    });
+    upper_slider.attrs({
+      min: min_start_date.getFullYear(),
+      max: max_end_date.getFullYear(),
+      value: max_end_date.getFullYear(),
+    });
+    var lowerSlider = document.querySelector("#lower"),
+      upperSlider = document.querySelector("#upper"),
+      lowerVal = parseInt(lowerSlider.value),
+      upperVal = parseInt(upperSlider.value);
+
+    upperSlider.oninput = function () {
+      lowerVal = parseInt(lowerSlider.value);
+      upperVal = parseInt(upperSlider.value);
+      d3.select("#upper_value").text(upperVal);
+
+      if (upperVal < lowerVal) {
+        lowerSlider.value = upperVal;
+
+        if (lowerVal == lowerSlider.min) {
+          upperSlider.value = 4;
+        }
+      }
+    };
+
+    lowerSlider.oninput = function () {
+      lowerVal = parseInt(lowerSlider.value);
+      d3.select("#lower_value").text(lowerVal);
+      upperVal = parseInt(upperSlider.value);
+
+      if (lowerVal > upperVal) {
+        upperSlider.value = lowerVal;
+
+        if (upperVal == upperSlider.max) {
+          lowerSlider.value = parseInt(upperSlider.max) - 4;
+        }
+      }
+    };
+
     const time_scale = d3
       .scaleTime()
       // .domain([Date.now() - 15*365*24*60*60*1000, Date.now()])
-      .domain([min_start_date, max_end_date])
+      .domain([filtered_min_start_date, filtered_max_end_date])
       .range([
         0,
         lib.canvas_width -
@@ -203,26 +315,11 @@ document.addEventListener("DOMContentLoaded", function () {
           lib.margin.left -
           lib.margin.right,
       ]);
-    // // FITREP Highlight Interaction
-    // function update_highlight_element(e, d, element) {
-    //   element
-    //     .attr("transform", `translate(${time_scale(d.start)}, 0)`)
-    //     .attr("width", `${time_scale(d.end) - time_scale(d.start)}`)
-    //     .attr(
-    //       "height",
-    //       `${lib.rsca_scale.range()[0] - lib.rsca_scale.range()[1]}`
-    //     )
-    //     .transition()
-    //     .duration(200)
-    //     .style("opacity", 0.2);
-    // }
-    // function clear_fitrep_highlight(element_to_clear) {
-    //   element_to_clear.style("opacity", 0);
-    // }
 
     // #region FITREP Highlight Hover Rect
     var fitrep_highlight = fitreps_g
       .append("rect")
+      .attr("id", "fitrep_highlight")
       .attr("width", "50px")
       .attr("height", "50px")
       .attr("fill", "blue")
@@ -231,6 +328,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Rank Bars
     var dates_of_rank = lib.get_dates_for_values_of_column(data, "paygrade");
+    console.log(dates_of_rank);
     lib.make_bars(
       dates_of_rank,
       rank_g,
@@ -258,9 +356,11 @@ document.addEventListener("DOMContentLoaded", function () {
     var reporting_senior_dates = lib.get_dates_for_values_of_column(
       data,
       "rs_name",
-      // new RegExp("^(?!.*(AT|CC)).*$", "g")
-      new RegExp("^RG$", "g")
+      new RegExp("^RG$", "g"),
+      "rpt_type"
     );
+    console.log("reporting_senior_dates");
+    console.log(reporting_senior_dates);
     lib.make_bars(
       reporting_senior_dates,
       rep_sen_rg_g,
@@ -289,7 +389,8 @@ document.addEventListener("DOMContentLoaded", function () {
       data,
       "rs_name",
       // new RegExp("^(?!.*(AT|CC)).*$", "g")
-      new RegExp("^IDT", "g")
+      new RegExp("^IDT", "g"),
+      "rpt_type"
     );
     lib.make_bars(
       idt_reporting_senior_dates,
@@ -479,12 +580,12 @@ document.addEventListener("DOMContentLoaded", function () {
     fitreps_g
       .append("g")
       .attr("class", "y axis")
-      .attr("transform", `translate(${time_scale(min_start_date)}, 0)`)
+      .attr("transform", `translate(${time_scale(filtered_min_start_date)}, 0)`)
       .call(d3.axisLeft(lib.rsca_scale));
 
-    fitreps_g.on("mouseenter", function () {
-      clear_fitrep_highlight(fitrep_highlight);
-    });
+    // fitreps_g.on("mouseenter", function () {
+    //   clear_fitrep_highlight(fitrep_highlight);
+    // });
 
     // Append FITREP marker groups
     const fitrep_marker_gs = fitreps_g
@@ -570,7 +671,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Draw dotted line for same Reporting Senior, different Rank
     var fitreps_same_rs_new_rank = lib.fitreps_same_rs_new_rank(data);
-    console.log(fitreps_same_rs_new_rank);
 
     fitreps_g
       .selectAll("lines")
@@ -588,6 +688,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("pointer-events", "none");
 
     // FITREP Gaps
+    var fitrep_gaps = lib.fitrep_gaps(data);
     fitreps_g
       .append("g")
       .attr("class", "fitrep gap")
@@ -670,19 +771,20 @@ document.addEventListener("DOMContentLoaded", function () {
     d3.select(canvas).select("#rank_g").selectAll("g").remove();
 
     d3.select(canvas).select("#command_rg_g").selectAll("g").remove();
-
     d3.select(canvas).select("#rep_sen_rg_g").selectAll("g").remove();
 
-    d3.select(canvas).select("#command_at_g").selectAll("g").remove();
+    d3.select(canvas).select("#command_idt_g").selectAll("g").remove();
+    d3.select(canvas).select("#rep_sen_idt_g").selectAll("g").remove();
 
-    d3.select(canvas)
-      // .select('#command_at_g')
-      .selectAll("g.fitrep")
-      .remove();
+    d3.select(canvas).select("#command_at_g").selectAll("g").remove();
+    d3.select(canvas).select("#rep_sen_at_g").selectAll("g").remove();
+
+    d3.select(canvas).selectAll("g.fitrep").remove();
 
     d3.select(canvas).selectAll("g.x.axis").remove();
 
     d3.select(canvas).selectAll("g.y.axis").remove();
+    d3.select(canvas).selectAll("#fitrep_highlight").remove();
   };
 
   const data = d3
@@ -696,7 +798,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .data(data);
 
       // Log data to console
-      // console.log(data);
+      console.log(data);
       return data;
     })
     .then((data) => {
