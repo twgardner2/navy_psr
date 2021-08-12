@@ -11,7 +11,11 @@
   grid-template-rows: 0.15fr 0.15fr 1fr 5fr;
   gap: 3px 3px;
   grid-auto-flow: row;
-  grid-template-areas: "name name name gh_link gh_link" "filters filters filters filters filters" "legend canvas canvas canvas ." "table table table table table";
+  grid-template-areas:
+    "name name name gh_link gh_link"
+    "filters filters filters filters filters"
+    "legend canvas canvas canvas ."
+    "table table table table table";
 }
 
 #name {
@@ -89,16 +93,10 @@ div.tooltip table tr {
   background: #efefef;
 }
 
-text {
-  font-family: "Roboto", serif;
-}
-
-table {
-  font-family: "Roboto", serif;
-}
-
 h1,
-h2 {
+h2,
+text,
+table {
   font-family: "Roboto", serif;
 }
 
@@ -138,7 +136,7 @@ input[type="range"]::-webkit-slider-thumb {
 
   /* background-color: var(--navy-dark-blue); */
   background-color: lightgrey;
-  position: relative;
+  /* position: relative; */
   margin: 15px 0;
   /* Add some margin to ensure box shadow is shown */
   cursor: pointer;
@@ -149,7 +147,7 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .multi-range {
-  position: relative;
+  /* position: relative; */
   height: 50px;
 }
 

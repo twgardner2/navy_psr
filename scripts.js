@@ -6,20 +6,29 @@ document.addEventListener("DOMContentLoaded", function () {
   // Create reference to <div> defining the grid
   const grid = d3.select("body").select(".grid");
 
-  const multi_range_span = grid.append("span").attr("class", "multi-range");
+  const filters_div = grid
+    .append("div")
+    .attrs({ id: "filters" })
+    .style("display", "flex")
+    .style("justify-content", "flex-start")
+    .style("align-items", "center");
+
+  filters_div.append("text").text("lower").attr("id", "lower_value");
+  const multi_range_span = filters_div
+    .append("span")
+    .attr("class", "multi-range")
+    .style("width", "400px");
   const lower_slider = multi_range_span
     .append("input")
     .attrs({ id: "lower", type: "range", min: 0, max: 50, value: 5, step: 1 });
   const upper_slider = multi_range_span
     .append("input")
     .attrs({ id: "upper", type: "range", min: 0, max: 50, value: 45, step: 1 });
-  multi_range_span.append("text").text("lower").attr("id", "lower_value");
-  multi_range_span.append("text").text("---");
-  multi_range_span.append("text").text("upper").attr("id", "upper_value");
+  filters_div.append("text").text("upper").attr("id", "upper_value");
   const button = d3
     .select("#name")
     .append("button")
-    .text("BUTTON")
+    .text("Apply Year Filter")
     .on("click", function () {
       // Gather filtering parameters
       var filters = new Map();
@@ -30,10 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
       filters.set("end_year", end_year);
 
       var table_data = lib.parse_data_from_table();
-      // var filtered_table_data = table_data.filter(
-      //   (d) => d.start_date.getFullYear() >= start_year
-      // );
-      // console.log(table_data);
       console.log("clearing psr...");
       clear_psr_viz(document.getElementById("canvas"));
       console.log("drawing again");
@@ -241,6 +246,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var min_start_date = new Date(Math.min(...start_dates));
     var max_end_date = new Date(Math.max(...end_dates));
+
+    d3.select("#lower_value").text(
+      filters.get("start_year") || min_start_date.getFullYear()
+    );
+    d3.select("#upper_value").text(
+      filters.get("end_year") || max_end_date.getFullYear()
+    );
 
     const filtered_start_dates = data.map((d) => d.start_date);
     const filtered_end_dates = data.map((d) => d.end_date);
