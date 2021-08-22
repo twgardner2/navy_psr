@@ -6,12 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Create reference to <div> defining the grid
   const grid = d3.select("body").select(".grid");
 
-  const filters_div = grid
-    .append("div")
-    .attrs({ id: "filters" })
-    .style("display", "flex")
-    .style("justify-content", "flex-start")
-    .style("align-items", "center");
+  const filters_div = d3.select("#filters");
 
   filters_div.append("text").text("lower").attr("id", "lower_value");
   const multi_range_span = filters_div
@@ -40,7 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
       var table_data = lib.parse_data_from_table();
       console.log("clearing psr...");
-      clear_psr_viz(document.getElementById("canvas"));
+      // clear_psr_viz(document.getElementById("canvas"));
+      clear_psr_viz();
       console.log("drawing again");
       console.log(table_data);
       console.log(filters);
@@ -50,16 +46,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Fitrep SVG canvas and main container groups
   // #region Make page sections
-  const svg = grid
-    .append("svg")
-    .attr("id", "canvas")
-    .attr("width", lib.canvas_width)
-    .attr("height", lib.canvas_height);
+  // const canvas = document.getElementById("canvas");
+  const canvas = d3.select("#canvas");
+  canvas.attr("width", lib.canvas_width).attr("height", lib.canvas_height);
 
-  const container_g = d3
-    .select("#canvas")
-    .append("g")
-    .attr("id", "container_g");
+  // const container_g = d3
+  //   .select("#canvas")
+  const container_g = canvas.append("g").attr("id", "container_g");
 
   // Rank bar group
   const rank_g = container_g
@@ -201,7 +194,8 @@ document.addEventListener("DOMContentLoaded", function () {
       var table_data = lib.parse_data_from_table();
       console.log(table_data);
       console.log("clearing psr...");
-      clear_psr_viz(document.getElementById("canvas"));
+      clear_psr_viz();
+      // clear_psr_viz(document.getElementById("canvas"));
       console.log("drawing again");
       draw_psr_viz(table_data);
     });
@@ -768,23 +762,25 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const clear_psr_viz = () => {
-    d3.select(canvas).select("#rank_g").selectAll("g").remove();
+    console.log("a");
+    // d3.select(canvas).select("#rank_g").selectAll("g").remove();
+    canvas.select("#rank_g").selectAll("g").remove();
 
-    d3.select(canvas).select("#command_rg_g").selectAll("g").remove();
-    d3.select(canvas).select("#rep_sen_rg_g").selectAll("g").remove();
+    canvas.select("#command_rg_g").selectAll("g").remove();
+    canvas.select("#rep_sen_rg_g").selectAll("g").remove();
 
-    d3.select(canvas).select("#command_idt_g").selectAll("g").remove();
-    d3.select(canvas).select("#rep_sen_idt_g").selectAll("g").remove();
+    canvas.select("#command_idt_g").selectAll("g").remove();
+    canvas.select("#rep_sen_idt_g").selectAll("g").remove();
 
-    d3.select(canvas).select("#command_at_g").selectAll("g").remove();
-    d3.select(canvas).select("#rep_sen_at_g").selectAll("g").remove();
+    canvas.select("#command_at_g").selectAll("g").remove();
+    canvas.select("#rep_sen_at_g").selectAll("g").remove();
 
-    d3.select(canvas).selectAll("g.fitrep").remove();
+    canvas.selectAll("g.fitrep").remove();
 
-    d3.select(canvas).selectAll("g.x.axis").remove();
+    canvas.selectAll("g.x.axis").remove();
 
-    d3.select(canvas).selectAll("g.y.axis").remove();
-    d3.select(canvas).selectAll("#fitrep_highlight").remove();
+    canvas.selectAll("g.y.axis").remove();
+    canvas.selectAll("#fitrep_highlight").remove();
   };
 
   const data = d3
