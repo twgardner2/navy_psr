@@ -623,7 +623,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const data = d3
-    .csv("../../gardner_anon.csv", d3.autoType)
+    .csv("./gardner_anon.csv", d3.autoType)
     .then((data) => {
       // Attach original data to ghost <g> to retain it
       d3.select("body")
