@@ -1,6 +1,7 @@
 "use strict";
 
-import * as lib from "./lib/lib.js";
+import * as lib from "./lib.js";
+import * as d3 from "d3";
 
 document.addEventListener("DOMContentLoaded", function () {
   // Create reference to <div> defining the grid
@@ -622,7 +623,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const data = d3
-    .csv("./gardner_anon.csv", d3.autoType)
+    .csv("../../gardner_anon.csv", d3.autoType)
     .then((data) => {
       // Attach original data to ghost <g> to retain it
       d3.select("body")
