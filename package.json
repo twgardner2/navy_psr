@@ -20,7 +20,8 @@
   },
   "homepage": "https://github.com/twgardner2/navy_psr#readme",
   "dependencies": {
-    "d3": "^7.1.1"
+    "d3": "^7.1.1",
+    "pdfreader": "^1.2.13"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
