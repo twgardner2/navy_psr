@@ -1,5 +1,7 @@
 "use strict";
 
+import * as d3 from "d3";
+
 // Sizing variables
 export const canvas_width = 1500;
 export const canvas_height = 650;

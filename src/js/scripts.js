@@ -1,6 +1,7 @@
 "use strict";
 
-import * as lib from "./lib/lib.js";
+import * as lib from "./lib.js";
+import * as d3 from "d3";
 
 document.addEventListener("DOMContentLoaded", function () {
   // Create reference to <div> defining the grid

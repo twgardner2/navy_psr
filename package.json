@@ -1,0 +1,38 @@
+{
+  "name": "gardner-charts",
+  "version": "0.0.1",
+  "description": "Mo betta way of looking at Navy Records",
+  "main": "scripts.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twgardner2/navy_psr.git"
+  },
+  "author": "Tom Gardner",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/twgardner2/navy_psr/issues"
+  },
+  "homepage": "https://github.com/twgardner2/navy_psr#readme",
+  "dependencies": {
+    "d3": "^7.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "babel-loader": "^8.2.3",
+    "css-loader": "^6.5.1",
+    "mini-css-extract-plugin": "^2.4.5",
+    "node-sass": "^6.0.1",
+    "postcss-loader": "^6.2.0",
+    "postcss-preset-env": "^6.7.0",
+    "sass-loader": "^12.3.0",
+    "webpack": "^5.64.0",
+    "webpack-cli": "^4.9.1"
+  }
+}
