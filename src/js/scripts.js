@@ -1,4 +1,3 @@
-"use strict";
 
 import * as lib from "./lib.js";
 import * as d3 from "d3";

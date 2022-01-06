@@ -20,19 +20,33 @@
   },
   "homepage": "https://github.com/twgardner2/navy_psr#readme",
   "dependencies": {
-    "d3": "^7.1.1",
-    "pdfreader": "^1.2.13"
+    "d3": "^7.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
+    "@babel/plugin-transform-runtime": "^7.16.7",
     "@babel/preset-env": "^7.16.0",
+    "@babel/runtime": "^7.16.7",
+    "@babel/runtime-corejs3": "^7.16.7",
+    "arraybuffer-to-buffer": "0.0.7",
+    "assert": "^2.0.0",
     "babel-loader": "^8.2.3",
+    "browserify-fs": "^1.0.0",
+    "buffer": "^6.0.3",
+    "constants-browserify": "^1.0.0",
     "css-loader": "^6.5.1",
+    "expose-loader": "^3.1.0",
+    "graceful-fs": "^4.2.9",
     "mini-css-extract-plugin": "^2.4.5",
     "node-sass": "^6.0.1",
+    "path-browserify": "^1.0.1",
+    "pdfreader": "^1.2.14",
     "postcss-loader": "^6.2.0",
     "postcss-preset-env": "^6.7.0",
+    "process": "^0.11.10",
     "sass-loader": "^12.3.0",
+    "stream-browserify": "^3.0.0",
+    "util": "^0.12.4",
     "webpack": "^5.64.0",
     "webpack-cli": "^4.9.1"
   }

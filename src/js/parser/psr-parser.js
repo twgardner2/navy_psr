@@ -5,23 +5,27 @@ const { convertToThou } = require('./helpers');
 
 const { identifyColumns, getMetaFloor} = require('./col-parser');
 const { parseEntryRows} = require('./entry-parser');
-
+const { Buffer } = require('buffer');
+const { resolve } = require('path');
 
 //To Read from Buffer use parseBuffer.
-function loadPages(filename) {
-    let pages = {};
-    let currentPage;
-    new PdfReader().parseFileItems(filename, function(err, item) {
-        if(err){
-            console.log(err);
-        } else if (item && item.page){
-            currentPage = `page${item.page}`;
-            pages[currentPage] = [];
-        } else if (item && item.text){
-                pages[currentPage].push(item);
-        }
+async function loadPages(buffer) {
+    return new Promise((resolve, reject)=>{
+        let pages = {};
+        let currentPage;
+        new PdfReader().parseBuffer(buffer, function(err, item) {
+            if(err){
+                console.log(err);
+            } else if (item && item.page){
+                currentPage = `page${item.page}`;
+                pages[currentPage] = [];
+            } else if (item && item.text){
+                    pages[currentPage].push(item);
+            } else if (!item){
+                resolve(pages)
+            }
+        });
     });
-    return pages;
 }
 
 function parsePage(page) {
@@ -55,8 +59,15 @@ function getEntryRows(page, cols) {
 }
 
 
-function parseUploadedForm(e){
-    e.preventDefault();
-    let files= e.files
-
+window.parseUploadedForm= function(input){
+    let file = input.files[0]; 
+    file.arrayBuffer().then( arrayBuffer=>{
+        let buffer = Buffer.from(arrayBuffer);
+        loadPages(buffer).then(pages=>{
+            let entries = Object.keys(pages)
+            .map(page=>parsePage(pages[page]))
+            .flat();
+            console.log(entries);
+        });
+      });
 }

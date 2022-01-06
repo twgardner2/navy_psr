@@ -1,43 +1,34 @@
 
 const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const webpack = require('webpack');
 
+const styleConfig = require('./config/style.config.js');
+const psrParserConfig = require('./config/psrParser.config.js');
 
 module.exports = {
     mode: 'development',
+    target:'web',
     entry: {
-        app: './src/js/scripts.js',
-        style: './src/scss/styles.scss'
-    },
+        ...psrParserConfig.entry(),
+        // ...styleConfig.entry(),
+        },
     output: {
         filename: './dist/[name].js',
         path: path.resolve(__dirname),
     },
     module: {
         rules: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/preset-env']
-                    },
-                },  
-            },
-            {
-                test: /\.(sass|scss)$/,
-                use: [
-                    MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    'sass-loader',
-                ],
-            }
+            ...psrParserConfig.rules(),
+            // ...styleConfig.rules(),            
         ],
     },
+    resolve:{
+        fallback: {
+           ...psrParserConfig.fallbacks(), 
+        }
+    },
     plugins: [
-        new MiniCssExtractPlugin({
-            filename: './dist/[name].min.css',
-        }),
+        ...psrParserConfig.plugins(),
+        // ...styleConfig.plugins(),
     ],
 };

@@ -2,5 +2,6 @@ data/
 ignore/
 hover_test.html
 hover.js
+.sass-cache
 node_modules
 dist/
