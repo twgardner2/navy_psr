@@ -10,7 +10,7 @@ module.exports = {
     target:'web',
     entry: {
         ...psrParserConfig.entry(),
-        // ...styleConfig.entry(),
+        ...styleConfig.entry(),
         },
     output: {
         filename: './dist/[name].js',
@@ -19,7 +19,7 @@ module.exports = {
     module: {
         rules: [
             ...psrParserConfig.rules(),
-            // ...styleConfig.rules(),            
+            ...styleConfig.rules(),            
         ],
     },
     resolve:{
@@ -29,6 +29,6 @@ module.exports = {
     },
     plugins: [
         ...psrParserConfig.plugins(),
-        // ...styleConfig.plugins(),
+        ...styleConfig.plugins(),
     ],
 };

@@ -5,7 +5,6 @@ const pdfjsConfig = require('./pdfjs.config.js');
 const appConfig = require('./app.config.js');
 
 module.exports.entry = ()=>({
-    parser: ['./src/js/parser/psr-parser.js'],
     ...appConfig.entry(),
 });
 
