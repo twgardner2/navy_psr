@@ -7,6 +7,8 @@ const {draw_psr_viz}= require("./graph/graph.js");
 
 const {resetGraph}= require("./page-components");
 
+const {populate_table} =require("./table/table.js");
+
 let parentElem;
 
 export function appendPDFUploadForm(parent){
@@ -32,7 +34,8 @@ function updateFromPdfInputChange(event){
     parseFileInputToEntries(elem)
         .then(data=>{
             resetGraph(parentElem);
-            console.log(data);
-            draw_psr_viz( new DataProvider(data) );
-        })
+            let provider=new DataProvider(data)
+            draw_psr_viz( provider );
+            return provider;
+        }).then(provider=> populate_table(provider))
 }

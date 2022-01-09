@@ -23,7 +23,6 @@ export const getPageElements= ()=>({
     rep_sen_cc_g,
     fitreps_g,
     legend_canvas,
-    table,
     rerender_button,
 });
 
@@ -38,25 +37,18 @@ export const buildElements= (grid)=>{
     .append("svg")
     .attr("width", "100%");
 
-    // Append rerender button
-    // no-export
+    
     table_container = grid
     .append("div")
     .attr("class", "table");
 
-    // no-export
-    // externalize callbacks
+    
     rerender_button = table_container
     .append("div")
     .append("button")
     .text("Re-Render")
-    
-
-    // Append FITREP table
-    table = table_container.append("table").attr("id", "fitrep_table");
 
     return getPageElements()
-
 }
 
 
@@ -127,4 +119,12 @@ function buildGraph(grid){
         6 * lib.bar_height + 5 * lib.margin.gap
     })`
     );
+}
+
+export function resetTable(){
+    if(table){
+        table.remove();
+    }
+    table = table_container.append("table").attr("id", "fitrep_table");
+    return table;
 }

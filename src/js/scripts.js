@@ -25,7 +25,8 @@ let grid = d3.select("body").select(".grid");
  rerender_button.on("click", function (event) {
   var table_data = parse_data_from_table();
   clear_psr_viz(document.getElementById("canvas"));
-  draw_psr_viz(table_data);
+  let provider=new DataProvider(table_data);
+  draw_psr_viz(provider);
 
 
 });
@@ -45,12 +46,12 @@ let data = d3
       return data;
     })
     .then((data) => {
-      // Build table with PSR data
-      populate_table(data);
-      return data;
+      let provider= new DataProvider(data)
+      populate_table(provider);
+      return provider;
     })
     // Draw viz
-    .then((data) => draw_psr_viz( new DataProvider(data) ));
+    .then((provider) => draw_psr_viz( provider ));
 
 
 });
