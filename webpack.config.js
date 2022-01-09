@@ -1,4 +1,3 @@
-
 const path = require('path');
 const webpack = require('webpack');
 
@@ -7,28 +6,22 @@ const psrParserConfig = require('./config/psrParser.config.js');
 
 module.exports = {
     mode: 'development',
-    target:'web',
+    target: 'web',
     entry: {
         ...psrParserConfig.entry(),
         ...styleConfig.entry(),
-        },
+    },
     output: {
         filename: './dist/[name].js',
         path: path.resolve(__dirname),
     },
     module: {
-        rules: [
-            ...psrParserConfig.rules(),
-            ...styleConfig.rules(),            
-        ],
+        rules: [...psrParserConfig.rules(), ...styleConfig.rules()],
     },
-    resolve:{
+    resolve: {
         fallback: {
-           ...psrParserConfig.fallbacks(), 
-        }
+            ...psrParserConfig.fallbacks(),
+        },
     },
-    plugins: [
-        ...psrParserConfig.plugins(),
-        ...styleConfig.plugins(),
-    ],
+    plugins: [...psrParserConfig.plugins(), ...styleConfig.plugins()],
 };
