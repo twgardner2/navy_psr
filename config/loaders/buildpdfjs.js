@@ -49,7 +49,7 @@ module.exports=function(input){
     let replacement=buildpdfjs();
     let output=input
         .replace(`'use strict';`,'')
-        .replace(`_pdfjsFiles.forEach( (fieldName, idx, arr) => _fileContent += fs.readFileSync(_basePath + fieldName, 'uth-8') );`, '')
+        .replace(`_pdfjsFiles.forEach( (fieldName, idx, arr) => _fileContent += fs.readFileSync(_basePath + fieldName, 'utf8') );`, '')
         .replace(`eval(_fileContent);`, replacement)
         .replace(`var nodeUtil`, 'nodeUtil')
         .replace('globalScope.PDFJS.disableWorker', '(true)');
