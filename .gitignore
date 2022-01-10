@@ -4,4 +4,6 @@ hover.js
 .sass-cache
 node_modules
 dist/
+
 data/
+!src/js/data/
