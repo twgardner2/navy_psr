@@ -4,7 +4,7 @@
 run `npm install`
 
 ## Build
-run `npm webpack --mode development`
+run `webpack --mode development`
  
  or
 

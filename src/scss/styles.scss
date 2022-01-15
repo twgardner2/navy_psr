@@ -6,83 +6,90 @@
 } */
 
 .grid {
-  display: grid;
-  grid-template-columns: 0.5fr 0.5fr 2fr 0.5fr 0.5fr;
-  grid-template-rows: 0.25fr 1fr 5fr;
-  gap: 3px 3px;
-  grid-auto-flow: row;
-  grid-template-areas:
-    "name name name gh_link gh_link"
-    ". canvas canvas canvas ."
-    "table table table table table";
+    display: grid;
+    grid-template-columns: 0.5fr 0.5fr 2fr 0.5fr 0.5fr;
+    grid-template-rows: 0.25fr 1fr 5fr;
+    gap: 3px 3px;
+    grid-auto-flow: row;
+    grid-template-areas:
+        'name name name gh_link gh_link'
+        'fitrep_legend canvas canvas canvas .'
+        'table table table table table';
 }
 
-.name {
-  grid-area: name;
+h1,
+h2,
+text,
+table {
+    font-family: 'Roboto', serif;
 }
 
-.gh_link {
-  grid-area: gh_link;
-  display: flex;
-  justify-content: flex-end;
+#name {
+    grid-area: name;
+}
+
+#gh_link {
+    grid-area: gh_link;
+    display: flex;
+    justify-content: flex-end;
 }
 
 #canvas {
-  grid-area: canvas;
+    grid-area: canvas;
 }
 
-.fitrep_legend {
-  grid-area: fitrep_legend;
+#fitrep_legend {
+    grid-area: fitrep_legend;
 }
 
 .table {
-  grid-area: table;
+    grid-area: table;
 }
 
 .label {
-  justify-self: end;
-  align-self: center;
+    justify-self: end;
+    align-self: center;
 }
 
 div.tooltip {
-  position: absolute;
-  text-align: left;
-  width: auto;
-  height: auto;
-  padding: 6px;
-  font: 12px sans-serif;
-  background: grey;
-  border: 2px;
-  border-radius: 8px;
-  pointer-events: none;
+    position: absolute;
+    text-align: left;
+    width: auto;
+    height: auto;
+    padding: 6px;
+    font: 12px sans-serif;
+    background: grey;
+    border: 2px;
+    border-radius: 8px;
+    pointer-events: none;
 }
 
 table {
-  border-collapse: collapse;
+    border-collapse: collapse;
 }
 
 th,
 td {
-  border: thin solid black;
+    border: thin solid black;
 }
 
 tr {
-  height: 50px;
+    height: 50px;
 }
 
 div.tooltip > table {
-  font: 12px san-serif;
-  /* width: 1px;
+    font: 12px san-serif;
+    /* width: 1px;
   height: 1px; */
-  white-space: nowrap;
-  border-collapse: collapse;
+    white-space: nowrap;
+    border-collapse: collapse;
 }
 
 div.tooltip table tr {
-  width: 1px;
-  height: 1px;
+    width: 1px;
+    height: 1px;
 }
 
-#fitreps_legend {
-  display: flex;
+#fitrep_legend {
+    display: flex;
 }
