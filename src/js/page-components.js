@@ -35,7 +35,7 @@ export const buildElements = (grid) => {
     // Legend SVG canvas
     legend_canvas = grid
         .append('div')
-        .attr('id', 'fitreps_legend')
+        .attr('id', 'fitrep_legend')
         .append('svg')
         .attr('width', '100%');
 

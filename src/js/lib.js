@@ -37,7 +37,7 @@ export const at_cc_command_bar_color = '#e8b00f';
 // FITREP marker styling
 export const prom_rec_categories = ['EP', 'MP', 'P', 'PR', 'SP', 'NOB'];
 export const fitrep_traffic_legend_sizes = [1, 3, 5, 10, 15];
-// export const ep_color = "green";
+
 export const ep_color = '#48ff00';
 export const mp_color = '#3498db';
 export const p_color = 'black';
