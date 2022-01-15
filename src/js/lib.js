@@ -15,11 +15,6 @@ export const bar_height = 40;
 export const fitrep_width = 1000;
 export const fitrep_height = 300;
 
-export function add_days_to_date(date, n_days) {
-    var days_in_ms = n_days * 24 * 3600 * 1000;
-    return new Date(date.getTime() + days_in_ms);
-}
-
 // Horizontal (time) scale - defined in scripts.js
 
 // Vertical (RSCA) scale
@@ -44,6 +39,7 @@ export const p_color = 'black';
 export const pr_color = 'yellow';
 export const sp_color = 'red';
 export const nob_color = 'lightgrey';
+export const fitrep_traffic_legend_marker_color = 'none';
 
 export const ep_shape = d3.symbol().type(d3.symbolCircle);
 export const mp_shape = d3.symbol().type(d3.symbolCircle);
@@ -75,3 +71,9 @@ export const fitrep_marker_size = d3
 
 // Formatters
 export const date_formatter = new Intl.DateTimeFormat('en-US').format;
+
+// Helpers
+export function add_days_to_date(date, n_days) {
+    var days_in_ms = n_days * 24 * 3600 * 1000;
+    return new Date(date.getTime() + days_in_ms);
+}
