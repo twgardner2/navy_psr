@@ -322,7 +322,7 @@ function draw_legend() {
             var size = lib.fitrep_marker_size(d);
             return symbol.size(size)();
         })
-        .attr('fill', (d) => lib.fitrep_color_scale('EP'))
+        .attr('fill', (d) => lib.fitrep_traffic_legend_marker_color)
         .attr('opacity', lib.fitrep_marker_opacity);
     /// Marker outlines
     fitrep_traffic_legend_marker_groups
@@ -352,6 +352,66 @@ function draw_legend() {
         .text((d) => d);
 
     // #endregion
+
+    const command_rg_label_g = legend_canvas
+        .append('g')
+        .attr(
+            'transform',
+            `translate(0, ${lib.margin.gap + 1.5 * lib.bar_height})`
+        )
+        .append('text')
+        .text('Regular Commands')
+        .style('dominant-baseline', 'middle');
+
+    const rep_sen_rg_label_g = legend_canvas
+        .append('g')
+        .attr(
+            'transform',
+            `translate(0, ${lib.margin.gap + 2.5 * lib.bar_height})`
+        )
+        .append('text')
+        .text('Regular Reporting Seniors')
+        .style('dominant-baseline', 'middle');
+
+    const command_idt_label_g = legend_canvas
+        .append('g')
+        .attr(
+            'transform',
+            `translate(0, ${lib.margin.gap + 3.5 * lib.bar_height})`
+        )
+        .append('text')
+        .text('IDT Commands')
+        .style('dominant-baseline', 'middle');
+
+    const rep_sen_idt_label_g = legend_canvas
+        .append('g')
+        .attr(
+            'transform',
+            `translate(0, ${lib.margin.gap + 4.5 * lib.bar_height})`
+        )
+        .append('text')
+        .text('IDT Reporting Seniors')
+        .style('dominant-baseline', 'middle');
+
+    const command_at_label_g = legend_canvas
+        .append('g')
+        .attr(
+            'transform',
+            `translate(0, ${lib.margin.gap + 5.5 * lib.bar_height})`
+        )
+        .append('text')
+        .text('AT Commands')
+        .style('dominant-baseline', 'middle');
+
+    const rep_sen_at_label_g = legend_canvas
+        .append('g')
+        .attr(
+            'transform',
+            `translate(0, ${lib.margin.gap + 6.5 * lib.bar_height})`
+        )
+        .append('text')
+        .text('AT Reporting Seniors')
+        .style('dominant-baseline', 'middle');
 }
 
 function draw_axises(group, data) {
