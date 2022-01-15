@@ -17,6 +17,13 @@
         'table table table table table';
 }
 
+h1,
+h2,
+text,
+table {
+    font-family: 'Roboto', serif;
+}
+
 #name {
     grid-area: name;
 }
