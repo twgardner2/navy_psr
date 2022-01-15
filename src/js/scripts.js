@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 const { DataProvider } = require('./data/providers/DataProvider');
 const { parse_data_from_table } = require('./data/parsers/table/table-parser');
 
-const { buildElements } = require('./page-components.js');
+const { buildElements, draw_legend } = require('./page-components.js');
 const { populate_table } = require('./table/table.js');
 const { clear_psr_viz, draw_psr_viz } = require('./graph/graph.js');
 
@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
         let provider = new DataProvider(table_data);
         draw_psr_viz(provider);
     });
+
+    draw_legend();
 
     let data = d3
         .csv('./gardner_anon.csv', d3.autoType)
