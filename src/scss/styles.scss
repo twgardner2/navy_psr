@@ -17,11 +17,11 @@
         'table table table table table';
 }
 
-.name {
+#name {
     grid-area: name;
 }
 
-.gh_link {
+#gh_link {
     grid-area: gh_link;
     display: flex;
     justify-content: flex-end;
