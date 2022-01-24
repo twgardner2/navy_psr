@@ -3,6 +3,7 @@ const webpack = require('webpack');
 
 const styleConfig = require('./config/style.config.js');
 const psrParserConfig = require('./config/psrParser.config.js');
+const htmlConfig= require('./config/html.config.js');
 
 module.exports = {
     mode: 'development',
@@ -16,7 +17,11 @@ module.exports = {
         path: path.resolve(__dirname),
     },
     module: {
-        rules: [...psrParserConfig.rules(), ...styleConfig.rules()],
+        rules: [
+            ...psrParserConfig.rules(), 
+            ...styleConfig.rules(),
+            ...htmlConfig.rules(),
+        ],
     },
     resolve: {
         fallback: {

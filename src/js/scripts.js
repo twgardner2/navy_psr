@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 const { DataProvider } = require('./data/providers/DataProvider');
 const { parse_data_from_table } = require('./data/parsers/table/table-parser');
 
-const { buildElements, draw_legend } = require('./page-components.js');
+const { buildElements, draw_legend, addHTMLTemplates } = require('./page-components.js');
 const { populate_table } = require('./table/table.js');
 const { clear_psr_viz, draw_psr_viz } = require('./graph/graph.js');
 
@@ -49,4 +49,6 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         // Draw viz
         .then((provider) => draw_psr_viz(provider));
+
+        addHTMLTemplates();
 });
