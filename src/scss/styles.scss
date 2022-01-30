@@ -1,18 +1,12 @@
-/* #grid {
-  display: grid;
-  grid-template-columns: 1fr 5fr;
-  grid-template-rows: 1fr 1fr 1fr 10fr;
-  grid-gap: 6px;
-} */
-
 .grid {
     display: grid;
-    grid-template-columns: 0.5fr 0.5fr 2fr 0.5fr 0.5fr;
-    grid-template-rows: 0.25fr 1fr 5fr;
+    grid-template-columns: 184px 0.5fr 2fr 0.5fr 0.5fr;
+    grid-template-rows: 75px 50px 1fr 5fr;
     gap: 3px 3px;
     grid-auto-flow: row;
     grid-template-areas:
         'name name name gh_link gh_link'
+        'upload . . . .'
         'fitrep_legend canvas canvas canvas .'
         'table table table table table';
 }
@@ -32,6 +26,10 @@ table {
     grid-area: gh_link;
     display: flex;
     justify-content: flex-end;
+}
+
+#pdf-parser-wrapper {
+    grid-area: upload;
 }
 
 #canvas {
