@@ -179,5 +179,4 @@ function buildButton(cell, text, callback) {
 function redrawGraph(){
     const { rerender_button } = getPageElements();
     rerender_button.node().click();
-    return false;
 }
