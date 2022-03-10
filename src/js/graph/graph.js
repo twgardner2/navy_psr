@@ -14,6 +14,13 @@ export const clear_psr_viz = (canvas) => {
 
     d3.select(canvas).select('#command_at_g').selectAll('g').remove();
 
+    d3.select(canvas).select('#rep_sen_at_g').selectAll('g').remove();
+
+    d3.select(canvas).select('#command_idt_g').selectAll('g').remove();
+
+    d3.select(canvas).select('#rep_sen_idt_g').selectAll('g').remove();
+
+
     d3.select(canvas).selectAll('g.fitrep').remove();
 
     d3.select(canvas).selectAll('g.x.axis').remove();

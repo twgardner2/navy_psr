@@ -44,6 +44,7 @@ export const buildElements = (grid) => {
     rerender_button = table_container
         .append('div')
         .append('button')
+        .attr('id', 'rerender-btn')
         .text('Re-Render');
 
     return getPageElements();

@@ -4,6 +4,7 @@ hover.js
 .sass-cache
 node_modules
 dist/
+*.pdf
 
 data/
 !src/js/data/

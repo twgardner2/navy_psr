@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import * as lib from '../lib.js';
+const { getPageElements } = require('../page-components.js');
 
 const { fields } = require('../data/schema');
 const { resetTable } = require('../page-components');
@@ -33,14 +34,14 @@ function toggle_rows(e, d) {
     var clicked_button = d3.select(this);
     var parent_row = d3.select(this.parentNode.parentNode);
 
-    // If not currently editing row
-    if (!this.classList.contains('editing')) {
+    // If not currently editting row
+    if (!this.classList.contains('editting')) {
         // Toggle button text to 'save'
         clicked_button.text('Save');
 
-        // Give this row's <td>s and the button an 'editing' class
-        clicked_button.classed('editing', true);
-        parent_row.selectAll('td').classed('editing', true);
+        // Give this row's <td>s and the button an 'editting' class
+        clicked_button.classed('editting', true);
+        parent_row.selectAll('td').classed('editting', true);
 
         // Append an <input> to each <td.table_field>
         parent_row.selectAll('td.table_field').each(function (d, i) {
@@ -60,10 +61,10 @@ function toggle_rows(e, d) {
                 .style('width', width);
         });
     } else {
-        // If currently editing row
+        // If currently editting row
 
         // Remove <input> from each <td.table_field>, replace with value as text
-        parent_row.selectAll('td.editing').each(function (d, i) {
+        parent_row.selectAll('td.editting').each(function (d, i) {
             if (this.innerHTML.indexOf('input') === -1) {
                 return;
             }
@@ -97,17 +98,19 @@ function toggle_rows(e, d) {
         });
 
         // Toggle button text to 'edit'
-        clicked_button.text('edit');
+        clicked_button.text('Edit');
 
-        // Remove this row's <td>s and the button an 'editing' class
-        clicked_button.classed('editing', false);
-        parent_row.selectAll('td').classed('editing', false);
+        // Remove this row's <td>s and the button an 'editting' class
+        clicked_button.classed('editting', false);
+        parent_row.selectAll('td').classed('editting', false);
+        redrawGraph();
     }
 }
 
 function deleteRow(e, d) {
     var parent_row = d3.select(this.parentNode.parentNode);
     parent_row.remove();
+    redrawGraph();
 }
 
 function addRow(e, d) {
@@ -170,4 +173,11 @@ function buildButton(cell, text, callback) {
         .attr('row_index', (d, i) => i)
         .text(text)
         .on('click', callback);
+}
+
+
+function redrawGraph(){
+    const { rerender_button } = getPageElements();
+    rerender_button.node().click();
+    return false;
 }
