@@ -34,14 +34,14 @@ function toggle_rows(e, d) {
     var clicked_button = d3.select(this);
     var parent_row = d3.select(this.parentNode.parentNode);
 
-    // If not currently editting row
-    if (!this.classList.contains('editting')) {
+    // If not currently editing row
+    if (!this.classList.contains('editing')) {
         // Toggle button text to 'save'
         clicked_button.text('Save');
 
-        // Give this row's <td>s and the button an 'editting' class
-        clicked_button.classed('editting', true);
-        parent_row.selectAll('td').classed('editting', true);
+        // Give this row's <td>s and the button an 'editing' class
+        clicked_button.classed('editing', true);
+        parent_row.selectAll('td').classed('editing', true);
 
         // Append an <input> to each <td.table_field>
         parent_row.selectAll('td.table_field').each(function (d, i) {
@@ -61,10 +61,10 @@ function toggle_rows(e, d) {
                 .style('width', width);
         });
     } else {
-        // If currently editting row
+        // If currently editing row
 
         // Remove <input> from each <td.table_field>, replace with value as text
-        parent_row.selectAll('td.editting').each(function (d, i) {
+        parent_row.selectAll('td.editing').each(function (d, i) {
             if (this.innerHTML.indexOf('input') === -1) {
                 return;
             }
@@ -100,9 +100,9 @@ function toggle_rows(e, d) {
         // Toggle button text to 'edit'
         clicked_button.text('Edit');
 
-        // Remove this row's <td>s and the button an 'editting' class
-        clicked_button.classed('editting', false);
-        parent_row.selectAll('td').classed('editting', false);
+        // Remove this row's <td>s and the button an 'editing' class
+        clicked_button.classed('editing', false);
+        parent_row.selectAll('td').classed('editing', false);
         redrawGraph();
     }
 }
