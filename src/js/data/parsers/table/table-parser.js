@@ -16,7 +16,7 @@ export function parse_data_from_table(e, d) {
       var row_data = {};
   
       j[i].childNodes.forEach(function (el) {
-        if (el.className == "table_field") {
+        if (el.classList.contains("table_field")) {
           // Get key and value in cell
           var cell_key = el.dataset.key;
           var cell_value = el.innerText;

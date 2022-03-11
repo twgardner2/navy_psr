@@ -26,6 +26,10 @@ document.addEventListener('DOMContentLoaded', function () {
         draw_psr_viz(provider);
     });
 
+    d3.select('#start-date').on('change', function (event) {
+        rerender_button.node().click();
+    });    
+
     draw_legend();
 
     let data = d3

@@ -1,5 +1,6 @@
 import * as lib from './lib.js';
 import * as d3 from 'd3';
+import flatpickr from "flatpickr";
 
 let svg,
     container_g,
@@ -14,7 +15,8 @@ let svg,
     legend_canvas,
     table,
     rerender_button,
-    table_container;
+    table_container,
+    fp_start_date;
 
 export const getPageElements = () => ({
     rank_g,
@@ -27,6 +29,7 @@ export const getPageElements = () => ({
     fitreps_g,
     legend_canvas,
     rerender_button,
+    fp_start_date    
 });
 
 export const buildElements = (grid) => {
@@ -41,11 +44,32 @@ export const buildElements = (grid) => {
 
     table_container = grid.append('div').attr('class', 'table');
 
+    let start_container = table_container
+        .append('div')
+        .attr('class', 'graph_filter_container');
+
+    start_container
+        .append('label')
+        .attr('for', 'start_date')
+        .html('Start Date:');
+
+    start_container
+        .append('input')
+        .attr('type', 'text')
+        .attr('id', 'start-date');
+
     rerender_button = table_container
         .append('div')
         .append('button')
         .attr('id', 'rerender-btn')
-        .text('Re-Render');
+        .text('Re-Render')
+        .style('display', 'none');
+
+    fp_start_date=
+        flatpickr("#start-date", {
+            position: "above left",
+            dateFormat: "m/d/Y"
+        });
 
     return getPageElements();
 };
