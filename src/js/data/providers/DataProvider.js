@@ -1,13 +1,17 @@
 import * as lib from '../../lib';
 import * as d3 from 'd3';
+import { min } from 'd3';
 
 const { fields } = require('../schema');
+const { getPageElements }= require('../../page-components.js')
 
 export class DataProvider {
     constructor(parsedData) {
         this.psr = this.format(parsedData);
+        this.startDate= this.getStartDate();
+        this.endDate= this.getEndDate();
         this.validatePsr();
-
+        
         this.setTimeScale();
 
         for (let k in fields) {
@@ -52,11 +56,9 @@ export class DataProvider {
     }
 
     setTimeScale() {
-        const start_dates = this.psr.map((d) => d.start_date);
-        const end_dates = this.psr.map((d) => d.end_date);
 
-        this.min_start_date = new Date(Math.min(...start_dates));
-        this.max_end_date = new Date(Math.max(...end_dates));
+        this.min_start_date = this.startDate;
+        this.max_end_date = this.endDate;
 
         this.time_scale = d3
             .scaleTime()
@@ -68,6 +70,19 @@ export class DataProvider {
                     lib.margin.left -
                     lib.margin.right,
             ]);
+    }
+
+    getStartDate() {
+        const start_dates = this.psr.map((d) => d.start_date);
+        const {fp_start_date} = getPageElements();
+        let startDate=new Date(Math.max(Math.min(...start_dates), ...fp_start_date.selectedDates));
+        fp_start_date.setDate(startDate, false);
+        return startDate;
+    }
+
+    getEndDate() {
+        const end_dates = this.psr.map((d) => d.end_date);
+        return new Date(Math.max(...end_dates));
     }
 
     fitrepsSameRsNewRank() {

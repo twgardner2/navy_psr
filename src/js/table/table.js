@@ -1,5 +1,7 @@
 import * as d3 from 'd3';
 import * as lib from '../lib.js';
+import flatpickr from "flatpickr";
+
 const { getPageElements } = require('../page-components.js');
 
 const { fields } = require('../data/schema');
@@ -59,6 +61,14 @@ function toggle_rows(e, d) {
                 .append('input')
                 .attr('value', value)
                 .style('width', width);
+            
+            if(schema_entry.type === 'date'){
+                table_field.node().classList.add('date-field');
+            }
+        });
+        flatpickr(".date-field input", {
+            position: "above left",
+            dateFormat: "m/d/Y"
         });
     } else {
         // If currently editing row
