@@ -340,3 +340,14 @@ export function draw_legend() {
         .text('AT Reporting Seniors')
         .style('dominant-baseline', 'middle');
 }
+
+export function addHTMLTemplates(){
+    let templates=[
+        'faqs'
+    ];
+
+    templates.map(filename=>d3.select('body')
+        .append('div')
+        .attr('id', filename)
+        .html(require(`../templates/${filename}.html`).default))
+}
