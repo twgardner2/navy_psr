@@ -24,6 +24,7 @@ export const rsca_scale = d3
     .range([fitrep_height, 0]);
 
 // Colors
+export const bg_color = '#e5e4e2';
 export const rank_bar_color = '#c6ccd0';
 export const regular_command_bar_color = '#003b4f';
 export const idt_command_bar_color = '#088199';
@@ -46,9 +47,9 @@ export const mp_color = '#3498db';
 export const p_color = 'black';
 export const pr_color = 'yellow';
 export const sp_color = 'red';
-export const nob_color = 'lightgrey';
-export const missing_rsca_color = 'none';
-export const fitrep_traffic_legend_marker_color = 'none';
+export const nob_color = 'white';
+export const missing_rsca_color = 'white';
+export const fitrep_traffic_legend_marker_color = 'white';
 
 export const ep_shape = d3.symbol().type(d3.symbolCircle);
 export const mp_shape = d3.symbol().type(d3.symbolCircle);
