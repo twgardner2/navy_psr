@@ -20,7 +20,6 @@ export const clear_psr_viz = (canvas) => {
 
     d3.select(canvas).select('#rep_sen_idt_g').selectAll('g').remove();
 
-
     d3.select(canvas).selectAll('g.fitrep').remove();
 
     d3.select(canvas).selectAll('g.x.axis').remove();
@@ -225,7 +224,7 @@ function make_atcc_reporting_senior_bars(data) {
     );
 }
 
-function draw_axises(group, data) {
+function draw_axes(group, data) {
     // Draw time axis
     group
         .append('g')
@@ -259,7 +258,7 @@ function draw_fitrep_graph(data, group) {
         .style('opacity', 0)
         .style('pointer-events', 'none');
 
-    draw_axises(group, data);
+    draw_axes(group, data);
 
     group.on('mouseenter', function () {
         clear_fitrep_highlight(fitrep_highlight);
@@ -275,7 +274,7 @@ function draw_fitrep_graph(data, group) {
         .attr('transform', function (d) {
             return `translate(${data.time_scale(
                 d.end_date
-            )}, ${lib.rsca_scale(d.trait_avg - d.rsca)})`;
+            )}, ${d.rsca ? lib.rsca_scale(d.trait_avg - d.rsca) : lib.rsca_scale(0)})`;
         });
 
     // Draw FITREP markers
@@ -311,8 +310,13 @@ function draw_fitrep_graph(data, group) {
             return symbol.size(size)();
         })
         .attr('fill', 'none')
-        .attr('stroke', (d) => lib.fitrep_color_scale(d.prom_rec.toUpperCase()))
-        .attr('stroke', (d) => 'black')
+        .attr('stroke', function (d) {
+            if (d.prom_rec.toUpperCase() != 'NOB' && d.rsca == 0) {
+                return 'red';
+            } else {
+                return 'black';
+            }
+        })
         .attr('stroke-width', lib.fitrep_marker_stroke_width)
         .attr('opacity', 1)
         .on('mouseover', function (event, d) {
@@ -331,7 +335,7 @@ function draw_fitrep_graph(data, group) {
     const line = d3
         .line()
         .x((d) => data.time_scale(d.end_date))
-        .y((d) => lib.rsca_scale(d.trait_avg - d.rsca));
+        .y((d) => lib.rsca_scale(d.rsca ? d.trait_avg - d.rsca : 0));
 
     group
         .selectAll('lines')
@@ -404,6 +408,7 @@ function fitrep_tooltip(d) {
     var delta = d.trait_avg ? (d.trait_avg - d.rsca).toFixed(2) : 'n/a';
     delta = delta == '-0.00' ? '0.00' : delta;
     delta = delta > 0 ? '+' + delta : delta;
+    delta = d.rsca ? delta : 'n/a';
 
     var return_val = `
     <strong>Period:</strong> ${lib.date_formatter(

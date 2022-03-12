@@ -30,7 +30,15 @@ export const idt_command_bar_color = '#088199';
 export const at_cc_command_bar_color = '#e8b00f';
 
 // FITREP marker styling
-export const prom_rec_categories = ['EP', 'MP', 'P', 'PR', 'SP', 'NOB'];
+export const prom_rec_categories = [
+    'EP',
+    'MP',
+    'P',
+    'PR',
+    'SP',
+    'NOB',
+    'Missing RSCA',
+];
 export const fitrep_traffic_legend_sizes = [1, 3, 5, 10, 15];
 
 export const ep_color = '#48ff00';
@@ -39,6 +47,7 @@ export const p_color = 'black';
 export const pr_color = 'yellow';
 export const sp_color = 'red';
 export const nob_color = 'lightgrey';
+export const missing_rsca_color = 'none';
 export const fitrep_traffic_legend_marker_color = 'none';
 
 export const ep_shape = d3.symbol().type(d3.symbolCircle);
@@ -55,13 +64,34 @@ export const fitrep_marker_stroke_width = 1.5;
 
 export const fitrep_color_scale = d3
     .scaleOrdinal()
-    .domain(['EP', 'MP', 'P', 'PR', 'SP', 'NOB'])
-    .range([ep_color, mp_color, p_color, pr_color, sp_color, nob_color]);
+    .domain(['EP', 'MP', 'P', 'PR', 'SP', 'NOB', 'MISSING RSCA'])
+    .range([
+        ep_color,
+        mp_color,
+        p_color,
+        pr_color,
+        sp_color,
+        nob_color,
+        missing_rsca_color,
+    ]);
+
+export const fitrep_stroke_scale = d3
+    .scaleOrdinal()
+    .domain(['EP', 'MP', 'P', 'PR', 'SP', 'NOB', 'MISSING RSCA'])
+    .range(['black', 'black', 'black', 'black', 'black', 'black', 'red']);
 
 export const fitrep_shape_scale = d3
     .scaleOrdinal()
-    .domain(['EP', 'MP', 'P', 'PR', 'SP', 'NOB'])
-    .range([ep_shape, mp_shape, p_shape, pr_shape, sp_shape, nob_shape]);
+    .domain(['EP', 'MP', 'P', 'PR', 'SP', 'NOB', 'Missing RSCA'])
+    .range([
+        ep_shape,
+        mp_shape,
+        p_shape,
+        pr_shape,
+        sp_shape,
+        nob_shape,
+        nob_shape,
+    ]);
 
 export const fitrep_marker_size = d3
     .scaleLinear()

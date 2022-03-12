@@ -1,6 +1,6 @@
 import * as lib from './lib.js';
 import * as d3 from 'd3';
-import flatpickr from "flatpickr";
+import flatpickr from 'flatpickr';
 
 let svg,
     container_g,
@@ -29,7 +29,7 @@ export const getPageElements = () => ({
     fitreps_g,
     legend_canvas,
     rerender_button,
-    fp_start_date    
+    fp_start_date,
 });
 
 export const buildElements = (grid) => {
@@ -65,11 +65,10 @@ export const buildElements = (grid) => {
         .text('Re-Render')
         .style('display', 'none');
 
-    fp_start_date=
-        flatpickr("#start-date", {
-            position: "above left",
-            dateFormat: "m/d/Y"
-        });
+    fp_start_date = flatpickr('#start-date', {
+        position: 'above left',
+        dateFormat: 'm/d/Y',
+    });
 
     return getPageElements();
 };
@@ -207,7 +206,7 @@ export function draw_legend() {
                     )
                 })`
         );
-    /// Outlines
+    /// Marker fill
     prom_rec_legend_marker_groups
         .append('path')
         .attr('d', function (d) {
@@ -226,7 +225,7 @@ export function draw_legend() {
             return symbol.size(size)();
         })
         .attr('fill', 'none')
-        .attr('stroke', 'black')
+        .attr('stroke', (d) => lib.fitrep_stroke_scale(d.toUpperCase()))
         .attr('stroke-width', lib.fitrep_marker_stroke_width);
     /// Labels
     prom_rec_legend_marker_groups
@@ -240,7 +239,7 @@ export function draw_legend() {
                         lib.fitrep_marker_size(lib.fitrep_legend_marker_size)) /
                         Math.PI
                 )
-            })`
+            },5)`
         )
         .text((d) => d);
 
@@ -299,7 +298,7 @@ export function draw_legend() {
                         lib.fitrep_marker_size(lib.fitrep_legend_marker_size)) /
                         Math.PI
                 )
-            })`
+            },5)`
         )
         .text((d) => d);
 
@@ -366,13 +365,14 @@ export function draw_legend() {
         .style('dominant-baseline', 'middle');
 }
 
-export function addHTMLTemplates(){
-    let templates=[
-        'faqs'
-    ];
+export function addHTMLTemplates() {
+    let templates = ['faqs'];
 
-    templates.map(filename=>d3.select('body')
-        .append('div')
-        .attr('id', filename)
-        .html(require(`../templates/${filename}.html`).default))
+    templates.map((filename) =>
+        d3
+            .select('body')
+            .append('div')
+            .attr('id', filename)
+            .html(require(`../templates/${filename}.html`).default)
+    );
 }
