@@ -3,15 +3,15 @@ import * as d3 from 'd3';
 import { min } from 'd3';
 
 const { fields } = require('../schema');
-const { getPageElements }= require('../../page-components.js')
+const { getPageElements } = require('../../page-components.js');
 
 export class DataProvider {
     constructor(parsedData) {
         this.psr = this.format(parsedData);
-        this.startDate= this.getStartDate();
-        this.endDate= this.getEndDate();
+        this.startDate = this.getStartDate();
+        this.endDate = this.getEndDate();
         this.validatePsr();
-        
+
         this.setTimeScale();
 
         for (let k in fields) {
@@ -56,7 +56,6 @@ export class DataProvider {
     }
 
     setTimeScale() {
-
         this.min_start_date = this.startDate;
         this.max_end_date = this.endDate;
 
@@ -74,8 +73,10 @@ export class DataProvider {
 
     getStartDate() {
         const start_dates = this.psr.map((d) => d.start_date);
-        const {fp_start_date} = getPageElements();
-        let startDate=new Date(Math.max(Math.min(...start_dates), ...fp_start_date.selectedDates));
+        const { fp_start_date } = getPageElements();
+        let startDate = new Date(
+            Math.max(Math.min(...start_dates), ...fp_start_date.selectedDates)
+        );
         fp_start_date.setDate(startDate, false);
         return startDate;
     }
