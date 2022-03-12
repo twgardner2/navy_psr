@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import * as lib from '../lib.js';
+const { getPageElements } = require('../page-components.js');
 
 const { fields } = require('../data/schema');
 const { resetTable } = require('../page-components');
@@ -97,17 +98,19 @@ function toggle_rows(e, d) {
         });
 
         // Toggle button text to 'edit'
-        clicked_button.text('edit');
+        clicked_button.text('Edit');
 
         // Remove this row's <td>s and the button an 'editing' class
         clicked_button.classed('editing', false);
         parent_row.selectAll('td').classed('editing', false);
+        redrawGraph();
     }
 }
 
 function deleteRow(e, d) {
     var parent_row = d3.select(this.parentNode.parentNode);
     parent_row.remove();
+    redrawGraph();
 }
 
 function addRow(e, d) {
@@ -170,4 +173,10 @@ function buildButton(cell, text, callback) {
         .attr('row_index', (d, i) => i)
         .text(text)
         .on('click', callback);
+}
+
+
+function redrawGraph(){
+    const { rerender_button } = getPageElements();
+    rerender_button.node().click();
 }
