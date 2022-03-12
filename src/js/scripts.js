@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
     draw_legend();
 
     let data = d3
-        .csv('./gardner_anon.csv', d3.autoType)
+        .csv('./sample_psr.csv', d3.autoType)
         .then((data) => {
             // Attach original data to ghost <g> to retain it
             d3.select('body')
