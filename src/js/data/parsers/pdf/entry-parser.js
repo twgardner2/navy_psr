@@ -1,6 +1,6 @@
 
 const { convertToThou } = require('./helpers');
-const obs= require('../../../lib').prom_rec_categories.slice(0,-1);
+const obs= require('../../../lib').prom_rec_categories.slice(0,-2);
 
 function parseEntryRows(entryRows, cols) {
     colsArr=Object.keys(cols).map(k=>{
