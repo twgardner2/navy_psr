@@ -163,6 +163,7 @@ function make_reporting_senior_bars(data) {
         'white'
     );
 }
+
 function make_idt_command_bars(data) {
     const { command_idt_g } = getPageElements();
 
@@ -249,11 +250,21 @@ function draw_axes(group, data) {
 function draw_fitrep_graph(data, group) {
     // FITREPs
     // #region Draw FITREPs plot
-    // Create tooltip
-    var tooltip = d3
+
+    // Create fitrepTooltip
+    var fitrepTooltip = d3
         .select('body')
         .append('div')
-        .attr('class', 'tooltip')
+        .attr('class', 'fitrepTooltip')
+        .style('border-style', 'solid')
+        .style('opacity', 0)
+        .style('pointer-events', 'none');
+
+    // Create FITREP gap tooltip
+    var fitrepGapTooltip = d3
+        .select('body')
+        .append('div')
+        .attr('class', 'fitrepGapTooltip')
         .style('border-style', 'solid')
         .style('opacity', 0)
         .style('pointer-events', 'none');
@@ -290,14 +301,17 @@ function draw_fitrep_graph(data, group) {
         .attr('fill', (d) => lib.fitrep_color_scale(d.prom_rec.toUpperCase()))
         .attr('opacity', lib.fitrep_marker_opacity)
         .on('mouseover', function (event, d) {
-            tooltip.transition().duration(400).style('opacity', 0.9);
-            tooltip
-                .html(fitrep_tooltip(d))
+            fitrepTooltip
+                .transition()
+                .duration(400)
+                .style('opacity', lib.fitrep_tooltip_opacity);
+            fitrepTooltip
+                .html(fitrepTooltipHTML(d))
                 .style('left', event.pageX + 'px')
                 .style('top', event.pageY - 28 + 'px');
         })
         .on('mouseout', function (d) {
-            tooltip.transition().duration(400).style('opacity', 0);
+            fitrepTooltip.transition().duration(400).style('opacity', 0);
         });
     // Draw FITREP marker outlines
     fitrep_marker_gs
@@ -320,18 +334,20 @@ function draw_fitrep_graph(data, group) {
         .attr('stroke-width', lib.fitrep_marker_stroke_width)
         .attr('opacity', 1)
         .on('mouseover', function (event, d) {
-            tooltip.transition().duration(400).style('opacity', 0.9);
-            tooltip
-                .html(fitrep_tooltip(d))
+            fitrepTooltip
+                .transition()
+                .duration(400)
+                .style('opacity', lib.fitrep_tooltip_opacity);
+            fitrepTooltip
+                .html(fitrepTooltipHTML(d))
                 .style('left', event.pageX + 'px')
                 .style('top', event.pageY - 28 + 'px');
         })
         .on('mouseout', function (d) {
-            tooltip.transition().duration(400).style('opacity', 0);
+            fitrepTooltip.transition().duration(400).style('opacity', 0);
         });
 
     // Draw comparable FITREP lines
-
     const line = d3
         .line()
         .x((d) => data.time_scale(d.end_date))
@@ -383,7 +399,20 @@ function draw_fitrep_graph(data, group) {
         )
         .attr('fill', 'red')
         .attr('opacity', 0.2)
-        .style('pointer-events', 'none');
+        .on('mouseover', function (event, d) {
+            let gapRectBoundingRect = event.target.getBoundingClientRect();
+            fitrepGapTooltip
+                .transition()
+                .duration(400)
+                .style('opacity', lib.fitrep_gap_tooltip_opacity);
+            fitrepGapTooltip
+                .html(fitrepGapTooltipHTML(d))
+                .style('left', gapRectBoundingRect.right)
+                .style('top', gapRectBoundingRect.top);
+        })
+        .on('mouseout', function (d) {
+            fitrepGapTooltip.transition().duration(400).style('opacity', 0.0);
+        });
     // #endregion
 }
 
@@ -404,13 +433,13 @@ function clear_fitrep_highlight(element_to_clear) {
     element_to_clear.style('opacity', 0);
 }
 
-function fitrep_tooltip(d) {
+function fitrepTooltipHTML(d) {
     var delta = d.trait_avg ? (d.trait_avg - d.rsca).toFixed(2) : 'n/a';
     delta = delta == '-0.00' ? '0.00' : delta;
     delta = delta > 0 ? '+' + delta : delta;
     delta = d.rsca ? delta : 'n/a';
 
-    var return_val = `
+    return `
     <strong>Period:</strong> ${lib.date_formatter(
         d.start_date
     )} to ${lib.date_formatter(d.end_date)}<br>
@@ -444,7 +473,7 @@ function fitrep_tooltip(d) {
             <td>${
                 d.prom_rec.toUpperCase() == 'EP' ? '<strong>EP</strong>' : 'EP'
             }</td>
-        </tr>
+            </tr>
         <tr>
             <td>${
                 d.prom_rec.toUpperCase() == 'SP'
@@ -474,6 +503,10 @@ function fitrep_tooltip(d) {
         </tr>
     </table>
     `;
-    // console.log(return_val);
-    return return_val;
+}
+
+function fitrepGapTooltipHTML(d) {
+    return `
+    <strong>Continuity Gap:</strong><br>
+    ${lib.date_formatter(d[0])} to ${lib.date_formatter(d[1])}`;
 }
