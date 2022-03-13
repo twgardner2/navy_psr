@@ -105,9 +105,9 @@ div.fitrepGapTooltip::after {
     content: ' ';
     position: absolute;
     top: 45%;
-    right: 100%; /* To the left of the tooltip */
+    right: 100%;
     margin-top: -5px;
-    border-width: 8px;
+    border-width: 6px;
     border-style: solid;
     border-color: transparent black transparent transparent;
 }

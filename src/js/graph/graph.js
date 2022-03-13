@@ -397,8 +397,8 @@ function draw_fitrep_graph(data, group) {
             'width',
             (d) => `${data.time_scale(d[1]) - data.time_scale(d[0])}px`
         )
-        .attr('fill', 'red')
-        .attr('opacity', 0.2)
+        .attr('fill', lib.gap_color)
+        .attr('opacity', lib.gap_opacity)
         .on('mouseover', function (event, d) {
             let gapRectBoundingRect = event.target.getBoundingClientRect();
             fitrepGapTooltip
@@ -407,8 +407,8 @@ function draw_fitrep_graph(data, group) {
                 .style('opacity', lib.fitrep_gap_tooltip_opacity);
             fitrepGapTooltip
                 .html(fitrepGapTooltipHTML(d))
-                .style('left', gapRectBoundingRect.right)
-                .style('top', gapRectBoundingRect.top);
+                .style('left', gapRectBoundingRect.right + window.scrollX)
+                .style('top', gapRectBoundingRect.top + window.scrollY);
         })
         .on('mouseout', function (d) {
             fitrepGapTooltip.transition().duration(400).style('opacity', 0.0);
@@ -506,7 +506,7 @@ function fitrepTooltipHTML(d) {
 }
 
 function fitrepGapTooltipHTML(d) {
-    return `
-    <strong>Continuity Gap:</strong><br>
-    ${lib.date_formatter(d[0])} to ${lib.date_formatter(d[1])}`;
+    return `<strong>Continuity Gap:</strong><br>${lib.date_formatter(
+        d[0]
+    )} to ${lib.date_formatter(d[1])}`;
 }
