@@ -18,9 +18,11 @@ export const fitrep_height = 300;
 // Horizontal (time) scale - defined in scripts.js
 
 // Vertical (RSCA) scale
+export const rsca_scale_max = 1.2;
+export const rsca_scale_min = -1.2;
 export const rsca_scale = d3
     .scaleLinear()
-    .domain([-1.2, 1.2])
+    .domain([rsca_scale_min, rsca_scale_max])
     .range([fitrep_height, 0]);
 
 // Colors
@@ -63,6 +65,14 @@ export const fitrep_legend_marker_size = 10;
 export const fitrep_marker_opacity = 0.85;
 export const fitrep_marker_stroke_width = 1.5;
 
+export const gap_legend_height = 120;
+export const gap_legend_width = 35;
+export const gap_color = 'red';
+export const gap_opacity = 0.2;
+
+export const fitrep_tooltip_opacity = 0.85;
+export const fitrep_gap_tooltip_opacity = 0.85;
+
 export const fitrep_color_scale = d3
     .scaleOrdinal()
     .domain(['EP', 'MP', 'P', 'PR', 'SP', 'NOB', 'MISSING RSCA'])
@@ -101,7 +111,12 @@ export const fitrep_marker_size = d3
     .clamp(true);
 
 // Formatters
-export const date_formatter = new Intl.DateTimeFormat('en-US').format;
+export const dateFormatter_mmddyyyy = new Intl.DateTimeFormat('en-US').format;
+export const dateFormatter_mmddyy = new Intl.DateTimeFormat('en-US', {
+    year: '2-digit',
+    month: 'numeric',
+    day: 'numeric',
+}).format;
 
 // Helpers
 export function add_days_to_date(date, n_days) {

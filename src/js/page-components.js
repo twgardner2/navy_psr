@@ -176,13 +176,30 @@ export function draw_legend() {
     const { legend_canvas } = getPageElements();
 
     // #region Add FITREP plot legend
-    // 2 groups in the legend canvas, 1 for the promotion recommendation legend, 1 for the traffic size legend
+    // 3 groups in the legend canvas: promotion recommendation legend, traffic size legend, gap legend
     const prom_rec_g = legend_canvas
         .append('g')
         .attr('transform', `translate(10,${8 * lib.bar_height})`);
     const traffic_g = legend_canvas
         .append('g')
         .attr('transform', `translate(100,${8 * lib.bar_height})`);
+    const gap_g = legend_canvas
+        .append('g')
+        .attr(
+            'transform',
+            `translate(10,${
+                8 * lib.bar_height +
+                lib.prom_rec_categories.length *
+                    1.2 *
+                    Math.sqrt(
+                        (4 *
+                            lib.fitrep_marker_size(
+                                lib.fitrep_legend_marker_size
+                            )) /
+                            Math.PI
+                    )
+            })`
+        );
 
     // Draw the promotion recommendation legend
     /// Markers
@@ -301,6 +318,23 @@ export function draw_legend() {
             },5)`
         )
         .text((d) => d);
+
+    // Draw the FITREP gap legend
+    gap_g
+        .append('rect')
+        .attr('height', `${lib.gap_legend_height}px`)
+        .attr('width', `${lib.gap_legend_width}px`)
+        .attr('fill', lib.gap_color)
+        .attr('opacity', lib.gap_opacity);
+    gap_g
+        .append('text')
+        .selectAll('tspan')
+        .data(['FITREP', 'Continuity', 'Gap'])
+        .enter()
+        .append('tspan')
+        .text((d) => d)
+        .attr('x', '45px')
+        .attr('y', (d, i) => `${50 + i * 16}px`);
 
     // #endregion
 

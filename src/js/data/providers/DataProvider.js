@@ -88,22 +88,13 @@ export class DataProvider {
 
     fitrepsSameRsNewRank() {
         var fitreps_by_rs = d3.group(this.psr, (d) => d.rs_name);
-        // console.log(fitreps_by_rs);
-
-        // console.log(fitreps_by_rs[1]);
-
         var array_from_maps = [];
+
         fitreps_by_rs.forEach((a) =>
             a.forEach((b, i) => {
                 if (a[i + 1] && b.paygrade != a[i + 1].paygrade) {
-                    // if (a[i + 1]) {
-                    // console.log(b);
-                    // console.log(a[i + 1]);
                     array_from_maps.push([b, a[i + 1]]);
-                    // array_from_maps.push(b);
                 }
-                // console.log(a);
-                // console.log(b);
             })
         );
         return array_from_maps;
@@ -115,9 +106,7 @@ export class DataProvider {
         var fitrep_gaps = fitrep_dates.map(function (el, i, array) {
             if (array[i + 1]) {
                 const one_day = 1 * 24 * 3600 * 1000;
-                // var end_this_fitrep = el[1];
                 var end_this_fitrep = new Date(el[1]);
-                // console.log(end_this_fitrep);
                 var day_after_end_this_fitrep = new Date(
                     end_this_fitrep.getTime() + one_day
                 );

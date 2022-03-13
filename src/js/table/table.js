@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import * as lib from '../lib.js';
-import flatpickr from "flatpickr";
+import flatpickr from 'flatpickr';
 
 const { getPageElements } = require('../page-components.js');
 
@@ -61,14 +61,14 @@ function toggle_rows(e, d) {
                 .append('input')
                 .attr('value', value)
                 .style('width', width);
-            
-            if(schema_entry.type === 'date'){
+
+            if (schema_entry.type === 'date') {
                 table_field.node().classList.add('date-field');
             }
         });
-        flatpickr(".date-field input", {
-            position: "above left",
-            dateFormat: "m/d/Y"
+        flatpickr('.date-field input', {
+            position: 'above left',
+            dateFormat: 'm/d/Y',
         });
     } else {
         // If currently editing row
@@ -131,8 +131,7 @@ function addRow(e, d) {
     if (next_row) {
         let next_selector = `tr:nth-child(${next_row.rowIndex + 1})`;
         table.insert('tr', next_selector);
-        new_row=table.select(next_selector);
-
+        new_row = table.select(next_selector);
     } else {
         new_row = table.append('tr');
     }
@@ -161,7 +160,7 @@ function processPSRField(entry, key) {
     let type = fields[key].type || 'text';
     let val = entry[key];
     if (type === 'text') val = val.toUpperCase();
-    if (type === 'date') val = lib.date_formatter(val);
+    if (type === 'date') val = lib.dateFormatter_mmddyyyy(val);
     if (key === 'trait_avg') {
         val = val ? Number.parseFloat(val).toFixed(2) : 0;
     }
@@ -185,8 +184,7 @@ function buildButton(cell, text, callback) {
         .on('click', callback);
 }
 
-
-function redrawGraph(){
+function redrawGraph() {
     const { rerender_button } = getPageElements();
     rerender_button.node().click();
 }
