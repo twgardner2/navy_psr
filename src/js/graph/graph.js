@@ -439,10 +439,11 @@ function fitrepTooltipHTML(d) {
     delta = delta > 0 ? '+' + delta : delta;
     delta = d.rsca ? delta : 'n/a';
 
+    var begin = lib.dateFormatter_mmddyy(d.start_date);
+    var end = lib.dateFormatter_mmddyy(d.end_date);
+
     return `
-    <strong>Period:</strong> ${lib.date_formatter(
-        d.start_date
-    )} to ${lib.date_formatter(d.end_date)}<br>
+    <strong>Period:</strong> ${begin} to ${end}<br>
     <strong>Report Type:</strong> ${d.rpt_type}<br>
     <br>
     <strong>Reporting Senior:</strong> ${d.rs_name}<br>
@@ -506,7 +507,8 @@ function fitrepTooltipHTML(d) {
 }
 
 function fitrepGapTooltipHTML(d) {
-    return `<strong>Continuity Gap:</strong><br>${lib.date_formatter(
-        d[0]
-    )} to ${lib.date_formatter(d[1])}`;
+    var begin = lib.dateFormatter_mmddyyyy(d[0]);
+    var end = lib.dateFormatter_mmddyyyy(d[1]);
+
+    return `<strong>Continuity Gap:</strong><br>${begin} to ${end}`;
 }

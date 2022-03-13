@@ -111,7 +111,8 @@ export const fitrep_marker_size = d3
     .clamp(true);
 
 // Formatters
-export const date_formatter = new Intl.DateTimeFormat('en-US', {
+export const dateFormatter_mmddyyyy = new Intl.DateTimeFormat('en-US').format;
+export const dateFormatter_mmddyy = new Intl.DateTimeFormat('en-US', {
     year: '2-digit',
     month: 'numeric',
     day: 'numeric',
