@@ -507,8 +507,8 @@ function fitrepTooltipHTML(d) {
 }
 
 function fitrepGapTooltipHTML(d) {
-    var begin = lib.dateFormatter_mmddyyyy(d[0]);
-    var end = lib.dateFormatter_mmddyyyy(d[1]);
+    var begin = lib.dateFormatter_mmddyy(d[0]);
+    var end = lib.dateFormatter_mmddyy(d[1]);
 
     return `<strong>Continuity Gap:</strong><br>${begin} to ${end}`;
 }
