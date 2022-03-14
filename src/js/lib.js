@@ -66,7 +66,7 @@ export const fitrep_marker_opacity = 0.85;
 export const fitrep_marker_stroke_width = 1.5;
 
 export const gap_legend_height = 120;
-export const gap_legend_width = 35;
+export const gap_legend_width = 30;
 export const gap_color = 'red';
 export const gap_opacity = 0.2;
 

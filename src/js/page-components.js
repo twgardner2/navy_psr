@@ -337,7 +337,7 @@ export function draw_legend() {
         .enter()
         .append('tspan')
         .text((d) => d)
-        .attr('x', '45px')
+        .attr('x', '40px')
         .attr('y', (d, i) => `${50 + i * 16}px`);
 
     // Draw the y-axis label
