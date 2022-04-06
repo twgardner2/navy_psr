@@ -99,7 +99,7 @@ function make_bars(
     // Draw <rect> for each value
     var bars = g
         .append('rect')
-        .attr('height', 0.8 * lib.bar_height)
+        .attr('height', lib.bar_height)
         .attr('width', (d) => data.time_scale(d.end) - data.time_scale(d.start))
         .attr('fill', 'none')
         .attr('stroke', 'black')
