@@ -113,9 +113,6 @@ function make_bars(
             let textSoSmallNeedToShowTooltip;
             var rect_height = this.parentNode.children[0].getBBox().height;
             var rect_width = this.parentNode.children[0].getBBox().width;
-            console.log('this');
-            console.log(this);
-            console.log(this.parentNode.children[1].getNumberOfChars());
             var num_chars =
                 0.65 * this.parentNode.children[1].getNumberOfChars();
 
