@@ -143,13 +143,6 @@ function make_bars(
 
     // Create <text> for each value
     g.append('text')
-        .attr(
-            'transform',
-            (d) =>
-                `translate(${
-                    0.5 * (data.time_scale(d.end) - data.time_scale(d.start))
-                },${0.5 * lib.bar_height})`
-        )
         .style('text-anchor', 'middle')
         .style('pointer-events', 'none')
         .style('fill', font_color)
@@ -157,13 +150,23 @@ function make_bars(
         .style('font-size', function (d) {
             var rect_height = this.parentNode.children[0].getBBox().height;
             var rect_width = this.parentNode.children[0].getBBox().width;
-            var num_chars = 0.65 * this.getNumberOfChars();
+            var num_chars = 0.85 * this.getNumberOfChars();
 
             var return_val_in_px = Math.min(
                 0.65 * rect_height,
                 rect_width / num_chars
             );
             return `${return_val_in_px}px`;
+        })
+        .attr('transform', function (d) {
+            let fontsize = parseFloat(this.style.fontSize);
+            console.log('fontsize');
+            console.log(fontsize);
+
+            return `translate(${
+                0.5 * (data.time_scale(d.end) - data.time_scale(d.start))
+            },
+            ${0.5 * lib.bar_height + Math.sqrt(fontsize)})`;
         });
 }
 
