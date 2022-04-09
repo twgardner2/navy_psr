@@ -10,7 +10,8 @@ export const margin = { top: 30, right: 30, bottom: 30, left: 30, gap: 10 };
 export const y_axis_width = 40;
 
 export const bar_width = 1000;
-export const bar_height = 40;
+export const bar_gap = 40;
+export const bar_height = 0.8 * bar_gap;
 
 export const fitrep_width = 1000;
 export const fitrep_height = 300;
@@ -66,7 +67,7 @@ export const fitrep_marker_opacity = 0.85;
 export const fitrep_marker_stroke_width = 1.5;
 
 export const gap_legend_height = 120;
-export const gap_legend_width = 35;
+export const gap_legend_width = 30;
 export const gap_color = 'red';
 export const gap_opacity = 0.2;
 

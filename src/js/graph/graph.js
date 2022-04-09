@@ -36,6 +36,9 @@ export const draw_psr_viz = (data) => {
 
     setFitrepHighlight(fitreps_g);
 
+    // Tooltip for Reporting Senior and Command Bars
+    make_rs_and_command_tooltip();
+
     // Rank Bars
     make_rank_bars(data);
 
@@ -66,6 +69,18 @@ function setFitrepHighlight(group) {
         .attr('opacity', 0.0);
 }
 
+function make_rs_and_command_tooltip() {
+    // Create RS/Command tooltip
+    var rs_command_bar_tooltip = d3
+        .select('body')
+        .append('div')
+        .attr('id', 'rsCommandBarTooltip')
+        .attr('class', 'tooltip rsCommandBarTooltip')
+        .style('border-style', 'solid')
+        .style('opacity', 0)
+        .style('pointer-events', 'none');
+}
+
 function make_bars(
     dates,
     data,
@@ -84,7 +99,7 @@ function make_bars(
     // Draw <rect> for each value
     var bars = g
         .append('rect')
-        .attr('height', 0.8 * lib.bar_height)
+        .attr('height', lib.bar_height)
         .attr('width', (d) => data.time_scale(d.end) - data.time_scale(d.start))
         .attr('fill', 'none')
         .attr('stroke', 'black')
@@ -92,22 +107,42 @@ function make_bars(
         .attr('fill', bar_color)
         .attr('rx', '10px')
         .attr('ry', '10px')
-        .on('mouseover', function (event, d) {
+        .on('mousemove', function (event, d) {
             update_highlight_element(event, d, fitrep_highlight, data);
+
+            let textSoSmallNeedToShowTooltip;
+            var rect_height = this.parentNode.children[0].getBBox().height;
+            var rect_width = this.parentNode.children[0].getBBox().width;
+            var num_chars =
+                0.65 * this.parentNode.children[1].getNumberOfChars();
+
+            var fontsize = Math.min(0.65 * rect_height, rect_width / num_chars);
+            textSoSmallNeedToShowTooltip = fontsize < 10;
+
+            if (textSoSmallNeedToShowTooltip) {
+                let rsCommandBarTooltip = d3.select('#rsCommandBarTooltip');
+                rsCommandBarTooltip
+                    .style('left', event.pageX + 'px')
+                    .style('top', event.pageY - 28 + 'px')
+                    .text(`${d.value}`);
+                rsCommandBarTooltip
+                    .transition()
+                    .duration(250)
+                    .style('opacity', 1.0);
+            }
         })
-        .on('mouseleave', function () {
+        .on('mouseleave', function (event, d) {
             clear_fitrep_highlight(fitrep_highlight);
+
+            let rsCommandBarTooltip = d3.select('#rsCommandBarTooltip');
+            rsCommandBarTooltip
+                .transition()
+                .duration(250)
+                .style('opacity', 0.0);
         });
 
     // Create <text> for each value
     g.append('text')
-        .attr(
-            'transform',
-            (d) =>
-                `translate(${
-                    0.5 * (data.time_scale(d.end) - data.time_scale(d.start))
-                },${0.5 * lib.bar_height})`
-        )
         .style('text-anchor', 'middle')
         .style('pointer-events', 'none')
         .style('fill', font_color)
@@ -115,13 +150,23 @@ function make_bars(
         .style('font-size', function (d) {
             var rect_height = this.parentNode.children[0].getBBox().height;
             var rect_width = this.parentNode.children[0].getBBox().width;
-            var num_chars = 0.65 * this.getNumberOfChars();
+            var num_chars = 0.85 * this.getNumberOfChars();
 
             var return_val_in_px = Math.min(
                 0.65 * rect_height,
                 rect_width / num_chars
             );
             return `${return_val_in_px}px`;
+        })
+        .attr('transform', function (d) {
+            let fontsize = parseFloat(this.style.fontSize);
+            console.log('fontsize');
+            console.log(fontsize);
+
+            return `translate(${
+                0.5 * (data.time_scale(d.end) - data.time_scale(d.start))
+            },
+            ${0.5 * lib.bar_height + Math.sqrt(fontsize)})`;
         });
 }
 
@@ -255,7 +300,7 @@ function draw_fitrep_graph(data, group) {
     var fitrepTooltip = d3
         .select('body')
         .append('div')
-        .attr('class', 'fitrepTooltip')
+        .attr('class', 'tooltip fitrepTooltip')
         .style('border-style', 'solid')
         .style('opacity', 0)
         .style('pointer-events', 'none');
@@ -264,7 +309,7 @@ function draw_fitrep_graph(data, group) {
     var fitrepGapTooltip = d3
         .select('body')
         .append('div')
-        .attr('class', 'fitrepGapTooltip')
+        .attr('class', 'tooltip fitrepGapTooltip')
         .style('border-style', 'solid')
         .style('opacity', 0)
         .style('pointer-events', 'none');
@@ -303,7 +348,7 @@ function draw_fitrep_graph(data, group) {
         .on('mouseover', function (event, d) {
             fitrepTooltip
                 .transition()
-                .duration(400)
+                .duration(250)
                 .style('opacity', lib.fitrep_tooltip_opacity);
             fitrepTooltip
                 .html(fitrepTooltipHTML(d))
@@ -311,7 +356,7 @@ function draw_fitrep_graph(data, group) {
                 .style('top', event.pageY - 28 + 'px');
         })
         .on('mouseout', function (d) {
-            fitrepTooltip.transition().duration(400).style('opacity', 0);
+            fitrepTooltip.transition().duration(250).style('opacity', 0);
         });
     // Draw FITREP marker outlines
     fitrep_marker_gs
@@ -336,7 +381,7 @@ function draw_fitrep_graph(data, group) {
         .on('mouseover', function (event, d) {
             fitrepTooltip
                 .transition()
-                .duration(400)
+                .duration(250)
                 .style('opacity', lib.fitrep_tooltip_opacity);
             fitrepTooltip
                 .html(fitrepTooltipHTML(d))
@@ -344,7 +389,7 @@ function draw_fitrep_graph(data, group) {
                 .style('top', event.pageY - 28 + 'px');
         })
         .on('mouseout', function (d) {
-            fitrepTooltip.transition().duration(400).style('opacity', 0);
+            fitrepTooltip.transition().duration(250).style('opacity', 0);
         });
 
     // Draw comparable FITREP lines
@@ -403,7 +448,7 @@ function draw_fitrep_graph(data, group) {
             let gapRectBoundingRect = event.target.getBoundingClientRect();
             fitrepGapTooltip
                 .transition()
-                .duration(400)
+                .duration(250)
                 .style('opacity', lib.fitrep_gap_tooltip_opacity);
             fitrepGapTooltip
                 .html(fitrepGapTooltipHTML(d))
@@ -411,7 +456,7 @@ function draw_fitrep_graph(data, group) {
                 .style('top', gapRectBoundingRect.top + window.scrollY);
         })
         .on('mouseout', function (d) {
-            fitrepGapTooltip.transition().duration(400).style('opacity', 0.0);
+            fitrepGapTooltip.transition().duration(250).style('opacity', 0.0);
         });
     // #endregion
 }
@@ -425,7 +470,7 @@ function update_highlight_element(e, d, element, data) {
             `${lib.rsca_scale.range()[0] - lib.rsca_scale.range()[1]}`
         )
         .transition()
-        .duration(200)
+        .duration(250)
         .style('opacity', 0.2);
 }
 
@@ -507,8 +552,8 @@ function fitrepTooltipHTML(d) {
 }
 
 function fitrepGapTooltipHTML(d) {
-    var begin = lib.dateFormatter_mmddyyyy(d[0]);
-    var end = lib.dateFormatter_mmddyyyy(d[1]);
+    var begin = lib.dateFormatter_mmddyy(d[0]);
+    var end = lib.dateFormatter_mmddyy(d[1]);
 
     return `<strong>Continuity Gap:</strong><br>${begin} to ${end}`;
 }

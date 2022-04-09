@@ -1,6 +1,14 @@
 $navy-yellow: #e8b00f;
 $navy-black: #08262c;
 
+$th-bg-color: #dcdcdc;
+$tr-odd-row-bg-color: #f5f5f5;
+$tr-even-row-bg-color: white;
+
+$fitrep-tooltip-bg-color: #c2dfff;
+$fitrep-gap-tooltip-bg-color: #c2dfff;
+$rs-command-bar-tooltip-bg-color: #c2dfff;
+
 nav {
     position: sticky;
     top: 0;
@@ -80,13 +88,13 @@ div {
 }
 
 th {
-    background-color: #dcdcdc;
+    background-color: $th-bg-color;
 }
 tr:nth-child(odd) {
-    background-color: #f5f5f5;
+    background-color: $tr-odd-row-bg-color;
 }
 tr:nth-child(even) {
-    background-color: white;
+    background-color: $tr-even-row-bg-color;
 }
 
 .label {
@@ -94,23 +102,23 @@ tr:nth-child(even) {
     align-self: center;
 }
 
-div.fitrepTooltip {
+div.tooltip {
     position: absolute;
+    border: 2.5px;
+    border-radius: 8px;
+    padding: 6px;
+}
+
+div.fitrepTooltip {
     text-align: left;
     width: auto;
     height: auto;
-    padding: 6px;
-    font: 12px sans-serif;
-    background: #c2dfff;
-    border: 2px;
-    border-radius: 8px;
+    background: $fitrep-tooltip-bg-color;
     pointer-events: none;
 }
 
 div.fitrepTooltip > table {
     font: 12px san-serif;
-    /* width: 1px;
-    height: 1px; */
     white-space: nowrap;
     border-collapse: collapse;
 }
@@ -121,16 +129,11 @@ div.fitrepTooltip table tr {
 }
 
 div.fitrepGapTooltip {
-    position: absolute;
     text-align: left;
     width: fit-content;
     block-size: fit-content;
     height: fit-content;
-    padding: 6px;
-    font: 12px sans-serif;
-    background: #c2dfff;
-    border: 2px;
-    border-radius: 8px;
+    background: $fitrep-gap-tooltip-bg-color;
     pointer-events: none;
     grid-area: canvas;
 }
@@ -144,6 +147,16 @@ div.fitrepGapTooltip::after {
     border-width: 6px;
     border-style: solid;
     border-color: transparent black transparent transparent;
+}
+
+div.rsCommandBarTooltip {
+    text-align: left;
+    width: fit-content;
+    block-size: fit-content;
+    height: fit-content;
+    font: 14px sans-serif;
+    background: $rs-command-bar-tooltip-bg-color;
+    pointer-events: none;
 }
 
 table {
