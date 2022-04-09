@@ -1,3 +1,37 @@
+$navy-yellow: #e8b00f;
+$navy-black: #08262c;
+
+nav {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+    transition: top 750ms ease-in-out;
+    background-color: $navy-black;
+}
+
+nav.scroll-up {
+    top: 0;
+}
+
+nav.scroll-down {
+    top: -100%;
+}
+nav > .links {
+    display: flex;
+    width: 40%;
+}
+nav > .logo {
+    color: white;
+}
+
+.links > a {
+    flex: 1;
+    color: white;
+}
+
 .grid {
     display: grid;
     grid-template-columns: 184px 0.5fr 2fr 0.5fr 0.5fr;
@@ -131,4 +165,61 @@ tr {
 
 .graph_filter_container {
     margin-bottom: 2em;
+}
+
+// FAQ overlay
+.overlay {
+    height: 0%;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.95);
+    overflow-y: hidden;
+    transition: 1s;
+}
+
+.overlay-content > * {
+    color: #a0a0a0;
+}
+
+.overlay-content {
+    position: relative;
+    top: 25%;
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.overlay a {
+    text-decoration: none;
+    color: #f1f1f1;
+}
+
+.overlay a:hover,
+.overlay a:focus {
+    color: #f1f1f1;
+}
+
+.overlay .closebtn {
+    position: absolute;
+    top: 20px;
+    right: 45px;
+    font-size: 60px;
+}
+
+@media screen and (max-height: 450px) {
+    .overlay {
+        overflow-y: auto;
+    }
+    .overlay a {
+        font-size: 20px;
+    }
+    .overlay .closebtn {
+        font-size: 40px;
+        top: 15px;
+        right: 35px;
+    }
 }

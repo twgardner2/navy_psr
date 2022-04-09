@@ -400,7 +400,7 @@ export function draw_legend() {
 }
 
 export function addHTMLTemplates() {
-    let templates = ['faqs'];
+    let templates = [];
 
     templates.map((filename) =>
         d3
@@ -409,4 +409,11 @@ export function addHTMLTemplates() {
             .attr('id', filename)
             .html(require(`../templates/${filename}.html`).default)
     );
+}
+
+export function addNavBar() {
+    console.log('adding navbar');
+    d3.select('nav')
+        .attr('id', 'nav')
+        .html(require('../templates/nav.html').default);
 }
