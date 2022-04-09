@@ -99,7 +99,7 @@ function buildGraph(grid) {
         .attr('class', 'bar_container')
         .attr(
             'transform',
-            `translate(${lib.y_axis_width}, ${lib.bar_height + lib.margin.gap})`
+            `translate(${lib.y_axis_width}, ${lib.bar_gap + lib.margin.gap})`
         );
     // Regular (Active Duty) Reporting Seniors
     rep_sen_rg_g = container_g
@@ -108,7 +108,7 @@ function buildGraph(grid) {
         .attr(
             'transform',
             `translate(${lib.y_axis_width}, ${
-                2 * lib.bar_height + lib.margin.gap
+                2 * lib.bar_gap + lib.margin.gap
             })`
         );
     // IDT (SELRES) Commands
@@ -119,7 +119,7 @@ function buildGraph(grid) {
         .attr(
             'transform',
             `translate(${lib.y_axis_width}, ${
-                3 * lib.bar_height + lib.margin.gap
+                3 * lib.bar_gap + lib.margin.gap
             })`
         );
     // IDT (SELRES) Reporting Seniors
@@ -129,7 +129,7 @@ function buildGraph(grid) {
         .attr(
             'transform',
             `translate(${lib.y_axis_width}, ${
-                4 * lib.bar_height + lib.margin.gap
+                4 * lib.bar_gap + lib.margin.gap
             })`
         );
     // AT (Mobilization/ADSW/ADT) Commands
@@ -139,7 +139,7 @@ function buildGraph(grid) {
         .attr(
             'transform',
             `translate(${lib.y_axis_width}, ${
-                5 * lib.bar_height + lib.margin.gap
+                5 * lib.bar_gap + lib.margin.gap
             })`
         );
     // AT (Mobilization/ADSW/ADT) Reporting Seniors
@@ -149,7 +149,7 @@ function buildGraph(grid) {
         .attr(
             'transform',
             `translate(${lib.y_axis_width}, ${
-                6 * lib.bar_height + lib.margin.gap
+                6 * lib.bar_gap + lib.margin.gap
             })`
         );
     fitreps_g = container_g
@@ -158,7 +158,7 @@ function buildGraph(grid) {
         .attr(
             'transform',
             `translate(${lib.y_axis_width}, ${
-                6 * lib.bar_height + 5 * lib.margin.gap
+                6 * lib.bar_gap + 5 * lib.margin.gap
             })`
         );
 }
@@ -180,16 +180,16 @@ export function draw_legend() {
     // traffic size legend, gap legend, y-axis label
     const prom_rec_g = legend_canvas
         .append('g')
-        .attr('transform', `translate(10,${8 * lib.bar_height})`);
+        .attr('transform', `translate(10,${8 * lib.bar_gap})`);
     const traffic_g = legend_canvas
         .append('g')
-        .attr('transform', `translate(100,${8 * lib.bar_height})`);
+        .attr('transform', `translate(100,${8 * lib.bar_gap})`);
     const gap_g = legend_canvas
         .append('g')
         .attr(
             'transform',
             `translate(10,${
-                8 * lib.bar_height +
+                8 * lib.bar_gap +
                 lib.prom_rec_categories.length *
                     1.2 *
                     Math.sqrt(
@@ -351,7 +351,7 @@ export function draw_legend() {
         .append('g')
         .attr(
             'transform',
-            `translate(0, ${lib.margin.gap + 1.5 * lib.bar_height})`
+            `translate(0, ${lib.margin.gap + 1.5 * lib.bar_gap})`
         )
         .append('text')
         .text('Regular Commands')
@@ -361,7 +361,7 @@ export function draw_legend() {
         .append('g')
         .attr(
             'transform',
-            `translate(0, ${lib.margin.gap + 2.5 * lib.bar_height})`
+            `translate(0, ${lib.margin.gap + 2.5 * lib.bar_gap})`
         )
         .append('text')
         .text('Regular Reporting Seniors')
@@ -371,7 +371,7 @@ export function draw_legend() {
         .append('g')
         .attr(
             'transform',
-            `translate(0, ${lib.margin.gap + 3.5 * lib.bar_height})`
+            `translate(0, ${lib.margin.gap + 3.5 * lib.bar_gap})`
         )
         .append('text')
         .text('IDT Commands')
@@ -381,7 +381,7 @@ export function draw_legend() {
         .append('g')
         .attr(
             'transform',
-            `translate(0, ${lib.margin.gap + 4.5 * lib.bar_height})`
+            `translate(0, ${lib.margin.gap + 4.5 * lib.bar_gap})`
         )
         .append('text')
         .text('IDT Reporting Seniors')
@@ -391,7 +391,7 @@ export function draw_legend() {
         .append('g')
         .attr(
             'transform',
-            `translate(0, ${lib.margin.gap + 5.5 * lib.bar_height})`
+            `translate(0, ${lib.margin.gap + 5.5 * lib.bar_gap})`
         )
         .append('text')
         .text('AT Commands')
@@ -401,7 +401,7 @@ export function draw_legend() {
         .append('g')
         .attr(
             'transform',
-            `translate(0, ${lib.margin.gap + 6.5 * lib.bar_height})`
+            `translate(0, ${lib.margin.gap + 6.5 * lib.bar_gap})`
         )
         .append('text')
         .text('AT Reporting Seniors')
