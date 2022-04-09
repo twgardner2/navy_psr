@@ -160,8 +160,6 @@ function make_bars(
         })
         .attr('transform', function (d) {
             let fontsize = parseFloat(this.style.fontSize);
-            console.log('fontsize');
-            console.log(fontsize);
 
             return `translate(${
                 0.5 * (data.time_scale(d.end) - data.time_scale(d.start))
