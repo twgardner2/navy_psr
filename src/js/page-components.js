@@ -180,16 +180,16 @@ export function draw_legend() {
     // traffic size legend, gap legend, y-axis label
     const prom_rec_g = legend_canvas
         .append('g')
-        .attr('transform', `translate(10,${8 * lib.bar_gap})`);
+        .attr('transform', `translate(10,${7.5 * lib.bar_gap})`);
     const traffic_g = legend_canvas
         .append('g')
-        .attr('transform', `translate(100,${8 * lib.bar_gap})`);
+        .attr('transform', `translate(100,${7.5 * lib.bar_gap})`);
     const gap_g = legend_canvas
         .append('g')
         .attr(
             'transform',
             `translate(10,${
-                8 * lib.bar_gap +
+                7.5 * lib.bar_gap +
                 lib.prom_rec_categories.length *
                     1.2 *
                     Math.sqrt(
@@ -338,7 +338,7 @@ export function draw_legend() {
         .append('tspan')
         .text((d) => d)
         .attr('x', '40px')
-        .attr('y', (d, i) => `${50 + i * 16}px`);
+        .attr('y', (d, i) => `${20 + i * 16}px`);
 
     // Draw the y-axis label
     axisLabel_g

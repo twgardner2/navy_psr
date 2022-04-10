@@ -391,6 +391,7 @@ function draw_fitrep_graph(data, group) {
         });
 
     // Draw comparable FITREP lines
+    // Line drawing definition
     const line = d3
         .line()
         .x((d) => data.time_scale(d.end_date))
