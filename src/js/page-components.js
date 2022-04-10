@@ -201,6 +201,72 @@ export function draw_legend() {
                     )
             })`
         );
+
+    // Linetype legend
+    const linetype_g = legend_canvas
+        .append('g')
+        .attr('id', 'linetype_legend_g')
+        .attr(
+            'transform',
+            `translate(10,${
+                9.0 * lib.bar_gap +
+                lib.prom_rec_categories.length *
+                    1.2 *
+                    Math.sqrt(
+                        (4 *
+                            lib.fitrep_marker_size(
+                                lib.fitrep_legend_marker_size
+                            )) /
+                            Math.PI
+                    )
+            })`
+        );
+    const linetype_line = d3
+        .line()
+        .x((d) => d.x)
+        .y((d) => d.y);
+
+    const linetype_legend_data = [
+        [
+            { x: 0, y: 20 },
+            { x: 130, y: 20 },
+        ],
+        [
+            { x: 0, y: 60 },
+            { x: 130, y: 60 },
+        ],
+    ];
+
+    linetype_g
+        .selectAll('lines')
+        .data(linetype_legend_data)
+        .enter()
+        .append('g')
+        .attr('class', 'fitrep line')
+        .append('path')
+        .attr('d', (d) => linetype_line(d))
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('stroke-width', '2.5px')
+        .attr('stroke-dasharray', function (d, i) {
+            let dasharray;
+            i == 0 ? (dasharray = '') : (dasharray = '5,3');
+            return dasharray;
+        })
+        .attr('opacity', 0.5)
+        .attr('pointer-events', 'none');
+
+    linetype_g
+        .append('text')
+        .selectAll('tspan')
+        .data(['Same RS and Rank', 'Same RS, New Rank'])
+        .enter()
+        .append('tspan')
+        .text((d) => d)
+        .attr('x', '0px')
+        .attr('y', (d, i) => `${40 + i * 40}px`);
+
+    // Y-axis label
     const axisLabel_g = legend_canvas
         .append('g')
         .attr('transform', `translate(180,430) rotate(270)`);
