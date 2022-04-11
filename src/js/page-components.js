@@ -226,20 +226,19 @@ export function draw_legend() {
         .x((d) => d.x)
         .y((d) => d.y);
 
-    const linetype_legend_data = [
-        [
-            { x: 0, y: 20 },
-            { x: 130, y: 20 },
-        ],
-        [
-            { x: 0, y: 60 },
-            { x: 130, y: 60 },
-        ],
-    ];
-
     linetype_g
         .selectAll('lines')
-        .data(linetype_legend_data)
+        // .data(linetype_legend_data)
+        .data([
+            [
+                { x: 0, y: 20 },
+                { x: 130, y: 20 },
+            ],
+            [
+                { x: 0, y: 60 },
+                { x: 130, y: 60 },
+            ],
+        ])
         .enter()
         .append('g')
         .attr('class', 'fitrep line')
