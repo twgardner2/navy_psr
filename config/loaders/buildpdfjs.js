@@ -52,6 +52,7 @@ module.exports=function(input){
         .replace(`_pdfjsFiles.forEach( (fieldName, idx, arr) => _fileContent += fs.readFileSync(_basePath + fieldName, 'utf8') );`, '')
         .replace(`eval(_fileContent);`, replacement)
         .replace(`var nodeUtil`, 'nodeUtil')
-        .replace('globalScope.PDFJS.disableWorker', '(true)');
+        .replace('globalScope.PDFJS.disableWorker', '(true)')
+        .replace(`this.compiledGlyphs[character] = new Function('c', 'size', js);`, 'this.compiledGlyphs[character] = (c, size)=>{js(c, size)};');
     return output;
 }
