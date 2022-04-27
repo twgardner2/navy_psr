@@ -1,5 +1,6 @@
 $navy-yellow: #e8b00f;
 $navy-black: #08262c;
+$navy-black-faded: #08262cf3;
 
 $th-bg-color: #dcdcdc;
 $tr-odd-row-bg-color: #f5f5f5;
@@ -9,15 +10,22 @@ $fitrep-tooltip-bg-color: #c2dfff;
 $fitrep-gap-tooltip-bg-color: #c2dfff;
 $rs-command-bar-tooltip-bg-color: #c2dfff;
 
+body {
+    margin: 0;
+}
+
+main {
+    margin: 8;
+}
+
 nav {
     position: sticky;
     top: 0;
-    display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    padding: 1.5rem 2rem;
+    padding: 0;
     transition: top 750ms ease-in-out;
-    background-color: $navy-black;
+    background-color: $navy-black-faded;
 }
 
 nav.scroll-up {
@@ -27,17 +35,31 @@ nav.scroll-up {
 nav.scroll-down {
     top: -100%;
 }
-nav > .links {
-    display: flex;
-    width: 40%;
-}
-nav > .logo {
-    color: white;
+
+nav > ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
-.links > a {
-    flex: 1;
+nav li a {
+    float: right;
+    display: block;
     color: white;
+    text-align: center;
+    padding: 25px 20px;
+    text-decoration: none;
+    font-size: large;
+}
+
+li a:hover {
+    background-color: $navy-black;
+}
+.logo {
+    float: left;
+    pointer-events: none;
+    font-size: x-large;
 }
 
 .grid {
@@ -57,7 +79,8 @@ h1,
 h2,
 text,
 table,
-div {
+div,
+nav {
     font-family: 'Roboto', serif;
 }
 

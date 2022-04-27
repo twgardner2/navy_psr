@@ -486,8 +486,12 @@ export function addHTMLTemplates() {
 }
 
 export function addNavBar() {
-    console.log('adding navbar');
     d3.select('nav')
         .attr('id', 'nav')
         .html(require('../templates/nav.html').default);
+
+    d3.select('body')
+        .append('div')
+        .attr('class', 'overlay')
+        .html(require('../templates/faq_overlay.html').default);
 }
