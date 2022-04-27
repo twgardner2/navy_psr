@@ -160,8 +160,6 @@ function make_bars(
         })
         .attr('transform', function (d) {
             let fontsize = parseFloat(this.style.fontSize);
-            console.log('fontsize');
-            console.log(fontsize);
 
             return `translate(${
                 0.5 * (data.time_scale(d.end) - data.time_scale(d.start))
@@ -393,6 +391,7 @@ function draw_fitrep_graph(data, group) {
         });
 
     // Draw comparable FITREP lines
+    // Line drawing definition
     const line = d3
         .line()
         .x((d) => data.time_scale(d.end_date))

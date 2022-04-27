@@ -21,7 +21,7 @@ module.exports.fallbacks = ()=>({
 module.exports.plugins = ()=>([
     new webpack.ProvidePlugin({
         process: require.resolve('process/browser'),
-        Buffer: ['buffer', 'Buffer'],
+        Buffer: ['buffer', 'Buffer']
     }),
     ...pdfjsConfig.plugins(),
 ]);
@@ -31,7 +31,7 @@ module.exports.rules = ()=>([
     {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: { 
+        use:{ 
             loader: 'babel-loader',
             options: {
                 presets: [
@@ -41,6 +41,6 @@ module.exports.rules = ()=>([
                 }]
                 ],
             },
-        },
-    },
+        }
+    }
 ]);

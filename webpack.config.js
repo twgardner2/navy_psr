@@ -23,10 +23,16 @@ module.exports = {
             ...htmlConfig.rules(),
         ],
     },
+    node:{
+        global: true
+    },
     resolve: {
         fallback: {
             ...psrParserConfig.fallbacks(),
         },
     },
-    plugins: [...psrParserConfig.plugins(), ...styleConfig.plugins()],
+    plugins: [
+        ...psrParserConfig.plugins(), 
+        ...styleConfig.plugins(),
+    ],
 };

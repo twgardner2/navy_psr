@@ -180,16 +180,16 @@ export function draw_legend() {
     // traffic size legend, gap legend, y-axis label
     const prom_rec_g = legend_canvas
         .append('g')
-        .attr('transform', `translate(10,${8 * lib.bar_gap})`);
+        .attr('transform', `translate(10,${7.5 * lib.bar_gap})`);
     const traffic_g = legend_canvas
         .append('g')
-        .attr('transform', `translate(100,${8 * lib.bar_gap})`);
+        .attr('transform', `translate(100,${7.5 * lib.bar_gap})`);
     const gap_g = legend_canvas
         .append('g')
         .attr(
             'transform',
             `translate(10,${
-                8 * lib.bar_gap +
+                7.5 * lib.bar_gap +
                 lib.prom_rec_categories.length *
                     1.2 *
                     Math.sqrt(
@@ -201,6 +201,71 @@ export function draw_legend() {
                     )
             })`
         );
+
+    // Linetype legend
+    const linetype_g = legend_canvas
+        .append('g')
+        .attr('id', 'linetype_legend_g')
+        .attr(
+            'transform',
+            `translate(10,${
+                9.0 * lib.bar_gap +
+                lib.prom_rec_categories.length *
+                    1.2 *
+                    Math.sqrt(
+                        (4 *
+                            lib.fitrep_marker_size(
+                                lib.fitrep_legend_marker_size
+                            )) /
+                            Math.PI
+                    )
+            })`
+        );
+    const linetype_line = d3
+        .line()
+        .x((d) => d.x)
+        .y((d) => d.y);
+
+    linetype_g
+        .selectAll('lines')
+        // .data(linetype_legend_data)
+        .data([
+            [
+                { x: 0, y: 20 },
+                { x: 130, y: 20 },
+            ],
+            [
+                { x: 0, y: 60 },
+                { x: 130, y: 60 },
+            ],
+        ])
+        .enter()
+        .append('g')
+        .attr('class', 'fitrep line')
+        .append('path')
+        .attr('d', (d) => linetype_line(d))
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('stroke-width', '2.5px')
+        .attr('stroke-dasharray', function (d, i) {
+            let dasharray;
+            i == 0 ? (dasharray = '') : (dasharray = '5,3');
+            return dasharray;
+        })
+        .attr('opacity', 0.5)
+        .attr('pointer-events', 'none');
+
+    linetype_g
+        .append('text')
+        .selectAll('tspan')
+        .data(['Same RS and Rank', 'Same RS, New Rank'])
+        .enter()
+        .append('tspan')
+        .text((d) => d)
+        .attr('x', '0px')
+        .attr('y', (d, i) => `${40 + i * 40}px`);
+
+    // Y-axis label
     const axisLabel_g = legend_canvas
         .append('g')
         .attr('transform', `translate(180,430) rotate(270)`);
@@ -338,7 +403,7 @@ export function draw_legend() {
         .append('tspan')
         .text((d) => d)
         .attr('x', '40px')
-        .attr('y', (d, i) => `${50 + i * 16}px`);
+        .attr('y', (d, i) => `${20 + i * 16}px`);
 
     // Draw the y-axis label
     axisLabel_g
