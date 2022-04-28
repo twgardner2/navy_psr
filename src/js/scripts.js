@@ -19,54 +19,6 @@ let data;
 
 document.addEventListener('DOMContentLoaded', function () {
     addNavBar();
-
-    let previousScrollPosition = 0;
-
-    function openFaq() {
-        console.log('open faq overlay');
-        // document.getElementById('faq').style.height = '100%';
-        document.querySelector('.overlay').style.height = '100%';
-    }
-    function closeFaq() {
-        console.log('close faq overlay');
-        document.querySelector('.overlay').style.height = '0%';
-    }
-
-    const faqLink = document.getElementById('faqLink');
-    faqLink.addEventListener('click', openFaq);
-
-    const faqCloseBtn = document.getElementById('faqCloseBtn');
-    faqCloseBtn.addEventListener('click', closeFaq);
-
-    // Navbar
-    const isScrollingDown = () => {
-        let currentScrolledPosition = window.scrollY || window.pageYOffset;
-        let scrollingDown;
-
-        if (currentScrolledPosition > previousScrollPosition) {
-            scrollingDown = true;
-        } else {
-            scrollingDown = false;
-        }
-        previousScrollPosition = currentScrolledPosition;
-        return scrollingDown;
-    };
-    const nav = document.querySelector('nav');
-    const handleNavScroll = () => {
-        if (isScrollingDown()) {
-            nav.classList.add('scroll-down');
-            nav.classList.remove('scroll-up');
-        } else {
-            nav.classList.add('scroll-up');
-            nav.classList.remove('scroll-down');
-        }
-    };
-
-    window.addEventListener('scroll', () => {
-        // throttle(handleNavScroll, 250);
-        handleNavScroll();
-    });
-
     // ^^^ Navbar ^^^
 
     d3.select('body').style('background-color', lib.bg_color);

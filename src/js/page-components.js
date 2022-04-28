@@ -409,7 +409,7 @@ export function draw_legend() {
 }
 
 export function addHTMLTemplates() {
-    let templates = [];
+    let templates = ['nav'];
 
     templates.map((filename) =>
         d3
@@ -425,4 +425,49 @@ export function addNavBar() {
     d3.select('nav')
         .attr('id', 'nav')
         .html(require('../templates/nav.html').default);
+
+    
+        let previousScrollPosition = 0;
+
+        function openFaq() {
+            document.querySelector('.overlay').classList.add('open');
+        }
+        function closeFaq() {
+            console.log('close faq overlay');
+            document.querySelector('.overlay').classList.remove('open');
+        }
+    
+        const faqLink = document.getElementById('faqLink');
+        faqLink.addEventListener('click', openFaq);
+    
+        const faqCloseBtn = document.getElementById('faqCloseBtn');
+        faqCloseBtn.addEventListener('click', closeFaq);
+    
+        // Navbar
+        const isScrollingDown = () => {
+            let currentScrolledPosition = window.scrollY || window.pageYOffset;
+            let scrollingDown;
+    
+            if (currentScrolledPosition > previousScrollPosition) {
+                scrollingDown = true;
+            } else {
+                scrollingDown = false;
+            }
+            previousScrollPosition = currentScrolledPosition;
+            return scrollingDown;
+        };
+        const nav = document.querySelector('nav');
+        const handleNavScroll = () => {
+            if (isScrollingDown()) {
+                nav.classList.add('scroll-down');
+                nav.classList.remove('scroll-up');
+            } else {
+                nav.classList.add('scroll-up');
+                nav.classList.remove('scroll-down');
+            }
+        };
+    
+        window.addEventListener('scroll', () => {
+            handleNavScroll();
+        });
 }
