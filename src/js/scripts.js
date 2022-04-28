@@ -41,28 +41,19 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     draw_legend();
+    
+    let sampleData=require('../../sample_psr.json');
+    // Attach original data to ghost <g> to retain it
+    d3.select('body')
+        .append('g')
+        .attr('id', 'original_data')
+        .attr('original_data', sampleData)
+        .data(sampleData);
 
-    let data = d3
-        .csv('./sample_psr.csv', d3.autoType)
-        .then((data) => {
-            // Attach original data to ghost <g> to retain it
-            d3.select('body')
-                .append('g')
-                .attr('id', 'original_data')
-                .attr('original_data', data)
-                .data(data);
-
-            // Log data to console
-            // console.log(data);
-            return data;
-        })
-        .then((data) => {
-            let provider = new DataProvider(data);
+        let provider = new DataProvider(sampleData);
             populate_table(provider);
-            return provider;
-        })
-        // Draw viz
-        .then((provider) => draw_psr_viz(provider));
+        
+        draw_psr_viz(provider);
 
     addHTMLTemplates();
 });

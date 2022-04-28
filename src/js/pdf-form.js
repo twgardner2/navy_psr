@@ -12,17 +12,25 @@ let parentElem;
 
 export function appendPDFUploadForm(parent) {
     parentElem = parent;
-    let wrapper = parent.append('div').attr('id', 'pdf-parser-wrapper');
+    let wrapper = parent
+        .append('div')
+        .attr('id', 'pdf-parser-wrapper')
+        .style('display', 'flex')
+        .style('justify-content', 'space-evenly')
+        .style('align-items', 'center');
 
     wrapper
         .append('label')
         .attr('for', 'pdf-parser')
-        .html('Select PSR PDF for Parsing');
+        .html('Upload PSR PDF:')
+        .style('font-weight', 'bold')
+        .style('font-size', 'larger');
 
     wrapper
         .append('input')
         .attr('type', 'file')
         .attr('accept', '.pdf')
+
         .on('change', updateFromPdfInputChange);
 }
 
