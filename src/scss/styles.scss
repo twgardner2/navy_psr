@@ -1,3 +1,7 @@
+$navy-yellow: #e8b00f;
+$navy-black: #08262c;
+$navy-black-faded: #08262cf3;
+
 $th-bg-color: #dcdcdc;
 $tr-odd-row-bg-color: #f5f5f5;
 $tr-even-row-bg-color: white;
@@ -5,6 +9,59 @@ $tr-even-row-bg-color: white;
 $fitrep-tooltip-bg-color: #c2dfff;
 $fitrep-gap-tooltip-bg-color: #c2dfff;
 $rs-command-bar-tooltip-bg-color: #c2dfff;
+
+body {
+    margin: 0;
+}
+
+main {
+    margin: 8;
+}
+
+nav {
+    position: sticky;
+    top: 0;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0;
+    transition: top 750ms ease-in-out;
+    background-color: $navy-black-faded;
+}
+
+nav.scroll-up {
+    top: 0;
+}
+
+nav.scroll-down {
+    top: -100%;
+}
+
+nav > ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+nav li a {
+    float: right;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 25px 20px;
+    text-decoration: none;
+    font-size: large;
+}
+
+li a:hover {
+    background-color: $navy-black;
+}
+.logo {
+    float: left;
+    pointer-events: none;
+    font-size: x-large;
+    padding: 20px 20px;
+}
 
 .grid {
     display: grid;
@@ -23,7 +80,8 @@ h1,
 h2,
 text,
 table,
-div {
+div,
+nav {
     font-family: 'Roboto', serif;
 }
 
@@ -144,4 +202,63 @@ tr {
 
 .graph_filter_container {
     margin-bottom: 2em;
+}
+
+// FAQ overlay
+.overlay {
+    height: 0%;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.95);
+    overflow-y: hidden;
+    transition: 1s;
+
+    &.open{
+        height:100%;
+    }
+}
+
+.overlay-content > * {
+    color: #a0a0a0;
+}
+
+.overlay-content {
+    position: relative;
+    top: 25%;
+    margin: 30px 100px;
+}
+
+.overlay a {
+    text-decoration: none;
+    color: #f1f1f1;
+}
+
+.overlay a:hover,
+.overlay a:focus {
+    color: #f1f1f1;
+}
+
+.overlay .closebtn {
+    position: absolute;
+    top: 20px;
+    right: 45px;
+    font-size: 60px;
+}
+
+@media screen and (max-height: 450px) {
+    .overlay {
+        overflow-y: auto;
+    }
+    .overlay a {
+        font-size: 20px;
+    }
+    .overlay .closebtn {
+        font-size: 40px;
+        top: 15px;
+        right: 35px;
+    }
 }

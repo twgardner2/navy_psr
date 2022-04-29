@@ -8,6 +8,7 @@ const {
     buildElements,
     draw_legend,
     addHTMLTemplates,
+    addNavBar,
 } = require('./page-components.js');
 const { populate_table } = require('./table/table.js');
 const { clear_psr_viz, draw_psr_viz } = require('./graph/graph.js');
@@ -17,6 +18,9 @@ const { appendPDFUploadForm } = require('./pdf-form.js');
 let data;
 
 document.addEventListener('DOMContentLoaded', function () {
+    addNavBar();
+    // ^^^ Navbar ^^^
+
     d3.select('body').style('background-color', lib.bg_color);
 
     let grid = d3.select('body').select('.grid');
