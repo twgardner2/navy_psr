@@ -1,3 +1,4 @@
+const { count } = require("d3");
 const { prom_rec_categories } = require("../lib")
 
 module.exports.fields={
@@ -56,7 +57,24 @@ module.exports.fields={
         },
         "months": { 
             name: "months", 
-            type: "number", 
+            type: "calculated",
+            calculated:{
+                watch: ['start_date', 'end_date'],
+                calculate: (d3Row)=>{
+                    let date1=d3Row.select('td[data-key="start_date"] input')
+                        .node()
+                        ._flatpickr
+                        .selectedDates[0];
+                    let date2=d3Row.select('td[data-key="end_date"] input')
+                        .node()
+                        ._flatpickr
+                        .selectedDates[0];
+                    let months = (date2.getFullYear() - date1.getFullYear()) * 12;
+                    months -= date1.getMonth();
+                    months += date2.getMonth();
+                    return months <= 0 ? 0 : months;
+                }
+            },
             display: "Months", 
             width: "30px",
             pdf:{
@@ -144,7 +162,26 @@ module.exports.fields={
         },
         "trait_avg":{ 
             name: "trait_avg", 
-            type: "number", 
+            type: "calculated",
+            calculated:{
+                watch: ['trait_1', 'trait_2', 'trait_3', 'trait_4', 'trait_5'],
+                calculate: (d3Row)=>{
+                    let values=this.fields.trait_avg.calculated.watch.map(key=>
+                        Number(d3Row.select(`td[data-key="${key}"] input`).node().value)
+                    );
+                    let observed=values.reduce((a,b)=>a+b);
+                    if(observed === 0){
+                        return '';
+                    }
+
+                    let sum=0;
+                    values.forEach((count, i)=>
+                        sum+=(i+1)*count
+                    );
+
+                    return (sum/observed).toFixed(2);
+                }   
+            },
             display: "Trait Avg",
             pdf: {
                 parentColumn: "Averages"

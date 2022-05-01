@@ -57,11 +57,18 @@ function toggle_rows(e, d) {
             var table_field = d3.select(this);
             var value = this.innerHTML;
             table_field.text('');
-            table_field
-                .append('input')
-                .attr('value', value)
-                .style('width', width);
+            let input= table_field
+                        .append('input')
+                        .attr('value', value)
+                        .attr('name', this.dataset.key)
+                        .style('width', width);
 
+            if(schema_entry.type === 'calculated'){
+                input.attr('disabled', 'disabled');
+                addCalcListeners(parent_row,input, schema_entry)
+                
+            }
+            
             if (schema_entry.type === 'date') {
                 table_field.node().classList.add('date-field');
             }
@@ -113,6 +120,7 @@ function toggle_rows(e, d) {
         // Remove this row's <td>s and the button an 'editing' class
         clicked_button.classed('editing', false);
         parent_row.selectAll('td').classed('editing', false);
+        parent_row.on("change", null);
         redrawGraph();
     }
 }
@@ -187,4 +195,15 @@ function buildButton(cell, text, callback) {
 function redrawGraph() {
     const { rerender_button } = getPageElements();
     rerender_button.node().click();
+}
+
+function addCalcListeners(parentRow, input, schema_entry){
+    schema_entry.calculated.watch.map(dataKey=>{
+        parentRow.node().addEventListener('change', (e)=>{
+            if(e.target.name !== dataKey){
+                return;
+            }
+            input.attr('value', schema_entry.calculated.calculate(parentRow));
+        })
+    })
 }

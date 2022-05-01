@@ -27,7 +27,7 @@ export function parse_data_from_table(e, d) {
           var valid_values = schema_entry[0] ? schema_entry[0].valid : null;
   
           var typed_cell_value;
-          if (cell_data_type == "text") {
+          if (cell_data_type == "text" || cell_data_type === 'calculated') {
             typed_cell_value = cell_value;
 
           } else if (cell_data_type == "number") {
