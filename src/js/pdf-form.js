@@ -1,6 +1,9 @@
+
+import * as d3 from 'd3';
+
 const { DataProvider } = require('./data/providers/DataProvider');
 
-const { parseFileInputToEntries } = require('./data/parsers/pdf/psr-parser');
+const { parseFileInputToEntries, parseFileInputToName } = require('./data/parsers/pdf/psr-parser');
 
 const { draw_psr_viz } = require('./graph/graph.js');
 
@@ -44,4 +47,7 @@ function updateFromPdfInputChange(event) {
             return provider;
         })
         .then((provider) => populate_table(provider));
+
+    parseFileInputToName(elem).then((psrName)=>
+        d3.select('#name h2').text(`PSR: ${psrName}`));
 }
