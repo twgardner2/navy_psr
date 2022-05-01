@@ -175,6 +175,11 @@ function parseAverages(cols) {
         rows:1,
         startLine:'top'
     }
+    cols.sum_group={
+        xThou:cols.Averages.xThou,
+        rows:1,
+        startLine:'bottom'
+    }
     cols.rsca={
         xThou:cols.Averages.xThou+2500,
         rows:1,
