@@ -187,6 +187,14 @@ module.exports.fields={
                 parentColumn: "Averages"
             }
         },
+        'sum_group': {
+            name: "sum_group",
+            type: "number",
+            display: "Summary Reporting Group Average",
+            pdf: {
+                parentColumn: "Averages"
+            }
+        },
         "rsca":{
             name: "rsca",
             type: "number",
