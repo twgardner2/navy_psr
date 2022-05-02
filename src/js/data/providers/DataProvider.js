@@ -30,7 +30,7 @@ export class DataProvider {
                     continue;
                 }
                 type = fields[k].type;
-                if (type === 'number') {
+                if (type === 'number' || type === 'average') {
                     entry[k] = Number(entry[k]);
                 } else if (type === 'date' && !(entry[k] instanceof Date)) {
                     entry[k] = new Date(entry[k]);
