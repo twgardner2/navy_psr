@@ -52,6 +52,21 @@ function dateFixer( mmddyyString){
     return new Date(mil+year, month, day);
 }
 
+function parseName(page){
+    let metaItems=page.filter(item=>item.y<getMetaFloor(page));
+    let nameLabel=metaItems.filter(item=>item.text==="NAME(LAST,FIRST, MIDDLE)")[0];
+    let nameCol=nameLabel.x;
+    let nameCeiling=nameLabel.y;
+    let nameFloor=metaItems.filter(item=>item.x===nameCol && item.text===" PG")[0].y;
+
+    let name=metaItems.filter(item=>item.x===nameCol && item.y<nameFloor && item.y>nameCeiling);
+
+    if(name.length !==1){
+        throw `${name.length} entries found for name, 1 expected`;
+    }
+    return name[0].text;    
+}
+
 function getEntryRows(page, cols) {
     let entryItems=page.filter(item=>item.y>=getMetaFloor(page));
     
@@ -89,4 +104,17 @@ export async function parseFileInputToEntries(input){
             });
         });
     });
+}
+
+export async function parseFileInputToName(input){
+    let file = input.files[0];
+    return new Promise((resolve, reject)=>{
+        file.arrayBuffer().then( arrayBuffer=>{
+            let buffer = Buffer.from(arrayBuffer);
+            loadPages(buffer).then(pages=>{
+                let name= parseName(pages['page1']);
+                resolve(name);
+            })
+        })
+    })
 }
