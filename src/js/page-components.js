@@ -15,6 +15,7 @@ let svg,
     legend_canvas,
     table,
     rerender_button,
+    start_container,
     table_container,
     fp_start_date;
 
@@ -44,20 +45,6 @@ export const buildElements = (grid) => {
 
     table_container = grid.append('div').attr('class', 'table');
 
-    let start_container = table_container
-        .append('div')
-        .attr('class', 'graph_filter_container');
-
-    start_container
-        .append('label')
-        .attr('for', 'start_date')
-        .html('Start Date:');
-
-    start_container
-        .append('input')
-        .attr('type', 'text')
-        .attr('id', 'start-date');
-
     rerender_button = table_container
         .append('div')
         .append('button')
@@ -65,17 +52,16 @@ export const buildElements = (grid) => {
         .text('Re-Render')
         .style('display', 'none');
 
-    fp_start_date = flatpickr('#start-date', {
-        position: 'above left',
-        dateFormat: 'm/d/Y',
-    });
+    setupStartDate();    
 
     return getPageElements();
 };
 
 export function resetGraph(grid) {
     svg.remove();
+    start_container.remove();
     buildGraph(grid);
+    setupStartDate();
 }
 
 function buildGraph(grid) {
@@ -523,6 +509,26 @@ export function addNavBar() {
         });
 }
 
+function setupStartDate(){
+    start_container = table_container
+        .append('div')
+        .attr('class', 'graph_filter_container');
+
+    start_container
+        .append('label')
+        .attr('for', 'start_date')
+        .html('Start Date:');
+        
+    start_container
+        .append('input')
+        .attr('type', 'text')
+        .attr('id', 'start-date');
+
+    fp_start_date = flatpickr('#start-date', {
+            position: 'above left',
+            dateFormat: 'm/d/Y',
+        });
+}
 
 export function addTabs() {
     addHTMLTemplates('tabs', '.grid');
