@@ -1,3 +1,4 @@
+$background-grey: #e5e4e2;
 $navy-yellow: #e8b00f;
 $navy-black: #08262c;
 $navy-black-faded: #08262cf3;
@@ -9,6 +10,8 @@ $tr-even-row-bg-color: white;
 $fitrep-tooltip-bg-color: #c2dfff;
 $fitrep-gap-tooltip-bg-color: #c2dfff;
 $rs-command-bar-tooltip-bg-color: #c2dfff;
+
+$lightblue:#4ea3dc;
 
 body {
     margin: 0;
@@ -67,11 +70,12 @@ li a:hover {
     display: grid;
     grid-template-columns: 184px 0.5fr 2fr 0.5fr 0.5fr;
     grid-template-rows: 75px 50px 1fr auto;
-    gap: 3px 3px;
+    gap: 0px 3px;
     grid-auto-flow: row;
     grid-template-areas:
         'name name name gh_link gh_link'
         'upload upload . . .'
+        '. tabs tabs tabs tabs'
         'fitrep_legend canvas canvas canvas .'
         'table table table table table';
 }
@@ -99,8 +103,39 @@ nav {
     grid-area: upload;
 }
 
+#tabs {
+    grid-area: tabs;
+    .tab {
+        overflow: hidden;
+        background-color: $background-grey;
+      }
+      
+    button {
+        background-color: white;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        font-size: 17px;
+
+        &:hover {
+            background-color: #ddd;
+        }
+
+        &.active {
+            background-color: $lightblue;
+        }
+      }
+}
+
+
 #canvas {
     grid-area: canvas;
+    border-width: 2px;
+    border-style: solid;
+    border-color: $lightblue;
 }
 
 #fitrep_legend {
@@ -248,6 +283,9 @@ tr {
     right: 45px;
     font-size: 60px;
 }
+
+
+
 
 @media screen and (max-height: 450px) {
     .overlay {
