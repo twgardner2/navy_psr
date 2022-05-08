@@ -143,7 +143,7 @@ function addRow(e, d) {
     } else {
         new_row = table.append('tr');
     }
-
+    new_row.attr('class', 'data_row');
     buildRow(new_row);
     new_row.select('button.edit').node().click();
 }
