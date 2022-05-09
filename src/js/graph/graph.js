@@ -127,8 +127,8 @@ function make_bars(
                     .style('top', event.pageY - 28 + 'px')
                     .text(`${d.value}`);
                 rsCommandBarTooltip
-                    .transition()
-                    .duration(250)
+                    // .transition()
+                    // .duration(250)
                     .style('opacity', 1.0);
             }
         })
@@ -137,8 +137,8 @@ function make_bars(
 
             let rsCommandBarTooltip = d3.select('#rsCommandBarTooltip');
             rsCommandBarTooltip
-                .transition()
-                .duration(250)
+                // .transition()
+                // .duration(250)
                 .style('opacity', 0.0);
         });
 
@@ -486,8 +486,8 @@ function update_highlight_element(e, d, element, data) {
             'height',
             `${lib.rsca_scale.range()[0] - lib.rsca_scale.range()[1]}`
         )
-        .transition()
-        .duration(250)
+        // .transition()
+        // .duration(250)
         .style('opacity', 0.2);
 }
 
