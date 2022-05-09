@@ -2,6 +2,11 @@ $background-grey: #e5e4e2;
 $navy-yellow: #e8b00f;
 $navy-black: #08262c;
 $navy-black-faded: #08262cf3;
+$navy-blue: #003b4f;
+$navy-teal: #088199;
+$navy-gray: #c6ccd0;
+$navy-gray-but-darker: #b9c1c6;
+$navy-red: #b30003;
 
 $th-bg-color: #dcdcdc;
 $tr-odd-row-bg-color: #f5f5f5;
@@ -11,7 +16,7 @@ $fitrep-tooltip-bg-color: #c2dfff;
 $fitrep-gap-tooltip-bg-color: #c2dfff;
 $rs-command-bar-tooltip-bg-color: #c2dfff;
 
-$lightblue:#4ea3dc;
+$lightblue: #4ea3dc;
 
 body {
     margin: 0;
@@ -111,7 +116,7 @@ nav {
     }
 
     button {
-        background-color: white;
+        background-color: $navy-gray;
         float: left;
         border: none;
         outline: none;
@@ -119,23 +124,25 @@ nav {
         padding: 14px 16px;
         transition: 0.3s;
         font-size: 17px;
+        border-radius: 10px 10px 0 0;
 
         &:hover {
-            background-color: #ddd;
+            background-color: $navy-gray-but-darker;
         }
 
         &.active {
-            background-color: $lightblue;
+            background-color: $navy-blue;
+            color: white;
         }
-      }
+    }
 }
-
 
 #canvas {
     grid-area: canvas;
     border-width: 2px;
     border-style: solid;
-    border-color: $lightblue;
+    border-color: $navy-blue;
+    border: none;
 }
 
 #fitrep_legend {
