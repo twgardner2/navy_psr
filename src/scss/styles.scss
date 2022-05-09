@@ -108,8 +108,8 @@ nav {
     .tab {
         overflow: hidden;
         background-color: $background-grey;
-      }
-      
+    }
+
     button {
         background-color: white;
         float: left;
@@ -252,8 +252,8 @@ tr {
     overflow-y: hidden;
     transition: 1s;
 
-    &.open{
-        height:100%;
+    &.open {
+        height: 100%;
     }
 }
 
@@ -283,9 +283,6 @@ tr {
     right: 45px;
     font-size: 60px;
 }
-
-
-
 
 @media screen and (max-height: 450px) {
     .overlay {

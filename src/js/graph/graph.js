@@ -270,21 +270,27 @@ function make_atcc_reporting_senior_bars(data) {
 }
 
 function draw_axes(group, data) {
-    const ylabelBuffer=30;
-    
+    const ylabelBuffer = 30;
+
     // Draw time axis
     group
         .append('g')
         .attr('class', 'x axis')
         .attr(
             'transform',
-            `translate(${ylabelBuffer}, ${lib.fitrep_height - lib.rsca_scale(0)})`
+            `translate(${ylabelBuffer}, ${
+                lib.fitrep_height - lib.rsca_scale(0)
+            })`
         )
         .call(d3.axisBottom(data.time_scale));
 
     // Draw 'Trait Avg - comp' axis
-    group.append('g')
-        .attr('transform', `translate(0,${lib.fitrep_height - lib.rsca_scale(0)}) rotate(270)`)
+    group
+        .append('g')
+        .attr(
+            'transform',
+            `translate(0,${lib.fitrep_height - lib.rsca_scale(0)}) rotate(270)`
+        )
         .attr('id', 'y-axis-label')
         .append('text')
         .attr('text-anchor', `middle`)
@@ -295,7 +301,9 @@ function draw_axes(group, data) {
         .attr('class', 'y axis')
         .attr(
             'transform',
-            `translate(${data.time_scale(data.min_start_date)+ylabelBuffer}, 0)`
+            `translate(${
+                data.time_scale(data.min_start_date) + ylabelBuffer
+            }, 0)`
         )
         .call(d3.axisLeft(lib.rsca_scale));
 }
@@ -489,7 +497,7 @@ function clear_fitrep_highlight(element_to_clear) {
 
 function fitrepTooltipHTML(d) {
     var delta = calcCompDelta(d).toFixed(2) || 'n/a';
-    
+
     var begin = lib.dateFormatter_mmddyy(d.start_date);
     var end = lib.dateFormatter_mmddyy(d.end_date);
 
@@ -565,18 +573,18 @@ function fitrepGapTooltipHTML(d) {
     return `<strong>Continuity Gap:</strong><br>${begin} to ${end}`;
 }
 
-function get_y_label(){
-    const view=getView();
+function get_y_label() {
+    const view = getView();
 
-    switch(view){
+    switch (view) {
         case 'rsca-comp':
-            return "Trait Average-RSCA";
+            return 'Trait Average-RSCA';
 
         case 'sum_group-comp':
-            return "Trait Average-Group Average";
+            return 'Trait Average-Group Average';
     }
 }
-function calcCompDelta(d){
-    let comp=getView()==='sum_group-comp' ? d.sum_group : d.rsca;
-    return comp ? d.trait_avg-comp : 0;   
+function calcCompDelta(d) {
+    let comp = getView() === 'sum_group-comp' ? d.sum_group : d.rsca;
+    return comp ? d.trait_avg - comp : 0;
 }
