@@ -7,9 +7,10 @@ const { parse_data_from_table } = require('./data/parsers/table/table-parser');
 const {
     buildElements,
     draw_legend,
-    addHTMLTemplates,
     addNavBar,
+    addTabs
 } = require('./page-components.js');
+
 const { populate_table } = require('./table/table.js');
 const { clear_psr_viz, draw_psr_viz } = require('./graph/graph.js');
 
@@ -19,7 +20,7 @@ let data;
 
 document.addEventListener('DOMContentLoaded', function () {
     addNavBar();
-    // ^^^ Navbar ^^^
+    addTabs()
 
     d3.select('body').style('background-color', lib.bg_color);
 
@@ -55,5 +56,4 @@ document.addEventListener('DOMContentLoaded', function () {
         
         draw_psr_viz(provider);
 
-    addHTMLTemplates();
 });

@@ -15,6 +15,7 @@ let svg,
     legend_canvas,
     table,
     rerender_button,
+    start_container,
     table_container,
     fp_start_date;
 
@@ -44,20 +45,6 @@ export const buildElements = (grid) => {
 
     table_container = grid.append('div').attr('class', 'table');
 
-    let start_container = table_container
-        .append('div')
-        .attr('class', 'graph_filter_container');
-
-    start_container
-        .append('label')
-        .attr('for', 'start_date')
-        .html('Start Date:');
-
-    start_container
-        .append('input')
-        .attr('type', 'text')
-        .attr('id', 'start-date');
-
     rerender_button = table_container
         .append('div')
         .append('button')
@@ -65,17 +52,16 @@ export const buildElements = (grid) => {
         .text('Re-Render')
         .style('display', 'none');
 
-    fp_start_date = flatpickr('#start-date', {
-        position: 'above left',
-        dateFormat: 'm/d/Y',
-    });
+    setupStartDate();    
 
     return getPageElements();
 };
 
 export function resetGraph(grid) {
     svg.remove();
+    start_container.remove();
     buildGraph(grid);
+    setupStartDate();
 }
 
 function buildGraph(grid) {
@@ -161,6 +147,7 @@ function buildGraph(grid) {
                 6 * lib.bar_gap + 5 * lib.margin.gap
             })`
         );
+        
 }
 
 export function resetTable() {
@@ -264,11 +251,6 @@ export function draw_legend() {
         .text((d) => d)
         .attr('x', '0px')
         .attr('y', (d, i) => `${40 + i * 40}px`);
-
-    // Y-axis label
-    const axisLabel_g = legend_canvas
-        .append('g')
-        .attr('transform', `translate(180,430) rotate(270)`);
 
     // Draw the promotion recommendation legend
     /// Markers
@@ -405,13 +387,6 @@ export function draw_legend() {
         .attr('x', '40px')
         .attr('y', (d, i) => `${20 + i * 16}px`);
 
-    // Draw the y-axis label
-    axisLabel_g
-        .append('text')
-        .attr('text-anchor', `middle`)
-        .text('Trait Average - RSCA');
-    // #endregion
-
     const command_rg_label_g = legend_canvas
         .append('g')
         .attr(
@@ -473,16 +448,12 @@ export function draw_legend() {
         .style('dominant-baseline', 'middle');
 }
 
-export function addHTMLTemplates() {
-    let templates = ['nav'];
-
-    templates.map((filename) =>
-        d3
-            .select('body')
-            .append('div')
-            .attr('id', filename)
-            .html(require(`../templates/${filename}.html`).default)
-    );
+function addHTMLTemplates(filename, selector="body") {
+        return d3
+                .select(selector)
+                .append('div')
+                .attr('id', filename)
+                .html(require(`../templates/${filename}.html`).default);
 }
 
 export function addNavBar() {
@@ -490,10 +461,8 @@ export function addNavBar() {
         .attr('id', 'nav')
         .html(require('../templates/nav.html').default);
 
-    d3.select('body')
-        .append('div')
-        .attr('class', 'overlay')
-        .html(require('../templates/faq_overlay.html').default);
+    addHTMLTemplates('faq_overlay')
+        .attr('class', 'overlay');
 
     
         let previousScrollPosition = 0;
@@ -502,7 +471,6 @@ export function addNavBar() {
             document.querySelector('.overlay').classList.add('open');
         }
         function closeFaq() {
-            console.log('close faq overlay');
             document.querySelector('.overlay').classList.remove('open');
         }
     
@@ -539,4 +507,39 @@ export function addNavBar() {
         window.addEventListener('scroll', () => {
             handleNavScroll();
         });
+}
+
+function setupStartDate(){
+    start_container = table_container
+        .append('div')
+        .attr('class', 'graph_filter_container');
+
+    start_container
+        .append('label')
+        .attr('for', 'start_date')
+        .html('Start Date:');
+        
+    start_container
+        .append('input')
+        .attr('type', 'text')
+        .attr('id', 'start-date');
+
+    fp_start_date = flatpickr('#start-date', {
+            position: 'above left',
+            dateFormat: 'm/d/Y',
+        });
+}
+
+export function addTabs() {
+    addHTMLTemplates('tabs', '.grid');
+
+    d3.selectAll('.tab button').on('click', function(e){
+        d3.selectAll('.tablinks').attr('class', 'tablinks');
+        this.classList.add('active');
+        rerender_button.node().click();
+    })
+}
+
+export function getView(){
+    return d3.select('.tablinks.active').attr('data-view');
 }

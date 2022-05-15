@@ -45,6 +45,10 @@ export class DataProvider {
     validatePsr() {
         this.psr.forEach((entry) => {
             Object.keys(fields).forEach((key) => {
+                if(key === 'sum_group'){
+                    return;
+                }
+                
                 if (
                     typeof entry[key] === 'undefined' &&
                     !fields[key]['optional']

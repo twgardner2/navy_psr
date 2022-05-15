@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import * as lib from '../lib';
 
-const { getPageElements } = require('../page-components');
+const { getPageElements, getView } = require('../page-components');
 
 let fitrep_highlight;
 
@@ -25,6 +25,7 @@ export const clear_psr_viz = (canvas) => {
     d3.select(canvas).selectAll('g.x.axis').remove();
 
     d3.select(canvas).selectAll('g.y.axis').remove();
+    d3.select(canvas).select('#y-axis-label').remove();
 };
 
 export const draw_psr_viz = (data) => {
@@ -126,8 +127,8 @@ function make_bars(
                     .style('top', event.pageY - 28 + 'px')
                     .text(`${d.value}`);
                 rsCommandBarTooltip
-                    .transition()
-                    .duration(250)
+                    // .transition()
+                    // .duration(250)
                     .style('opacity', 1.0);
             }
         })
@@ -136,8 +137,8 @@ function make_bars(
 
             let rsCommandBarTooltip = d3.select('#rsCommandBarTooltip');
             rsCommandBarTooltip
-                .transition()
-                .duration(250)
+                // .transition()
+                // .duration(250)
                 .style('opacity', 0.0);
         });
 
@@ -269,23 +270,40 @@ function make_atcc_reporting_senior_bars(data) {
 }
 
 function draw_axes(group, data) {
+    const ylabelBuffer = 30;
+
     // Draw time axis
     group
         .append('g')
         .attr('class', 'x axis')
         .attr(
             'transform',
-            `translate(0, ${lib.fitrep_height - lib.rsca_scale(0)})`
+            `translate(${ylabelBuffer}, ${
+                lib.fitrep_height - lib.rsca_scale(0)
+            })`
         )
         .call(d3.axisBottom(data.time_scale));
 
-    // Draw 'Trait Avg - RSCA' axis
+    // Draw 'Trait Avg - comp' axis
+    group
+        .append('g')
+        .attr(
+            'transform',
+            `translate(0,${lib.fitrep_height - lib.rsca_scale(0)}) rotate(270)`
+        )
+        .attr('id', 'y-axis-label')
+        .append('text')
+        .attr('text-anchor', `middle`)
+        .text(get_y_label());
+
     group
         .append('g')
         .attr('class', 'y axis')
         .attr(
             'transform',
-            `translate(${data.time_scale(data.min_start_date)}, 0)`
+            `translate(${
+                data.time_scale(data.min_start_date) + ylabelBuffer
+            }, 0)`
         )
         .call(d3.axisLeft(lib.rsca_scale));
 }
@@ -328,7 +346,7 @@ function draw_fitrep_graph(data, group) {
         .attr('transform', function (d) {
             return `translate(${data.time_scale(
                 d.end_date
-            )}, ${d.rsca ? lib.rsca_scale(d.trait_avg - d.rsca) : lib.rsca_scale(0)})`;
+            )}, ${lib.rsca_scale(calcCompDelta(d))})`;
         });
 
     // Draw FITREP markers
@@ -395,7 +413,7 @@ function draw_fitrep_graph(data, group) {
     const line = d3
         .line()
         .x((d) => data.time_scale(d.end_date))
-        .y((d) => lib.rsca_scale(d.rsca ? d.trait_avg - d.rsca : 0));
+        .y((d) => lib.rsca_scale(calcCompDelta(d)));
 
     group
         .selectAll('lines')
@@ -468,8 +486,8 @@ function update_highlight_element(e, d, element, data) {
             'height',
             `${lib.rsca_scale.range()[0] - lib.rsca_scale.range()[1]}`
         )
-        .transition()
-        .duration(250)
+        // .transition()
+        // .duration(250)
         .style('opacity', 0.2);
 }
 
@@ -478,10 +496,7 @@ function clear_fitrep_highlight(element_to_clear) {
 }
 
 function fitrepTooltipHTML(d) {
-    var delta = d.trait_avg ? (d.trait_avg - d.rsca).toFixed(2) : 'n/a';
-    delta = delta == '-0.00' ? '0.00' : delta;
-    delta = delta > 0 ? '+' + delta : delta;
-    delta = d.rsca ? delta : 'n/a';
+    var delta = calcCompDelta(d).toFixed(2) || 'n/a';
 
     var begin = lib.dateFormatter_mmddyy(d.start_date);
     var end = lib.dateFormatter_mmddyy(d.end_date);
@@ -496,9 +511,10 @@ function fitrepTooltipHTML(d) {
     <br>
     <strong>Paygrade:</strong> ${d.paygrade}<br>
     <strong>Trait Average:</strong> ${
-        d.trait_avg ? d.trait_avg.toFixed(2) : 'n/a'
+        d.trait_avg ? Number(d.trait_avg).toFixed(2) : 'n/a'
     }<br>
     <strong>RSCA:</strong> ${d.rsca ? d.rsca : 'n/a'}<br>
+    <strong>Summary Group:</strong> ${d.sum_group ? d.sum_group : 'n/a'}<br>
     <strong>Delta:</strong> ${delta} <br>
     <br>
     <table>
@@ -555,4 +571,20 @@ function fitrepGapTooltipHTML(d) {
     var end = lib.dateFormatter_mmddyy(d[1]);
 
     return `<strong>Continuity Gap:</strong><br>${begin} to ${end}`;
+}
+
+function get_y_label() {
+    const view = getView();
+
+    switch (view) {
+        case 'rsca-comp':
+            return 'Trait Average-RSCA';
+
+        case 'sum_group-comp':
+            return 'Trait Average-Group Average';
+    }
+}
+function calcCompDelta(d) {
+    let comp = getView() === 'sum_group-comp' ? d.sum_group : d.rsca;
+    return comp ? d.trait_avg - comp : 0;
 }
