@@ -700,5 +700,32 @@
     "n_ep": 2,
     "prt": "P",
     "rpt_type": "IDT/RG"
+  },
+  {
+    "paygrade": "O5",
+    "station": "NR CNO CAPS ASMNT",
+    "duty": "ACTION OFFICER",
+    "start_date": "2022-02-01",
+    "end_date": "2022-04-30",
+    "months": 3,
+    "rs_name": "YETANOTHER C O",
+    "rs_paygrade": "O6",
+    "rs_title": "CO",
+    "trait_1": 0,
+    "trait_2": 0,
+    "trait_3": 3,
+    "trait_4": 3,
+    "trait_5": 1,
+    "trait_avg": "3.71",
+    "sum_group": 3.40,
+    "rsca": 3.40,
+    "prom_rec": "ep",
+    "n_sp": 0,
+    "n_pr": 0,
+    "n_p": 5,
+    "n_mp": 2,
+    "n_ep": 2,
+    "prt": "N",
+    "rpt_type": "IDT/RG"
   }
- ]
+]
