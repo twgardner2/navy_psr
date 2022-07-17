@@ -677,7 +677,7 @@
   {
     "paygrade": "O5",
     "station": "NR CNO CAPS ASMNT",
-    "duty": "ACTION OFFICER",
+    "duty": "N7 DEPT HEAD",
     "start_date": "2021-05-01",
     "end_date": "2022-01-31",
     "months": 9,
@@ -704,7 +704,7 @@
   {
     "paygrade": "O5",
     "station": "NR CNO CAPS ASMNT",
-    "duty": "ACTION OFFICER",
+    "duty": "OPERATIONS DH",
     "start_date": "2022-02-01",
     "end_date": "2022-04-30",
     "months": 3,
