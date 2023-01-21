@@ -34,36 +34,38 @@ nav {
     padding: 0;
     transition: top 750ms ease-in-out;
     background-color: $navy-black-faded;
+    
+    &.scroll-up {
+        top: 0;
+    }
+    
+    &.scroll-down {
+        top: -100%;
+    }
+    
+    & > ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+    
+    li a {
+        float: right;
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 25px 20px;
+        text-decoration: none;
+        font-size: large;
+    }
 }
 
-nav.scroll-up {
-    top: 0;
-}
-
-nav.scroll-down {
-    top: -100%;
-}
-
-nav > ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-
-nav li a {
-    float: right;
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 25px 20px;
-    text-decoration: none;
-    font-size: large;
-}
 
 li a:hover {
     background-color: $navy-black;
 }
+
 .logo {
     float: left;
     pointer-events: none;
@@ -168,14 +170,14 @@ tr:nth-child(even) {
     align-self: center;
 }
 
-div.tooltip {
+.tooltip {
     position: absolute;
     border: 2.5px;
     border-radius: 8px;
     padding: 6px;
 }
 
-div.fitrepTooltip {
+.fitrepTooltip {
     text-align: left;
     width: auto;
     height: auto;
@@ -183,18 +185,18 @@ div.fitrepTooltip {
     pointer-events: none;
 }
 
-div.fitrepTooltip > table {
+.fitrepTooltip > table {
     font: 12px san-serif;
     white-space: nowrap;
     border-collapse: collapse;
 }
 
-div.fitrepTooltip table tr {
+.fitrepTooltip table tr {
     width: 1px;
     height: 1px;
 }
 
-div.fitrepGapTooltip {
+.fitrepGapTooltip {
     text-align: left;
     width: fit-content;
     block-size: fit-content;
@@ -204,7 +206,7 @@ div.fitrepGapTooltip {
     grid-area: canvas;
 }
 
-div.fitrepGapTooltip::after {
+.fitrepGapTooltip::after {
     content: ' ';
     position: absolute;
     top: 45%;
@@ -215,7 +217,7 @@ div.fitrepGapTooltip::after {
     border-color: transparent black transparent transparent;
 }
 
-div.rsCommandBarTooltip {
+.rsCommandBarTooltip {
     text-align: left;
     width: fit-content;
     block-size: fit-content;
@@ -262,6 +264,22 @@ tr {
     &.open {
         height: 100%;
     }
+
+    a {
+        text-decoration: none;
+        color: #f1f1f1;
+
+        &:hover, &:focus{
+            color: #f1f1f1;
+        }
+    }
+
+    .closebtn {
+        position: absolute;
+        top: 20px;
+        right: 45px;
+        font-size: 60px;
+    }
 }
 
 .overlay-content > * {
@@ -274,22 +292,6 @@ tr {
     margin: 30px 100px;
 }
 
-.overlay a {
-    text-decoration: none;
-    color: #f1f1f1;
-}
-
-.overlay a:hover,
-.overlay a:focus {
-    color: #f1f1f1;
-}
-
-.overlay .closebtn {
-    position: absolute;
-    top: 20px;
-    right: 45px;
-    font-size: 60px;
-}
 
 @media screen and (max-height: 450px) {
     .overlay {
