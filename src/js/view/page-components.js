@@ -1,4 +1,4 @@
-import * as lib from './lib.js';
+import * as lib from '../lib.js';
 import * as d3 from 'd3';
 import flatpickr from 'flatpickr';
 
@@ -453,13 +453,13 @@ function addHTMLTemplates(filename, selector="body") {
                 .select(selector)
                 .append('div')
                 .attr('id', filename)
-                .html(require(`../templates/${filename}.html`).default);
+                .html(require(`../../templates/${filename}.html`).default);
 }
 
 export function addNavBar() {
     d3.select('nav')
         .attr('id', 'nav')
-        .html(require('../templates/nav.html').default);
+        .html(require('../../templates/nav.html').default);
 
     addHTMLTemplates('faq_overlay')
         .attr('class', 'overlay');

@@ -1,16 +1,19 @@
 import * as lib from '../../lib';
 import * as d3 from 'd3';
-import { min } from 'd3';
+import { getState } from '../../stores/app-state';
+import { getAllRecordNames, nameToId } from '../../stores/records';
+import { deserify } from '@karmaniverous/serify-deserify';
+import { showSingleRecord } from '../../stores/view-settings';
+import { DataLoader } from './DataLoader';
 
 const { fields } = require('../schema');
-const { getPageElements } = require('../../page-components.js');
+const { getPageElements } = require('../../view/page-components.js');
 
 export class DataProvider {
-    constructor(parsedData) {
-        this.psr = this.format(parsedData);
+    constructor() {
+        this.psr = deserify(this.getActiveRecord());
         this.startDate = this.getStartDate();
         this.endDate = this.getEndDate();
-        this.validatePsr();
 
         this.setTimeScale();
 
@@ -20,43 +23,35 @@ export class DataProvider {
                     this.getDatesForValuesOfColumn(k, reportFilter);
             }
         }
+
+        Array.from(document.getElementsByClassName('record-name')).map(e=>e.classList.remove('active'));
+        let active=nameToId(this.getActiveRecordName());
+
+        document.getElementById(active).classList.add('active');
     }
 
-    format(data) {
-        return data.map((entry) => {
-            let type;
-            for (let k in entry) {
-                if (!fields[k] || !fields[k].type) {
-                    continue;
-                }
-                type = fields[k].type;
-                if (type === 'number' || type === 'average') {
-                    entry[k] = Number(entry[k]);
-                } else if (type === 'date' && !(entry[k] instanceof Date)) {
-                    entry[k] = new Date(entry[k]);
-                } else if (type === 'text') {
-                    entry[k] = entry[k].toString().trim();
-                }
-            }
-            return entry;
-        });
+    getActiveRecordName() {
+        let state = getState();
+        let names = getAllRecordNames();
+        if (typeof state.view.activeRecord === 'string') {
+            return state.view.activeRecord;
+        } else if (names.length){
+            return names[0]
+        } else {
+            return 'Sample';
+        }
     }
 
-    validatePsr() {
-        this.psr.forEach((entry) => {
-            Object.keys(fields).forEach((key) => {
-                if(key === 'sum_group'){
-                    return;
-                }
-                
-                if (
-                    typeof entry[key] === 'undefined' &&
-                    !fields[key]['optional']
-                ) {
-                    throw `${key} undefined for entry in parsed data`;
-                }
-            });
-        });
+    getActiveRecord() {
+        let state = getState();
+        let name = this.getActiveRecordName();
+        return state.records[name];
+    }
+
+    updateActiveRecord(data) {
+        let loader=new DataLoader(data);
+        loader.setRecordName(this.getActiveRecordName());
+        loader.load();
     }
 
     setTimeScale() {
@@ -81,7 +76,6 @@ export class DataProvider {
         let startDate = new Date(
             Math.max(Math.min(...start_dates), ...fp_start_date.selectedDates)
         );
-        fp_start_date.setDate(startDate, false);
         return startDate;
     }
 

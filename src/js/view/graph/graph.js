@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import * as lib from '../lib';
+import * as lib from '../../lib';
 
 const { getPageElements, getView } = require('../page-components');
 
@@ -32,8 +32,8 @@ export const draw_psr_viz = (data) => {
     const { fitreps_g } = getPageElements();
 
     // Extract member's name and update H1
-    const member_name = data.getName();
-    if (member_name) d3.select('h1').text(`PSR - ${member_name}`);
+    const member_name = data.getActiveRecordName();
+    if (member_name) d3.select('#name>*').text(`PSR - ${member_name}`);
 
     setFitrepHighlight(fitreps_g);
 

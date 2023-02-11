@@ -61,6 +61,38 @@ nav {
     }
 }
 
+#record-names{
+    display: flex;
+    
+    & > * {
+        margin: 0.75em;
+        width: 10em;
+        padding: 0.5em;
+        border: 3px dashed $navy-blue;
+        border-radius: 1em;
+        min-height: 2.25em;
+        position: relative;
+        cursor: pointer;
+
+        &.active{
+            border-color: $navy-yellow;
+        }
+
+        .delete-btn{
+            min-width: 33px;
+            color: $navy-red;
+            height: 33px;
+            margin-bottom: 5px;
+            padding: 0;
+            border: 1;
+            position: absolute;
+            top: 0;
+            right: -1em;
+        }
+      }
+
+}
+
 
 li a:hover {
     background-color: $navy-black;

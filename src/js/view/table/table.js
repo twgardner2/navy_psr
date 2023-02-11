@@ -1,10 +1,10 @@
 import * as d3 from 'd3';
-import * as lib from '../lib.js';
+import * as lib from '../../lib.js';
 import flatpickr from 'flatpickr';
 
 const { getPageElements } = require('../page-components.js');
 
-const { fields } = require('../data/schema');
+const { fields } = require('../../data/schema');
 const { resetTable } = require('../page-components');
 
 const tableFields = Object.values(fields);
