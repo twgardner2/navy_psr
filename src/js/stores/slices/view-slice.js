@@ -28,22 +28,15 @@ const viewSlice = createSlice({
         },
         addHiddenRecord: (state, action) => {
             const { hiddenRecord } = action.payload;
-            if (state.hiddenRecords.indexOf(hiddenRecord) !== -1) {
-                state.hiddenRecords.push(hiddenRecord);
-            } else {
-                console.log(`Error: ${hiddenRecord} already hidden`);
-            }
+            let current=new Set(state.hiddenRecords);
+            current.add(hiddenRecord);
+            state.hiddenRecords=Array.from(current)
         },
         showHiddenRecord: (state, action) => {
             const { hiddenRecord } = action.payload;
-            const index = state.hiddenRecords.indexOf(hiddenRecord);
-            if (index !== -1) {
-                state.hiddenRecords = state.hiddenRecords.filter(
-                    (v, i) => i !== index
-                );
-            } else {
-                console.log(`Error: ${hiddenRecord} is not hidden`);
-            }
+            let current=new Set(state.hiddenRecords);
+            current.delete(hiddenRecord);
+            state.hiddenRecords=Array.from(current);
         },
         showAllRecords: (state) => {
             state.hiddenRecords = [];

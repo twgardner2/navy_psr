@@ -1,0 +1,50 @@
+
+
+body.multiview{
+
+    .table{
+        display: none;
+    }
+
+    #compare_toggle{
+        display: block;
+    }
+
+    #record-names{
+        & > *{
+            opacity:0.5;
+            border-color: $navy-yellow;
+            
+            &.active{
+                border-color: $navy-yellow;
+            }
+
+            &.multi-hidden{
+                border-color: $navy-gray;
+            }
+            
+            .delete-btn{
+                display: none;
+            }
+
+        }
+    }
+
+    #rank_g, 
+    #command_rg_g, 
+    #command_idt_g,
+    #rep_sen_idt_g,
+    #command_at_g,
+    #rep_sen_at_g
+    {
+        & >* {
+        display:none;
+        }
+    }
+
+    #fitreps_g{
+        .fitrep.dot{
+            opacity:0.5;
+        }
+    }
+}

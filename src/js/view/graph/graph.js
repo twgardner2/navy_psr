@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import { DataProvider } from '../../data/providers/DataProvider';
 import * as lib from '../../lib';
+import { isMultiView } from '../../stores/view-settings';
 
 const { getPageElements, getView } = require('../page-components');
 
@@ -35,8 +36,13 @@ export const draw_psr_viz = () => {
     const { fitreps_g } = getPageElements();
 
     // Extract member's name and update H1
-    const member_name = data.getActiveRecordName();
-    if (member_name) d3.select('#name>*').text(`PSR - ${member_name}`);
+    const headline=d3.select('#name>*');
+    if(isMultiView()){
+        headline.text("Comparison Mode")
+    } else {
+        const member_name = data.getActiveRecordName();
+        if (member_name) d3.select('#name>*').text(`PSR - ${member_name}`);
+    }
 
     setFitrepHighlight(fitreps_g);
 
@@ -73,8 +79,9 @@ function setFitrepHighlight(group) {
         .attr('opacity', 0.0);
 }
 
+
+// Create RS/Command tooltip
 function make_rs_and_command_tooltip() {
-    // Create RS/Command tooltip
     var rs_command_bar_tooltip = d3
         .select('body')
         .append('div')
@@ -86,190 +93,193 @@ function make_rs_and_command_tooltip() {
 }
 
 function make_bars(
-    dates,
+    lambda,
     data,
     parent_g,
     bar_color = 'lightgrey',
-    font_color = 'black'
+    cssClass='bars',
+    font_color = 'black',
 ) {
-    // Create <g> for each value
-    var g = parent_g
-        .selectAll('g')
-        .data(dates)
-        .enter()
-        .append('g')
-        .attr('transform', (d) => `translate(${data.time_scale(d.start)},0)`);
 
-    // Draw <rect> for each value
-    var bars = g
-        .append('rect')
-        .attr('height', lib.bar_height)
-        .attr('width', (d) => data.time_scale(d.end) - data.time_scale(d.start))
-        .attr('fill', 'none')
-        .attr('stroke', 'black')
-        .attr('stroke-width', '2px')
-        .attr('fill', bar_color)
-        .attr('rx', '10px')
-        .attr('ry', '10px')
-        .on('mousemove', function (event, d) {
-            update_highlight_element(event, d, fitrep_highlight, data);
+    
+    for(const entry of data){
+        
+        const id=entry[0];
+        const provider=entry[1];
 
-            let textSoSmallNeedToShowTooltip;
-            var rect_height = this.parentNode.children[0].getBBox().height;
-            var rect_width = this.parentNode.children[0].getBBox().width;
-            var num_chars =
-                0.65 * this.parentNode.children[1].getNumberOfChars();
+        const dates=lambda(provider);
 
-            var fontsize = Math.min(0.65 * rect_height, rect_width / num_chars);
-            textSoSmallNeedToShowTooltip = fontsize < 10;
+        const individual_g=parent_g.append('g')
+        .attr('data-individual', id)
+        .attr('class', cssClass);
 
-            if (textSoSmallNeedToShowTooltip) {
+        // Create <g> for each value
+        const g = individual_g
+            .selectAll('g')
+            .data(dates)
+            .enter()
+            .append('g')
+            .attr('transform', (d) => `translate(${data.time_scale(d.start)},0)`);
+
+        // Draw <rect> for each value
+        const bars = g
+            .append('rect')
+            .attr('height', lib.bar_height)
+            .attr('width', (d) => data.time_scale(d.end) - data.time_scale(d.start))
+            .attr('fill', 'none')
+            .attr('stroke', 'black')
+            .attr('stroke-width', '2px')
+            .attr('fill', bar_color)
+            .attr('rx', '10px')
+            .attr('ry', '10px')
+            .on('mousemove', function (event, d) {
+                update_highlight_element(event, d, fitrep_highlight, data);
+
+                let textSoSmallNeedToShowTooltip;
+                var rect_height = this.parentNode.children[0].getBBox().height;
+                var rect_width = this.parentNode.children[0].getBBox().width;
+                var num_chars =
+                    0.65 * this.parentNode.children[1].getNumberOfChars();
+
+                var fontsize = Math.min(0.65 * rect_height, rect_width / num_chars);
+                textSoSmallNeedToShowTooltip = fontsize < 10;
+
+                if (textSoSmallNeedToShowTooltip) {
+                    let rsCommandBarTooltip = d3.select('#rsCommandBarTooltip');
+                    rsCommandBarTooltip
+                        .style('left', event.pageX + 'px')
+                        .style('top', event.pageY - 28 + 'px')
+                        .text(`${d.value}`);
+                    rsCommandBarTooltip
+                        // .transition()
+                        // .duration(250)
+                        .style('opacity', 1.0);
+                }
+            })
+            .on('mouseleave', function (event, d) {
+                clear_fitrep_highlight(fitrep_highlight);
+
                 let rsCommandBarTooltip = d3.select('#rsCommandBarTooltip');
-                rsCommandBarTooltip
-                    .style('left', event.pageX + 'px')
-                    .style('top', event.pageY - 28 + 'px')
-                    .text(`${d.value}`);
                 rsCommandBarTooltip
                     // .transition()
                     // .duration(250)
-                    .style('opacity', 1.0);
-            }
-        })
-        .on('mouseleave', function (event, d) {
-            clear_fitrep_highlight(fitrep_highlight);
+                    .style('opacity', 0.0);
+            });
 
-            let rsCommandBarTooltip = d3.select('#rsCommandBarTooltip');
-            rsCommandBarTooltip
-                // .transition()
-                // .duration(250)
-                .style('opacity', 0.0);
-        });
+        // Create <text> for each value
+        g.append('text')
+            .style('text-anchor', 'middle')
+            .style('pointer-events', 'none')
+            .style('fill', font_color)
+            .text((d) => d.value)
+            .style('font-size', function (d) {
+                var rect_height = this.parentNode.children[0].getBBox().height;
+                var rect_width = this.parentNode.children[0].getBBox().width;
+                var num_chars = 0.85 * this.getNumberOfChars();
 
-    // Create <text> for each value
-    g.append('text')
-        .style('text-anchor', 'middle')
-        .style('pointer-events', 'none')
-        .style('fill', font_color)
-        .text((d) => d.value)
-        .style('font-size', function (d) {
-            var rect_height = this.parentNode.children[0].getBBox().height;
-            var rect_width = this.parentNode.children[0].getBBox().width;
-            var num_chars = 0.85 * this.getNumberOfChars();
+                var return_val_in_px = Math.min(
+                    0.65 * rect_height,
+                    rect_width / num_chars
+                );
+                return `${return_val_in_px}px`;
+            })
+            .attr('transform', function (d) {
+                let fontsize = parseFloat(this.style.fontSize);
 
-            var return_val_in_px = Math.min(
-                0.65 * rect_height,
-                rect_width / num_chars
-            );
-            return `${return_val_in_px}px`;
-        })
-        .attr('transform', function (d) {
-            let fontsize = parseFloat(this.style.fontSize);
+                return `translate(${
+                    0.5 * (data.time_scale(d.end) - data.time_scale(d.start))
+                },
+                ${0.5 * lib.bar_height + Math.sqrt(fontsize)})`;
+            });
 
-            return `translate(${
-                0.5 * (data.time_scale(d.end) - data.time_scale(d.start))
-            },
-            ${0.5 * lib.bar_height + Math.sqrt(fontsize)})`;
-        });
+        }
 }
 
 function make_rank_bars(data) {
     const { rank_g } = getPageElements();
 
-    var dates_of_rank = data.get_paygrade_dates();
-    make_bars(dates_of_rank, data, rank_g, lib.rank_bar_color);
+    const lambda= (provider)=>provider.get_paygrade_dates()
+
+    make_bars(lambda, data, rank_g, lib.rank_bar_color, 'rank_bars');
+
 }
 
 function make_command_bars(data) {
     const { command_rg_g } = getPageElements();
 
-    var command_dates = data.get_station_dates({
+    const filter={
         regex: new RegExp('^RG$', 'g'),
         filterColumn: 'rpt_type',
-    });
+    }
 
-    make_bars(
-        command_dates,
-        data,
-        command_rg_g,
-        lib.regular_command_bar_color,
-        'white'
-    );
+    const lambda= (provider)=>provider.get_station_dates(filter);
+
+    make_bars(lambda, data, command_rg_g, lib.regular_command_bar_color, 'command_bars', 'white');
+
 }
 
 function make_reporting_senior_bars(data) {
     const { rep_sen_rg_g } = getPageElements();
-    var reporting_senior_dates = data.get_rs_name_dates({
-        regex: new RegExp('^RG$', 'g'),
-    });
 
-    make_bars(
-        reporting_senior_dates,
-        data,
-        rep_sen_rg_g,
-        lib.regular_command_bar_color,
-        'white'
-    );
+    const filter={
+        regex: new RegExp('^RG$', 'g'),
+    };
+
+    const lambda= (provider)=>provider.get_rs_name_dates(filter);
+
+    make_bars(lambda, data, rep_sen_rg_g, lib.regular_command_bar_color, 'reg_rep_senior_bars', 'white');
+
 }
 
 function make_idt_command_bars(data) {
     const { command_idt_g } = getPageElements();
-
-    var command_dates = data.get_station_dates({
+    const filter={
         regex: new RegExp('^IDT', 'g'),
         filterColumn: 'rpt_type',
-    });
+    };
 
-    make_bars(
-        command_dates,
-        data,
-        command_idt_g,
-        lib.idt_command_bar_color,
-        'white'
-    );
+    const lambda= (provider)=>provider.get_station_dates(filter);
+
+    make_bars(lambda, data, command_idt_g, lib.idt_command_bar_color, 'idt_command_bars', 'white');
+
 }
 
 function make_idt_reporting_senior_bars(data) {
     const { rep_sen_idt_g } = getPageElements();
-    var reporting_senior_dates = data.get_rs_name_dates({
-        regex: new RegExp('^IDT', 'g'),
-    });
 
-    make_bars(
-        reporting_senior_dates,
-        data,
-        rep_sen_idt_g,
-        lib.idt_command_bar_color,
-        'white'
-    );
+    const filter={
+        regex: new RegExp('^IDT', 'g'),
+    };
+
+    const lambda= (provider)=>provider.get_rs_name_dates(filter);
+
+    make_bars(lambda, data, rep_sen_idt_g, lib.idt_command_bar_color, 'idt_rep_senior_bars', 'white');
+
 }
 
 function make_atcc_command_bars(data) {
     const { command_at_g } = getPageElements();
-    var non_regular_command_dates = data.get_station_dates({
+
+    const filter={
         regex: new RegExp('(AT|CC)', 'g'),
         filterColumn: 'rpt_type',
-    });
+    };
 
-    make_bars(
-        non_regular_command_dates,
-        data,
-        command_at_g,
-        lib.at_cc_command_bar_color
-    );
+    const lambda= (provider)=>provider.get_station_dates(filter);
+
+    make_bars(lambda, data, command_at_g, lib.at_cc_command_bar_color, 'atcc_command_bars');
+    
 }
 
 function make_atcc_reporting_senior_bars(data) {
     const { rep_sen_at_g } = getPageElements();
-    var concurrent_command_reporting_senior_dates = data.get_rs_name_dates({
+    const filter={
         regex: new RegExp('(AT|CC)', 'g'),
-    });
+    }
+    const lambda= (provider)=>provider.get_rs_name_dates(filter);
 
-    make_bars(
-        concurrent_command_reporting_senior_dates,
-        data,
-        rep_sen_at_g,
-        lib.at_cc_command_bar_color
-    );
+    make_bars(lambda, data, rep_sen_at_g, lib.at_cc_command_bar_color, 'atcc_rep_senior_bars');
+    
 }
 
 function draw_axes(group, data) {
@@ -314,9 +324,20 @@ function draw_axes(group, data) {
 function draw_fitrep_graph(data, group) {
     // FITREPs
     // #region Draw FITREPs plot
+    
+    draw_axes(group, data);
+    
+    group.on('mouseenter', function () {
+        clear_fitrep_highlight(fitrep_highlight);
+    });
+
+    for(const entry of data){
+        
+        const id=entry[0];
+        const provider=entry[1];
 
     // Create fitrepTooltip
-    var fitrepTooltip = d3
+    const fitrepTooltip = d3
         .select('body')
         .append('div')
         .attr('class', 'tooltip fitrepTooltip')
@@ -325,7 +346,7 @@ function draw_fitrep_graph(data, group) {
         .style('pointer-events', 'none');
 
     // Create FITREP gap tooltip
-    var fitrepGapTooltip = d3
+    const fitrepGapTooltip = d3
         .select('body')
         .append('div')
         .attr('class', 'tooltip fitrepGapTooltip')
@@ -333,19 +354,16 @@ function draw_fitrep_graph(data, group) {
         .style('opacity', 0)
         .style('pointer-events', 'none');
 
-    draw_axes(group, data);
 
-    group.on('mouseenter', function () {
-        clear_fitrep_highlight(fitrep_highlight);
-    });
 
     // Append FITREP marker groups
     const fitrep_marker_gs = group
-        .selectAll('g.fitrep')
-        .data(data.psr)
+        .selectAll(`g.fitrep.${id}`)
+        .data(provider.psr)
         .enter()
         .append('g')
-        .attr('class', 'fitrep dot')
+        .attr('class', `fitrep dot`)
+        .attr('data-individual', id)
         .attr('transform', function (d) {
             return `translate(${data.time_scale(
                 d.end_date
@@ -364,6 +382,7 @@ function draw_fitrep_graph(data, group) {
         })
         .attr('fill', (d) => lib.fitrep_color_scale(d.prom_rec.toUpperCase()))
         .attr('opacity', lib.fitrep_marker_opacity)
+        .attr('data-individual', id)
         .on('mouseover', function (event, d) {
             fitrepTooltip
                 .transition()
@@ -373,9 +392,18 @@ function draw_fitrep_graph(data, group) {
                 .html(fitrepTooltipHTML(d))
                 .style('left', event.pageX + 'px')
                 .style('top', event.pageY - 28 + 'px');
+
+                if(isMultiView()){
+                const id=event.target.dataset.individual;
+                showIndivdualDetails(id);
+            }
         })
-        .on('mouseout', function (d) {
+        .on('mouseout', function (event, d) {
             fitrepTooltip.transition().duration(250).style('opacity', 0);
+            if(isMultiView()){
+                const id=event.target.dataset.individual;
+                revertIndvidualDetails(id);
+            }
         });
     // Draw FITREP marker outlines
     fitrep_marker_gs
@@ -397,6 +425,7 @@ function draw_fitrep_graph(data, group) {
         })
         .attr('stroke-width', lib.fitrep_marker_stroke_width)
         .attr('opacity', 1)
+        .attr('data-individual', id)
         .on('mouseover', function (event, d) {
             fitrepTooltip
                 .transition()
@@ -420,7 +449,7 @@ function draw_fitrep_graph(data, group) {
 
     group
         .selectAll('lines')
-        .data(data.fitrepsGroupedByPaygradeAndRepsen())
+        .data(provider.fitrepsGroupedByPaygradeAndRepsen())
         .enter()
         .append('g')
         .attr('class', 'fitrep line')
@@ -435,7 +464,7 @@ function draw_fitrep_graph(data, group) {
     // Draw dotted line for same Reporting Senior, different Rank
     group
         .selectAll('lines')
-        .data(data.fitrepsSameRsNewRank())
+        .data(provider.fitrepsSameRsNewRank())
         .enter()
         .append('g')
         .attr('class', 'fitrep line')
@@ -453,7 +482,7 @@ function draw_fitrep_graph(data, group) {
         .append('g')
         .attr('class', 'fitrep gap')
         .selectAll('rect')
-        .data(data.fitrepGaps())
+        .data(provider.fitrepGaps())
         .enter()
         .append('rect')
         .attr('transform', (d) => `translate(${data.time_scale(d[0])},0)`)
@@ -478,7 +507,24 @@ function draw_fitrep_graph(data, group) {
         .on('mouseout', function (d) {
             fitrepGapTooltip.transition().duration(250).style('opacity', 0.0);
         });
+    }
     // #endregion
+}
+function elemArrayforIndividual(ind){
+    return Array.from(document.querySelectorAll(`[data-individual='${ind}']`))
+}
+function showIndivdualDetails(ind){
+    elemArrayforIndividual(ind).map(elem=>{
+        elem.style.display="block";
+        elem.style.opacity="1";
+    });
+}
+
+function revertIndvidualDetails(ind){
+    elemArrayforIndividual(ind).map(elem=>{
+        elem.style.display=null;
+        elem.style.opacity=null;
+    })
 }
 
 function update_highlight_element(e, d, element, data) {

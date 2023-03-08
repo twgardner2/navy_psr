@@ -543,6 +543,7 @@ export function addTabs() {
 
 export function addViewToggle(){
     addHTMLTemplates('view_toggle', '.grid');   
+    addHTMLTemplates('compare_toggle', '.grid');
     bindToViewToggle(); 
 }
 

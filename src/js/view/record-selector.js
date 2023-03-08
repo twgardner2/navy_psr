@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { setMulitView, setSingleViewMode, showSingleRecord } from '../stores/view-settings';
+import { isHiddenId, isMultiView, multiHide, multiShow, setComparisonType, setMulitView, setSingleViewMode, showSingleRecord } from '../stores/view-settings';
 import { nameToId, removeRecordByName  } from '../stores/records';
 
 export function appendMultiNameSelect(parent){
@@ -17,11 +17,30 @@ export function scrubNames(names){
                 return enter
                 .append('div')
                 .attr('id', (d)=>nameToId(d) )
-                .attr('class', 'record-name')
+                .attr('data-individual', (d)=>nameToId(d))
+                .attr('class', (d)=>{
+                    let cssClass='record-name'
+                    const id=nameToId(d);
+                    if(isHiddenId(id)){
+                        cssClass += ' multi-hidden';
+                    }
+                    return cssClass;
+                })
                 .on('click', (e)=>{
                     let name=e.target.id;
-                    e.target.classList.add('active');
-                    showSingleRecord(name);
+                    
+                    if(!isMultiView()){
+                        e.target.classList.add('active');
+                        showSingleRecord(name);
+                    } else {
+                        if(e.target.classList.contains('multi-hidden')){
+                            multiShow(name);
+                            e.target.classList.remove('multi-hidden');
+                        } else {
+                            multiHide(name);
+                            e.target.classList.add('multi-hidden');
+                        }
+                    }
                 })
                 .html(d=>d)
                 .call( parent =>{
@@ -72,5 +91,11 @@ export function bindToViewToggle(){
             } else {
                 setSingleViewMode();
             }
+        });
+
+    d3.select('#compare_toggle input')
+        .on('change', (e)=>{
+            let compare= e.target.checked ? 'time' : 'rank';
+            setComparisonType(compare);
         })
 }

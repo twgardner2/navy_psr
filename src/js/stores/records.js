@@ -7,6 +7,7 @@ import { DataProvider } from '../data/providers/DataProvider';
 import { clear_psr_viz, draw_psr_viz } from '../view/graph/graph';
 import { populate_table } from '../view/table/table';
 import { scrubNames } from '../view/record-selector';
+import { isMultiView, setSingleViewMode } from './view-settings';
 
 
 export function updateNewRecord(recordName, parsedData){
@@ -37,12 +38,19 @@ export function nameToId(name){
 
 appStore.subscribe( () => {
     //Setup names in top portion
-    let names=getAllRecordNames()
+    let names=getAllRecordNames();
 
     scrubNames(names);
 
     if(names.length === 1){
-        d3.select('.delete-btn').remove()
+        d3.select('.delete-btn').remove();
+        d3.select('#view_toggle').style('display', 'none');
+        
+        if(isMultiView()){
+            setSingleViewMode();
+        }
+    } else {
+        d3.select('#view_toggle').style('display', 'block');
     }
 
     //Redraw the Graph
@@ -50,18 +58,14 @@ appStore.subscribe( () => {
         
         draw_psr_viz();
 
-        const table=d3.select('.table')
-
-
         //Redraw the Tables
         if(appStore.getState().view.viewMode === 'single'){
 
-            table.style('display', 'block');
+            document.body.classList.remove('multiview');
             populate_table();
 
         } else{ 
-            table.style('display', 'none')
-
+            document.body.classList.add('multiview');
         }
 
 });

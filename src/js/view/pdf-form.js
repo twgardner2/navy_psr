@@ -42,7 +42,7 @@ async function updateFromPdfInputChange(event) {
     loader.load();
 
     if (document.getElementById('Sample')) {
-        removeRecordByName('Sample');
+        // removeRecordByName('Sample');
     }
 
     elem.value = '';
