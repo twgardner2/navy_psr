@@ -1,6 +1,7 @@
 import * as lib from '../lib.js';
 import * as d3 from 'd3';
 import flatpickr from 'flatpickr';
+import { bindToViewToggle } from './record-selector.js';
 
 let svg,
     container_g,
@@ -539,6 +540,12 @@ export function addTabs() {
         rerender_button.node().click();
     })
 }
+
+export function addViewToggle(){
+    addHTMLTemplates('view_toggle', '.grid');   
+    bindToViewToggle(); 
+}
+
 
 export function getView(){
     return d3.select('.tablinks.active').attr('data-view');

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     activeRecord: false,
-    viewMode: 'indivdual',
+    viewMode: 'single',
     comparisonMode: 'rank',
     hiddenRecords: [],
 };

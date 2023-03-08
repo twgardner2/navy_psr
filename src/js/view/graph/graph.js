@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { DataProvider } from '../../data/providers/DataProvider';
 import * as lib from '../../lib';
 
 const { getPageElements, getView } = require('../page-components');
@@ -28,7 +29,9 @@ export const clear_psr_viz = (canvas) => {
     d3.select(canvas).select('#y-axis-label').remove();
 };
 
-export const draw_psr_viz = (data) => {
+export const draw_psr_viz = () => {
+    let data= new DataProvider();
+
     const { fitreps_g } = getPageElements();
 
     // Extract member's name and update H1

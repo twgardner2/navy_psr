@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import * as lib from '../../lib.js';
 import flatpickr from 'flatpickr';
+import { DataProvider } from '../../data/providers/DataProvider.js';
 
 const { getPageElements } = require('../page-components.js');
 
@@ -9,7 +10,8 @@ const { resetTable } = require('../page-components');
 
 const tableFields = Object.values(fields);
 
-export const populate_table = (data) => {
+export const populate_table = () => {
+    let data=new DataProvider();
     const table = resetTable();
 
     // Add form header row

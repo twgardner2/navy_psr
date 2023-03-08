@@ -47,11 +47,21 @@ appStore.subscribe( () => {
 
     //Redraw the Graph
         clear_psr_viz(document.getElementById('canvas'));
-        let provider= new DataProvider();
         
-        draw_psr_viz(provider);
+        draw_psr_viz();
+
+        const table=d3.select('.table')
+
 
         //Redraw the Tables
-        populate_table(provider);
+        if(appStore.getState().view.viewMode === 'single'){
+
+            table.style('display', 'block');
+            populate_table();
+
+        } else{ 
+            table.style('display', 'none')
+
+        }
 
 });

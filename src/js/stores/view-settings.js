@@ -1,6 +1,6 @@
 
 import { appStore } from './app-state';
-import { setActiveRecord } from  './slices/view-slice';
+import { setActiveRecord, setViewMode } from  './slices/view-slice';
 
 
 export function showSingleRecord(id){
@@ -9,4 +9,16 @@ export function showSingleRecord(id){
             activeRecord: id
         })
     );
+}
+
+export function setMulitView(){
+    appStore.dispatch(setViewMode({
+        viewMode: 'multiple'
+    }));
+}
+
+export function setSingleViewMode(){
+    appStore.dispatch(setViewMode({
+        viewMode:'single'
+    }));
 }

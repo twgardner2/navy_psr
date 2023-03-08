@@ -1,9 +1,10 @@
-
 import { DataLoader } from '../data/providers/DataLoader';
-import { removeRecordByName } from '../stores/records';
+import { removeRecordByName, nameToId } from '../stores/records';
 
-const { parseFileInputToEntries, parseFileInputToName } = require('../data/parsers/pdf/psr-parser');
-
+const {
+    parseFileInputToEntries,
+    parseFileInputToName,
+} = require('../data/parsers/pdf/psr-parser');
 
 let parentElem;
 
@@ -28,23 +29,21 @@ export function appendPDFUploadForm(parent) {
         .attr('type', 'file')
         .attr('accept', '.pdf')
         .on('change', updateFromPdfInputChange);
-    
 }
 
 async function updateFromPdfInputChange(event) {
     let elem = event.target;
-    let data = await parseFileInputToEntries(elem)
-    let psrName= await parseFileInputToName(elem);
+    let data = await parseFileInputToEntries(elem);
+    let psrName = await parseFileInputToName(elem);
 
-    let loader= new DataLoader(data);
-    
-    
-    loader.setRecordName(psrName);
+    let loader = new DataLoader(data);
+
+    loader.setRecordName(nameToId(psrName));
     loader.load();
-    
-    if(document.getElementById('Sample')){
+
+    if (document.getElementById('Sample')) {
         removeRecordByName('Sample');
     }
-    
-    elem.value='';
+
+    elem.value = '';
 }

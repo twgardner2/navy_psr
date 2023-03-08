@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { showSingleRecord } from '../stores/view-settings';
+import { setMulitView, setSingleViewMode, showSingleRecord } from '../stores/view-settings';
 import { nameToId, removeRecordByName  } from '../stores/records';
 
 export function appendMultiNameSelect(parent){
@@ -19,7 +19,7 @@ export function scrubNames(names){
                 .attr('id', (d)=>nameToId(d) )
                 .attr('class', 'record-name')
                 .on('click', (e)=>{
-                    let name=e.target.innerHTML;
+                    let name=e.target.id;
                     e.target.classList.add('active');
                     showSingleRecord(name);
                 })
@@ -62,3 +62,15 @@ export function scrubNames(names){
         );
 }
 
+
+export function bindToViewToggle(){
+    d3.select('#view_toggle input')
+        .on('change', (e)=>{
+            let multi= e.target.checked;
+            if(multi){
+                setMulitView();
+            } else {
+                setSingleViewMode();
+            }
+        })
+}

@@ -10,11 +10,9 @@ const {
     buildElements,
     draw_legend,
     addNavBar,
-    addTabs
+    addTabs,
+    addViewToggle
 } = require('./view/page-components.js');
-
-const { populate_table } = require('./view/table/table.js');
-const { clear_psr_viz, draw_psr_viz } = require('./view/graph/graph.js');
 
 const { appendPDFUploadForm } = require('./view/pdf-form.js');
 
@@ -28,8 +26,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let grid = d3.select('body').select('.grid');
 
-    appendPDFUploadForm(grid);
     appendMultiNameSelect(grid);
+    appendPDFUploadForm(grid);
+    addViewToggle();
 
     const { rerender_button } = buildElements(grid);
 

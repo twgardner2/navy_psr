@@ -107,13 +107,13 @@ li a:hover {
 
 .grid {
     display: grid;
-    grid-template-columns: 184px 0.5fr 2fr 0.5fr 0.5fr;
+    grid-template-columns: 184px 0.5fr 1.5fr 0.5fr 1fr;
     grid-template-rows: 75px 50px 1fr auto;
     gap: 0px 3px;
     grid-auto-flow: row;
     grid-template-areas:
         'name name name gh_link gh_link'
-        'upload upload . . .'
+        'upload upload . . view_toggle'
         '. tabs tabs tabs tabs'
         'fitrep_legend canvas canvas canvas .'
         'table table table table table';
@@ -140,6 +140,78 @@ nav {
 
 #pdf-parser-wrapper {
     grid-area: upload;
+}
+
+#view_toggle{
+    grid-area: view_toggle;
+    align-self: center;
+    justify-self: end;
+    padding-right: 2em;
+
+    .toggle-label {
+        position: relative;
+        top: 1em;
+      }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+      }
+      
+      .switch input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: $navy-blue;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+      
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: $background-grey;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+      
+      input:checked + .slider {
+        background-color: $navy-yellow;
+      }
+      
+      input:focus + .slider {
+        box-shadow: 0 0 1px $navy-yellow;
+      }
+      
+      input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+      
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 34px;
+      }
+      
+      .slider.round:before {
+        border-radius: 50%;
+      }
 }
 
 #tabs {
