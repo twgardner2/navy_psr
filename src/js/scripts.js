@@ -2,7 +2,7 @@ import * as lib from './lib.js';
 import * as d3 from 'd3';
 import { appendMultiNameSelect } from './view/record-selector.js';
 import { DataLoader } from './data/providers/DataLoader.js';
-import { DataProvider } from './data/providers/DataProvider.js';
+import { setFlatPickr } from './stores/view-settings.js';
 
 const { parse_data_from_table } = require('./data/parsers/table/table-parser');
 
@@ -30,17 +30,10 @@ document.addEventListener('DOMContentLoaded', function () {
     appendPDFUploadForm(grid);
     addViewToggle();
 
-    const { rerender_button } = buildElements(grid);
-
-    rerender_button.on('click', function (event) {
-        var table_data = parse_data_from_table();
-        let provider=new DataProvider();
-        provider.updateActiveRecord(table_data);
-
-    });
+    buildElements(grid);
 
     d3.select('#start-date').on('change', function (event) {
-        rerender_button.node().click();
+        setFlatPickr(this.flatpickr().selectedDates[0]);
     });
 
     draw_legend();
@@ -54,8 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .data(sampleData);
 
         let loader= new DataLoader(sampleData);
-        loader.setRecordName("Sample");
+        loader.setRecordName(lib.sample_name);
         loader.load();
-
-        
+  
 });

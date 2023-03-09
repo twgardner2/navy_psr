@@ -1,9 +1,10 @@
 import * as d3 from 'd3';
 import { DataProvider } from '../../data/providers/DataProvider';
 import * as lib from '../../lib';
-import { isMultiView } from '../../stores/view-settings';
+import { getActiveRecordName } from '../../stores/records';
+import { getMeasureMode, isMultiView } from '../../stores/view-settings';
 
-const { getPageElements, getView } = require('../page-components');
+const { getPageElements } = require('../page-components');
 
 let fitrep_highlight;
 
@@ -24,6 +25,8 @@ export const clear_psr_viz = (canvas) => {
 
     d3.select(canvas).selectAll('g.fitrep').remove();
 
+    d3.select(canvas).selectAll('.rank_switch_line').remove();
+
     d3.select(canvas).selectAll('g.x.axis').remove();
 
     d3.select(canvas).selectAll('g.y.axis').remove();
@@ -40,7 +43,7 @@ export const draw_psr_viz = () => {
     if(isMultiView()){
         headline.text("Comparison Mode")
     } else {
-        const member_name = data.getActiveRecordName();
+        const member_name = getActiveRecordName();
         if (member_name) d3.select('#name>*').text(`PSR - ${member_name}`);
     }
 
@@ -175,7 +178,7 @@ function make_bars(
             .style('font-size', function (d) {
                 var rect_height = this.parentNode.children[0].getBBox().height;
                 var rect_width = this.parentNode.children[0].getBBox().width;
-                var num_chars = 0.85 * this.getNumberOfChars();
+                var num_chars = 0.85 * d.value.length;
 
                 var return_val_in_px = Math.min(
                     0.65 * rect_height,
@@ -383,27 +386,11 @@ function draw_fitrep_graph(data, group) {
         .attr('fill', (d) => lib.fitrep_color_scale(d.prom_rec.toUpperCase()))
         .attr('opacity', lib.fitrep_marker_opacity)
         .attr('data-individual', id)
-        .on('mouseover', function (event, d) {
-            fitrepTooltip
-                .transition()
-                .duration(250)
-                .style('opacity', lib.fitrep_tooltip_opacity);
-            fitrepTooltip
-                .html(fitrepTooltipHTML(d))
-                .style('left', event.pageX + 'px')
-                .style('top', event.pageY - 28 + 'px');
-
-                if(isMultiView()){
-                const id=event.target.dataset.individual;
-                showIndivdualDetails(id);
-            }
+        .on('mouseover', function (e, d) {
+           showFitrepToolTip(e, d, fitrepTooltip, provider);
         })
         .on('mouseout', function (event, d) {
-            fitrepTooltip.transition().duration(250).style('opacity', 0);
-            if(isMultiView()){
-                const id=event.target.dataset.individual;
-                revertIndvidualDetails(id);
-            }
+            hideFitrepTooltip(event, fitrepTooltip);
         });
     // Draw FITREP marker outlines
     fitrep_marker_gs
@@ -427,17 +414,10 @@ function draw_fitrep_graph(data, group) {
         .attr('opacity', 1)
         .attr('data-individual', id)
         .on('mouseover', function (event, d) {
-            fitrepTooltip
-                .transition()
-                .duration(250)
-                .style('opacity', lib.fitrep_tooltip_opacity);
-            fitrepTooltip
-                .html(fitrepTooltipHTML(d))
-                .style('left', event.pageX + 'px')
-                .style('top', event.pageY - 28 + 'px');
+            showFitrepToolTip(event, d, fitrepTooltip, provider);
         })
-        .on('mouseout', function (d) {
-            fitrepTooltip.transition().duration(250).style('opacity', 0);
+        .on('mouseout', function (event, d) {
+            hideFitrepTooltip(event, fitrepTooltip);
         });
 
     // Draw comparable FITREP lines
@@ -507,24 +487,36 @@ function draw_fitrep_graph(data, group) {
         .on('mouseout', function (d) {
             fitrepGapTooltip.transition().duration(250).style('opacity', 0.0);
         });
+
+        if( isMultiView() ){
+            const startGrade=data.provider.getComparisonStartGrade();
+            const switchDate=provider.getEndDateForPaygrade(startGrade);
+            const verticalLine = d3.line()
+                .x(d => data.time_scale(d.date))
+                .y(d => lib.rsca_scale(d.value));
+
+            group.append("path")
+                .datum([
+                    {date: switchDate, value: lib.rsca_scale_min},
+                    {date: switchDate, value: lib.rsca_scale_max}
+                ])
+                .attr('class', 'rank_switch_line')
+                .attr('data-individual', id)
+                .style("stroke-dasharray", ("3, 3"))
+                .style("stroke", "black")
+                .style("stroke-width", "3")
+                .attr("d", verticalLine)
+                .on("mouseover", function(e, d){
+                    const id=e.target.dataset.individual;
+                    showIndivdualDetails(id);
+                })
+                .on("mouseout", function(e,d){
+                    const id=e.target.dataset.individual;
+                    revertIndvidualDetails(id);
+                })
+        }
     }
     // #endregion
-}
-function elemArrayforIndividual(ind){
-    return Array.from(document.querySelectorAll(`[data-individual='${ind}']`))
-}
-function showIndivdualDetails(ind){
-    elemArrayforIndividual(ind).map(elem=>{
-        elem.style.display="block";
-        elem.style.opacity="1";
-    });
-}
-
-function revertIndvidualDetails(ind){
-    elemArrayforIndividual(ind).map(elem=>{
-        elem.style.display=null;
-        elem.style.opacity=null;
-    })
 }
 
 function update_highlight_element(e, d, element, data) {
@@ -544,13 +536,14 @@ function clear_fitrep_highlight(element_to_clear) {
     element_to_clear.style('opacity', 0);
 }
 
-function fitrepTooltipHTML(d) {
+function fitrepTooltipHTML(d, lastname) {
     var delta = calcCompDelta(d).toFixed(2) || 'n/a';
 
     var begin = lib.dateFormatter_mmddyy(d.start_date);
     var end = lib.dateFormatter_mmddyy(d.end_date);
 
     return `
+    <h4>${lastname}</h4>
     <strong>Period:</strong> ${begin} to ${end}<br>
     <strong>Report Type:</strong> ${d.rpt_type}<br>
     <br>
@@ -615,6 +608,49 @@ function fitrepTooltipHTML(d) {
     `;
 }
 
+function showFitrepToolTip(e, d, fitrepTooltip, provider) {
+fitrepTooltip
+    .transition()
+    .duration(250)
+    .style('opacity', lib.fitrep_tooltip_opacity);
+fitrepTooltip
+    .html(fitrepTooltipHTML(d, provider.getLastName()))
+    .style('left', e.pageX + 'px')
+    .style('top', e.pageY - 28 + 'px');
+
+    if(isMultiView()){
+    const id=e.target.dataset.individual;
+    showIndivdualDetails(id);
+    }
+}
+
+function hideFitrepTooltip(event, fitrepTooltip){
+    fitrepTooltip.transition().duration(250).style('opacity', 0);
+    
+    if(isMultiView()){
+        const id=event.target.dataset.individual;
+        revertIndvidualDetails(id);
+    }
+}
+
+function elemArrayforIndividual(ind){
+    return Array.from(document.querySelectorAll(`[data-individual='${ind}']`))
+}
+
+export function showIndivdualDetails(ind){
+    elemArrayforIndividual(ind).map(elem=>{
+        elem.style.visibility="visible";
+        elem.style.opacity="1";
+    });
+}
+
+export function revertIndvidualDetails(ind){
+    elemArrayforIndividual(ind).map(elem=>{
+        elem.style.visibility=null;
+        elem.style.opacity=null;
+    })
+}
+
 function fitrepGapTooltipHTML(d) {
     var begin = lib.dateFormatter_mmddyy(d[0]);
     var end = lib.dateFormatter_mmddyy(d[1]);
@@ -623,17 +659,17 @@ function fitrepGapTooltipHTML(d) {
 }
 
 function get_y_label() {
-    const view = getView();
+    const view = getMeasureMode()
 
     switch (view) {
-        case 'rsca-comp':
+        case 'rsca':
             return 'Trait Average-RSCA';
 
-        case 'sum_group-comp':
+        case 'group':
             return 'Trait Average-Group Average';
     }
 }
 function calcCompDelta(d) {
-    let comp = getView() === 'sum_group-comp' ? d.sum_group : d.rsca;
+    let comp = getMeasureMode() === 'group' ? d.sum_group : d.rsca;
     return comp ? d.trait_avg - comp : 0;
 }

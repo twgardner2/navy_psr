@@ -2,9 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     activeRecord: false,
+    measureMode: 'rsca',
     viewMode: 'single',
     comparisonMode: 'rank',
+    tableLock: true,
     hiddenRecords: [],
+    flatPickr: new Date(0)
 };
 
 const viewSlice = createSlice({
@@ -26,6 +29,12 @@ const viewSlice = createSlice({
             const { comparisonMode } = action.payload;
             state.comparisonMode = comparisonMode;
         },
+        setMeasureModeRSCA: (state)=>{
+            state.measureMode='rsca'
+        },
+        setMeasureModeGroup: (state)=>{
+            state.measureMode='group'
+        },
         addHiddenRecord: (state, action) => {
             const { hiddenRecord } = action.payload;
             let current=new Set(state.hiddenRecords);
@@ -41,6 +50,16 @@ const viewSlice = createSlice({
         showAllRecords: (state) => {
             state.hiddenRecords = [];
         },
+        lockTable: (state)=>{
+            state.tableLock=true
+        },
+        openTable: (state)=>{
+            state.tableLock=false;
+        },
+        updateFlatPickr: (state, action)=>{
+            const {date} = action.payload
+            state.flatPickr=date;
+        }
     },
 });
 
@@ -52,6 +71,11 @@ export const {
     addHiddenRecord,
     showHiddenRecord,
     showAllRecords,
+    setMeasureModeGroup,
+    setMeasureModeRSCA,
+    lockTable,
+    openTable,
+    updateFlatPickr
 } = viewSlice.actions;
 
 export default viewSlice.reducer;

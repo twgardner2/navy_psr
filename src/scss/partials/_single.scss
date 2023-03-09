@@ -276,6 +276,10 @@ tr:nth-child(even) {
     height: auto;
     background: $fitrep-tooltip-bg-color;
     pointer-events: none;
+
+    h4{
+        margin:0;
+    }
 }
 
 .fitrepTooltip > table {

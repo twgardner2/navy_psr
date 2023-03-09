@@ -8,6 +8,8 @@ import { clear_psr_viz, draw_psr_viz } from '../view/graph/graph';
 import { populate_table } from '../view/table/table';
 import { scrubNames } from '../view/record-selector';
 import { isMultiView, setSingleViewMode } from './view-settings';
+import { setActiveRecord } from './slices/view-slice';
+import { sample_name } from '../lib';
 
 
 export function updateNewRecord(recordName, parsedData){
@@ -17,7 +19,33 @@ export function updateNewRecord(recordName, parsedData){
     }));
 }
 
+export function getActiveRecordName() {
+    let state = appStore.getState();
+    let names = getAllRecordNames();
+    if (typeof state.view.activeRecord === 'string') {
+        return state.view.activeRecord;
+    } else if (names.length){
+        return names[0]
+    } else {
+        return sample_name
+    }
+}
+
+export function getActiveRecord() {
+    let state = appStore.getState();
+    let name = getActiveRecordName();
+    return state.records[name];
+}
+
+
 export function removeRecordByName(recordName){
+    if(getActiveRecordName() === recordName){
+        const names=getAllRecordNames()
+        appStore.dispatch(setActiveRecord({
+            activeRecord: names[0]
+        }))
+    }
+
     appStore.dispatch( removeRecord({
         recordName: recordName
     }));
@@ -60,10 +88,12 @@ appStore.subscribe( () => {
 
         //Redraw the Tables
         if(appStore.getState().view.viewMode === 'single'){
-
             document.body.classList.remove('multiview');
-            populate_table();
-
+            document.getElementById( getActiveRecordName() ).classList.add('active');
+            
+            if(appStore.getState().view.tableLock){
+                populate_table();
+            }
         } else{ 
             document.body.classList.add('multiview');
         }

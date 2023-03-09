@@ -1,7 +1,8 @@
+import { deserify } from '@karmaniverous/serify-deserify';
 import * as d3 from 'd3';
 
 import { appStore } from './app-state';
-import { addHiddenRecord, setActiveRecord, setComparisonMode, setViewMode, showHiddenRecord } from  './slices/view-slice';
+import { addHiddenRecord, lockTable, setActiveRecord, setComparisonMode, setMeasureModeGroup, setMeasureModeRSCA, setViewMode, showHiddenRecord, updateFlatPickr } from  './slices/view-slice';
 
 
 export function showSingleRecord(id){
@@ -13,10 +14,22 @@ export function showSingleRecord(id){
 }
 
 export function setMulitView(){
+    appStore.dispatch( lockTable());
+
     appStore.dispatch(setViewMode({
         viewMode: 'multiple'
     }));
 
+}
+
+export function setFlatPickr(date){
+    appStore.dispatch( updateFlatPickr({
+        date: date
+    }));
+}
+
+export function getFlatPickr(){
+    return deserify(appStore.getState().view.flatPickr)
 }
 
 export function setSingleViewMode(){
@@ -50,4 +63,19 @@ export function multiShow(id){
     appStore.dispatch(showHiddenRecord({
         hiddenRecord:id
     }));
+}
+
+export function bindToTabs(){
+    d3.selectAll('.tab button').on('click', function(e){
+        d3.selectAll('.tablinks').attr('class', 'tablinks');
+        this.classList.add('active');
+
+        const action= e.target.dataset.view === 'sum_group-comp' ? setMeasureModeGroup() : setMeasureModeRSCA();
+
+        appStore.dispatch(action);
+    });
+}
+
+export function getMeasureMode(){
+    return appStore.getState().view.measureMode
 }

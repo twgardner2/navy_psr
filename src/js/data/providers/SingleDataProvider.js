@@ -1,14 +1,16 @@
-import * as lib from '../../lib';
 import * as d3 from 'd3';
 import { DataLoader } from './DataLoader';
 import { AbstractProvider } from './AbstractProvider';
+import { getActiveRecordName } from '../../stores/records';
+import { getFlatPickr } from '../../stores/view-settings';
 
 const { fields } = require('../schema');
 const { getPageElements } = require('../../view/page-components.js');
 
 export class SingleDataProvider extends AbstractProvider{
-    constructor(psr) {
+    constructor(recordName, psr) {
         super();
+        this.recordName=recordName
         this.psr = this.parse(psr)
         for (let k in fields) {
             if (fields[k].dateFilter) {
@@ -21,19 +23,24 @@ export class SingleDataProvider extends AbstractProvider{
 
     }
 
+    getLastName(){
+        const stop = this.recordName.indexOf('-');
+        return this.recordName.substr(0, stop);
+    }
+
     updateActiveRecord(data) {
         let loader=new DataLoader(data);
-        loader.setRecordName(this.getActiveRecordName());
+        loader.setRecordName(getActiveRecordName());
         loader.load();
     }
 
     getStartDate() {
         const start_dates = this.psr.map((d) => d.start_date);
-        const { fp_start_date } = getPageElements();
-        let startDate = new Date(
-            Math.max(Math.min(...start_dates), ...fp_start_date.selectedDates)
-        );
-        return startDate;
+        
+        const earliest_psr= this.getEarliestDate(start_dates);
+        const fp_date=getFlatPickr();
+        
+        return this.getLatestDate([earliest_psr, fp_date]);
     }
 
     getEndDate() {
@@ -184,6 +191,36 @@ export class SingleDataProvider extends AbstractProvider{
             this.psr,
             (d)=>d.paygrade
         );
+    }
+
+    getEndDateForPaygrade(paygrade){
+        const fitreps=this.fitrepsGroupedByPaygrade().get(paygrade);
+        if(typeof fitreps === 'undefined'){
+            return false;
+        }
+        let endDates=[];
+
+        for(let rep of fitreps){
+            endDates.push(rep.end_date);
+        }
+
+        return this.getLatestDate(endDates);
+        
+    }
+
+    getStartDateForPaygrade(paygrade){
+        const fitreps=this.fitrepsGroupedByPaygrade().get(paygrade);
+        if(typeof fitreps === 'undefined'){
+            return false;
+        }
+
+        let startDates=[];
+
+        for(let rep of fitreps){
+            startDates.push(rep.start_date);
+        }
+
+        return this.getEarliestDate(startDates);
     }
 
 }

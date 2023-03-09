@@ -20,10 +20,32 @@ export class MultiDataProvider extends AbstractProvider{
         this.providers={};
 
         for(let id of shownRecords){
-            this.providers[id]=new SingleDataProvider(this.parse(state.records[id]));
+            this.providers[id]=new SingleDataProvider(id, this.parse(state.records[id]));
         }
 
         this.setDatesandTime();
+    }
+
+    getRanksForComparison(){
+        let mapped=[]
+
+            for(const id in this.providers){
+                mapped.push(this.providers[id].fitrepsGroupedByPaygrade());
+            }
+
+            const noToCompare=2;
+
+            const grades=new Set(mapped.map(m=>Array.from(m.keys())).flat());
+            const forComparison=Array.from(grades)
+                .sort()
+                .slice(-noToCompare);
+
+            return forComparison;
+    }
+
+    getComparisonStartGrade(){
+        const ranks=this.getRanksForComparison();
+        return ranks[0];
     }
 
     getStartDate(){
@@ -36,33 +58,16 @@ export class MultiDataProvider extends AbstractProvider{
             return newDate;
 
         } else if (this.comparisonMode === 'rank'){
-            let mapped=[]
-
-            for(const id in this.providers){
-                mapped.push(this.providers[id].fitrepsGroupedByPaygrade());
-            }
-
-            const noToCompare=2;
-
-            const grades=new Set(mapped.map(m=>Array.from(m.keys())).flat());
-            const forComparison=Array.from(grades)
-                .sort()
-                .slice(-noToCompare);
             
-            const startGrade=forComparison[0];
+            const startGrade=this.getComparisonStartGrade();
 
             let startDates=[];
-            for(let records of mapped){
-                records.get(startGrade).map(fitrep=>{
-                    startDates.push(fitrep.start_date);
-                });
+            for(const id in this.providers){
+                startDates.push(this.providers[id].getStartDateForPaygrade(startGrade));
             }
 
-            const earliest=startDates.reduce((previousDate, currentDate) => {
-                return currentDate < previousDate ? currentDate : previousDate;
-              });
-
-            return earliest;
+            return this.getEarliestDate(startDates);
+            
         }
     }
 
@@ -72,11 +77,7 @@ export class MultiDataProvider extends AbstractProvider{
             endDates.push(this.providers[id].endDate);
         }
 
-        const latest=endDates.reduce((previousDate, currentDate) => {
-            return currentDate > previousDate ? currentDate : previousDate;
-          });
-
-        return latest;
+        return this.getLatestDate(endDates);
     }
 
 

@@ -2,6 +2,7 @@ import * as lib from '../lib.js';
 import * as d3 from 'd3';
 import flatpickr from 'flatpickr';
 import { bindToViewToggle } from './record-selector.js';
+import { bindToTabs } from '../stores/view-settings.js';
 
 let svg,
     container_g,
@@ -15,7 +16,6 @@ let svg,
     fitreps_g,
     legend_canvas,
     table,
-    rerender_button,
     start_container,
     table_container,
     fp_start_date;
@@ -30,7 +30,6 @@ export const getPageElements = () => ({
     rep_sen_at_g,
     fitreps_g,
     legend_canvas,
-    rerender_button,
     fp_start_date,
 });
 
@@ -45,13 +44,6 @@ export const buildElements = (grid) => {
         .attr('width', '100%');
 
     table_container = grid.append('div').attr('class', 'table');
-
-    rerender_button = table_container
-        .append('div')
-        .append('button')
-        .attr('id', 'rerender-btn')
-        .text('Re-Render')
-        .style('display', 'none');
 
     setupStartDate();    
 
@@ -533,21 +525,11 @@ function setupStartDate(){
 
 export function addTabs() {
     addHTMLTemplates('tabs', '.grid');
-
-    d3.selectAll('.tab button').on('click', function(e){
-        d3.selectAll('.tablinks').attr('class', 'tablinks');
-        this.classList.add('active');
-        rerender_button.node().click();
-    })
+    bindToTabs()
 }
 
 export function addViewToggle(){
     addHTMLTemplates('view_toggle', '.grid');   
     addHTMLTemplates('compare_toggle', '.grid');
     bindToViewToggle(); 
-}
-
-
-export function getView(){
-    return d3.select('.tablinks.active').attr('data-view');
 }

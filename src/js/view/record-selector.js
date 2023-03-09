@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import { isHiddenId, isMultiView, multiHide, multiShow, setComparisonType, setMulitView, setSingleViewMode, showSingleRecord } from '../stores/view-settings';
 import { nameToId, removeRecordByName  } from '../stores/records';
+import { revertIndvidualDetails, showIndivdualDetails } from './graph/graph';
 
 export function appendMultiNameSelect(parent){
     parent
@@ -30,7 +31,7 @@ export function scrubNames(names){
                     let name=e.target.id;
                     
                     if(!isMultiView()){
-                        e.target.classList.add('active');
+                        
                         showSingleRecord(name);
                     } else {
                         if(e.target.classList.contains('multi-hidden')){
@@ -41,6 +42,20 @@ export function scrubNames(names){
                             e.target.classList.add('multi-hidden');
                         }
                     }
+                })
+                .on('mouseover', (e)=>{
+                    if(!isMultiView()){
+                        return;
+                    }
+                    const ind=e.target.dataset.individual;
+                    showIndivdualDetails(ind)
+                })
+                .on('mouseleave', (e)=>{
+                    if(!isMultiView){
+                        return;
+                    }
+                    const ind=e.target.dataset.individual;                    
+                    revertIndvidualDetails(ind);
                 })
                 .html(d=>d)
                 .call( parent =>{

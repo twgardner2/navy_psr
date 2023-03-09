@@ -38,13 +38,13 @@ body.multiview{
     #rep_sen_at_g
     {
         & >* {
-        display:none;
+        visibility: hidden;
         }
     }
 
     #fitreps_g{
-        .fitrep.dot{
-            opacity:0.5;
+        .fitrep.dot, .rank_switch_line{
+            opacity:0.4;
         }
     }
 }

@@ -18,8 +18,10 @@ export function parse_data_from_table(e, d) {
       j[i].childNodes.forEach(function (el) {
         if (el.classList.contains("table_field")) {
           // Get key and value in cell
-          var cell_key = el.dataset.key;
-          var cell_value = el.innerText;
+          const cell_key = el.dataset.key;
+          
+          const cell_value=el.getElementsByTagName('input').length ? el.getElementsByTagName('input')[0].value :  el.innerText;
+          
 
           // Coerce to correct data type
           var schema_entry = tableFields.filter((el) => el.name == cell_key);

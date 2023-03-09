@@ -5,10 +5,6 @@ import { deserify } from "@karmaniverous/serify-deserify";
 
 export class AbstractProvider{
 
-    construct(){
-        
-    }
-
     setDatesandTime(){
         this.startDate = this.getStartDate();
         this.endDate = this.getEndDate();
@@ -16,12 +12,10 @@ export class AbstractProvider{
     }
 
     setTimeScale() {
-        this.min_start_date = this.startDate;
-        this.max_end_date = this.endDate;
 
         this.time_scale = d3
             .scaleTime()
-            .domain([this.min_start_date, this.max_end_date])
+            .domain([this.startDate, this.endDate])
             .range([
                 0,
                 lib.canvas_width -
@@ -35,4 +29,20 @@ export class AbstractProvider{
         return deserify(psr)
     }
 
+    getEarliestDate(dates){
+        
+        const earliest=dates.reduce((previousDate, currentDate) => {
+            return currentDate < previousDate ? currentDate : previousDate;
+          });
+
+        return earliest;
+    }
+
+    getLatestDate(dates){
+        const latest=dates.reduce((previousDate, currentDate) => {
+            return currentDate > previousDate ? currentDate : previousDate;
+          });
+
+        return latest;
+    }
 }

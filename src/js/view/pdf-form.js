@@ -1,4 +1,5 @@
 import { DataLoader } from '../data/providers/DataLoader';
+import { sample_name } from '../lib';
 import { removeRecordByName, nameToId } from '../stores/records';
 
 const {
@@ -41,8 +42,8 @@ async function updateFromPdfInputChange(event) {
     loader.setRecordName(nameToId(psrName));
     loader.load();
 
-    if (document.getElementById('Sample')) {
-        // removeRecordByName('Sample');
+    if (document.getElementById(sample_name)) {
+        removeRecordByName(sample_name);
     }
 
     elem.value = '';
