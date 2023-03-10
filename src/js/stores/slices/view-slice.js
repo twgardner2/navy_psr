@@ -1,3 +1,4 @@
+import { serify } from '@karmaniverous/serify-deserify';
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
@@ -7,7 +8,7 @@ const initialState = {
     comparisonMode: 'rank',
     tableLock: true,
     hiddenRecords: [],
-    flatPickr: new Date(0)
+    flatPickr: serify(new Date(0))
 };
 
 const viewSlice = createSlice({
