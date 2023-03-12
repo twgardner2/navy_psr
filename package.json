@@ -42,7 +42,6 @@
     "graceful-fs": "^4.2.9",
     "html-loader": "^3.1.0",
     "mini-css-extract-plugin": "^2.4.5",
-    "node-sass": "^6.0.1",
     "path-browserify": "^1.0.1",
     "pdfreader": "^1.2.14",
     "postcss-loader": "^6.2.0",
