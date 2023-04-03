@@ -133,7 +133,6 @@ function toggle_rows(e, d) {
         parent_row.selectAll('td').classed('editing', false);
         parent_row.on("change", null);
         maybeLockTable();
-        redrawGraph();
     }
 }
 
@@ -141,10 +140,10 @@ function deleteRow(e, d) {
     var parent_row = d3.select(this.parentNode.parentNode);
     parent_row.remove();
     maybeLockTable();
-    redrawGraph();
 }
 
 function maybeLockTable(){
+    redrawGraph();
     if(document.querySelectorAll('button.editing').length ===0){
         appStore.dispatch(lockTable());
     }
