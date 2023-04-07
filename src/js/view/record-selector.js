@@ -75,6 +75,7 @@ export function scrubNames(names){
             function(update){
                 return update
                     .attr('id', (d)=>nameToId(d) )
+                    .attr('data-individual', (d)=>nameToId(d))
                     .html(d=>d)
                     .call( parent =>{
                         parent.append('div')
