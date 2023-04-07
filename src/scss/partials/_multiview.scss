@@ -43,8 +43,12 @@ body.multiview{
     }
 
     #fitreps_g{
-        .fitrep.dot, .rank_switch_line{
+        .fitrep.dot, .rank_switch_line, .multiview-name-tail{
             opacity:0.4;
+        }
+
+        .gap{
+            opacity:0.1;
         }
     }
 }

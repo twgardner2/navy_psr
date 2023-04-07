@@ -26,6 +26,7 @@ export const clear_psr_viz = (canvas) => {
     d3.select(canvas).selectAll('g.fitrep').remove();
 
     d3.select(canvas).selectAll('.rank_switch_line').remove();
+    d3.select(canvas).selectAll('.multiview-name-tail').remove();
 
     d3.select(canvas).selectAll('g.x.axis').remove();
 
@@ -467,6 +468,7 @@ function draw_fitrep_graph(data, group) {
         .append('rect')
         .attr('transform', (d) => `translate(${data.time_scale(d[0])},0)`)
         .attr('height', lib.rsca_scale.range()[0])
+        .attr('data-individual', id)
         .attr(
             'width',
             (d) => `${data.time_scale(d[1]) - data.time_scale(d[0])}px`
@@ -489,6 +491,7 @@ function draw_fitrep_graph(data, group) {
         });
 
         if( isMultiView() ){
+            //draw paygrade separating lines
             const startGrade=data.provider.getComparisonStartGrade();
             const switchDate=provider.getEndDateForPaygrade(startGrade);
             const verticalLine = d3.line()
@@ -513,7 +516,33 @@ function draw_fitrep_graph(data, group) {
                 .on("mouseout", function(e,d){
                     const id=e.target.dataset.individual;
                     revertIndvidualDetails(id);
-                })
+                });
+
+            // Append SVG text
+            const lastName = provider.getLastName();
+            const lastMarker = fitrep_marker_gs.nodes()[fitrep_marker_gs.size() - 1];
+            const transformAttr = lastMarker.getAttribute('transform');
+            const x = parseFloat(transformAttr.match(/translate\(([\d\.]+),/)[1]);
+            const y = parseFloat(transformAttr.match(/, ([\d\.]+)\)/)[1]);
+            group.append('text')
+            .attr('class', 'multiview-name-tail')
+            .attr('data-individual', id)
+            .attr('x', x)
+            .attr('y', y - 7)
+            .attr('text-anchor', 'start')
+            .attr('font-size', 12)
+            .text(lastName)
+            .on("mouseover", function(e, d){
+                const id=e.target.dataset.individual;
+                showIndivdualDetails(id);
+            })
+            .on("mouseout", function(e,d){
+                const id=e.target.dataset.individual;
+                revertIndvidualDetails(id);
+            });;
+
+
+            
         }
     }
     // #endregion
