@@ -58,16 +58,25 @@ nav {
             border-color: $navy-yellow;
         }
 
-        .delete-btn{
-            min-width: 33px;
-            color: $navy-red;
-            height: 33px;
+        .delete-btn, .multi-record-toggle{
             margin-bottom: 5px;
             padding: 0;
             border: 1;
             position: absolute;
+        }
+        
+        .delete-btn{
+            min-width: 33px;
+            height: 33px;
             top: 0;
             right: -1em;
+            color: $navy-red;            
+        }
+
+        .multi-record-toggle{
+            display:none;
+            bottom: 0;
+            right: 0.25em;
         }
       }
 

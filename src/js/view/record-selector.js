@@ -58,45 +58,46 @@ export function scrubNames(names){
                     revertIndvidualDetails(ind);
                 })
                 .html(d=>d)
-                .call( parent =>{
-                    parent.append('div')
-                    .attr('class', 'delete-btn')
-                    .attr('data-name', d=>d)
-                    .on('click', (e)=>{
-                        e.stopPropagation()
-                        let name=e.target.dataset.name;
-                        removeRecordByName(name);
-                        let id=nameToId(name);
-                        d3.select(`#${id}`).remove();
-                    })
-                    .html("X")
-                })
+                .call(chickletChildren)
             },
             function(update){
                 return update
                     .attr('id', (d)=>nameToId(d) )
                     .attr('data-individual', (d)=>nameToId(d))
                     .html(d=>d)
-                    .call( parent =>{
-                        parent.append('div')
-                        .attr('class', 'delete-btn')
-                        .attr('data-name', d=>d)
-                        .on('click', (e)=>{
-                            e.stopPropagation()
-                            let name=e.target.dataset.name;
-                            removeRecordByName(name);
-                            let id=nameToId(name);
-                            d3.select(`#${id}`).remove();
-                        })
-                        .html("X")
-                    })
+                    .call(chickletChildren)
             },
             function(exit){
                 exit.remove(); 
             }
         );
+    
+    d3.selectAll('input.multi-record-toggle')
+            .each( function(){
+                const checkbox = d3.select(this);
+                const name = checkbox.attr('data-name');
+                checkbox.property('checked', !isHiddenId(nameToId(name)));
+            });
 }
 
+function chickletChildren(parent){
+    parent.append('div')
+        .attr('class', 'delete-btn')
+        .attr('data-name', d=>d)
+        .on('click', (e)=>{
+            e.stopPropagation()
+            let name=e.target.dataset.name;
+            removeRecordByName(name);
+            let id=nameToId(name);
+            d3.select(`#${id}`).remove();
+        })
+        .html("X")
+
+    parent.append('input')
+        .attr('class', 'multi-record-toggle')
+        .attr('type', 'checkbox')
+        .attr('data-name', d=>d);
+}
 
 export function bindToViewToggle(){
     d3.select('#view_toggle input')
