@@ -16,6 +16,8 @@ export const bar_height = 0.8 * bar_gap;
 export const fitrep_width = 1000;
 export const fitrep_height = 300;
 
+export const sample_name="SAMPLE-I-AM"
+
 // Horizontal (time) scale - defined in scripts.js
 
 // Vertical (RSCA) scale

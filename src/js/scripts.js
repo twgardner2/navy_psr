@@ -1,20 +1,20 @@
 import * as lib from './lib.js';
 import * as d3 from 'd3';
+import { appendMultiNameSelect } from './view/record-selector.js';
+import { DataLoader } from './data/providers/DataLoader.js';
+import { setFlatPickr } from './stores/view-settings.js';
 
-const { DataProvider } = require('./data/providers/DataProvider');
 const { parse_data_from_table } = require('./data/parsers/table/table-parser');
 
 const {
     buildElements,
     draw_legend,
     addNavBar,
-    addTabs
-} = require('./page-components.js');
+    addTabs,
+    addViewToggle
+} = require('./view/page-components.js');
 
-const { populate_table } = require('./table/table.js');
-const { clear_psr_viz, draw_psr_viz } = require('./graph/graph.js');
-
-const { appendPDFUploadForm } = require('./pdf-form.js');
+const { appendPDFUploadForm } = require('./view/pdf-form.js');
 
 let data;
 
@@ -26,19 +26,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let grid = d3.select('body').select('.grid');
 
+    appendMultiNameSelect(grid);
     appendPDFUploadForm(grid);
+    addViewToggle();
 
-    const { rerender_button } = buildElements(grid);
-
-    rerender_button.on('click', function (event) {
-        var table_data = parse_data_from_table();
-        clear_psr_viz(document.getElementById('canvas'));
-        let provider = new DataProvider(table_data);
-        draw_psr_viz(provider);
-    });
+    buildElements(grid);
 
     d3.select('#start-date').on('change', function (event) {
-        rerender_button.node().click();
+        setFlatPickr(this.flatpickr().selectedDates[0]);
     });
 
     draw_legend();
@@ -51,9 +46,8 @@ document.addEventListener('DOMContentLoaded', function () {
         .attr('original_data', sampleData)
         .data(sampleData);
 
-        let provider = new DataProvider(sampleData);
-            populate_table(provider);
-        
-        draw_psr_viz(provider);
-
+        let loader= new DataLoader(sampleData);
+        loader.setRecordName(lib.sample_name);
+        loader.load();
+  
 });

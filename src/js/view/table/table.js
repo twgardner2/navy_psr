@@ -1,15 +1,24 @@
 import * as d3 from 'd3';
-import * as lib from '../lib.js';
+import * as lib from '../../lib.js';
 import flatpickr from 'flatpickr';
+import { DataProvider } from '../../data/providers/DataProvider.js';
+import { appStore } from '../../stores/app-state.js';
+import { lockTable, openTable } from '../../stores/slices/view-slice.js';
+import { parse_data_from_table } from '../../data/parsers/table/table-parser.js';
 
 const { getPageElements } = require('../page-components.js');
 
-const { fields } = require('../data/schema');
+const { fields } = require('../../data/schema');
 const { resetTable } = require('../page-components');
 
 const tableFields = Object.values(fields);
 
-export const populate_table = (data) => {
+
+export const populate_table = () => {
+
+    //table is a singlerecordview only
+    
+    let data=(new DataProvider()).provider;
     const table = resetTable();
 
     // Add form header row
@@ -38,6 +47,8 @@ function toggle_rows(e, d) {
 
     // If not currently editing row
     if (!this.classList.contains('editing')) {
+
+        appStore.dispatch(openTable());
         // Toggle button text to 'save'
         clicked_button.text('Save');
 
@@ -121,14 +132,21 @@ function toggle_rows(e, d) {
         clicked_button.classed('editing', false);
         parent_row.selectAll('td').classed('editing', false);
         parent_row.on("change", null);
-        redrawGraph();
+        maybeLockTable();
     }
 }
 
 function deleteRow(e, d) {
     var parent_row = d3.select(this.parentNode.parentNode);
     parent_row.remove();
+    maybeLockTable();
+}
+
+function maybeLockTable(){
     redrawGraph();
+    if(document.querySelectorAll('button.editing').length ===0){
+        appStore.dispatch(lockTable());
+    }
 }
 
 function addRow(e, d) {
@@ -192,10 +210,12 @@ function buildButton(cell, text, callback) {
         .on('click', callback);
 }
 
-function redrawGraph() {
-    const { rerender_button } = getPageElements();
-    rerender_button.node().click();
+function redrawGraph(){
+        const table_data = parse_data_from_table()
+        let provider=new DataProvider();
+        provider.updateActiveRecord(table_data);
 }
+
 
 function addCalcListeners(parentRow, input, schema_entry){
     schema_entry.calculated.watch.map(dataKey=>{

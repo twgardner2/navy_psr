@@ -1,0 +1,59 @@
+
+
+body.multiview{
+
+    .table{
+        display: none;
+    }
+
+    #compare_toggle{
+        display: block;
+    }
+
+    #record-names{
+        & > *{
+            opacity:0.5;
+            border-color: $navy-yellow;
+            
+            &.active{
+                border-color: $navy-yellow;
+            }
+
+            &.multi-hidden{
+                border-color: $navy-gray;
+            }
+            
+            .delete-btn{
+                display: none;
+            }
+
+            .multi-record-toggle{
+                display: block;
+            }
+
+        }
+    }
+
+    #rank_g, 
+    #command_rg_g, 
+    #rep_sen_rg_g,
+    #command_idt_g,
+    #rep_sen_idt_g,
+    #command_at_g,
+    #rep_sen_at_g
+    {
+        & >* {
+        visibility: hidden;
+        }
+    }
+
+    #fitreps_g{
+        .fitrep.dot, .rank_switch_line, .multiview-name-tail{
+            opacity:0.4;
+        }
+
+        .gap{
+            opacity:0.1;
+        }
+    }
+}
