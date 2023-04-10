@@ -28,18 +28,19 @@ export function scrubNames(names){
                     return cssClass;
                 })
                 .on('click', (e)=>{
-                    let name=e.target.id;
+                    const elem=e.currentTarget
+                    const name=elem.id;
                     
                     if(!isMultiView()){
                         
                         showSingleRecord(name);
                     } else {
-                        if(e.target.classList.contains('multi-hidden')){
+                        if(elem.classList.contains('multi-hidden')){
                             multiShow(name);
-                            e.target.classList.remove('multi-hidden');
+                            elem.classList.remove('multi-hidden');
                         } else {
                             multiHide(name);
-                            e.target.classList.add('multi-hidden');
+                            elem.classList.add('multi-hidden');
                         }
                     }
                 })
@@ -47,14 +48,14 @@ export function scrubNames(names){
                     if(!isMultiView()){
                         return;
                     }
-                    const ind=e.target.dataset.individual;
+                    const ind=e.currentTarget.dataset.individual;
                     showIndivdualDetails(ind)
                 })
                 .on('mouseleave', (e)=>{
                     if(!isMultiView){
                         return;
                     }
-                    const ind=e.target.dataset.individual;                    
+                    const ind=e.currentTarget.dataset.individual;                    
                     revertIndvidualDetails(ind);
                 })
                 .html(d=>d)
@@ -71,8 +72,8 @@ export function scrubNames(names){
                 exit.remove(); 
             }
         );
-    
-    d3.selectAll('input.multi-record-toggle')
+        
+        d3.selectAll('input.multi-record-toggle')
             .each( function(){
                 const checkbox = d3.select(this);
                 const name = checkbox.attr('data-name');
@@ -93,10 +94,10 @@ function chickletChildren(parent){
         })
         .html("X")
 
-    parent.append('input')
+        parent.append('input')
         .attr('class', 'multi-record-toggle')
         .attr('type', 'checkbox')
-        .attr('data-name', d=>d);
+        .attr('data-name', d=>d)
 }
 
 export function bindToViewToggle(){
