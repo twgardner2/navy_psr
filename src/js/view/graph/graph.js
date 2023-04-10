@@ -36,6 +36,10 @@ export const clear_psr_viz = (canvas) => {
 
 export const draw_psr_viz = () => {
     let data= new DataProvider();
+    
+    if(data.isEmpty()){
+        return;
+    }
 
     const { fitreps_g } = getPageElements();
 

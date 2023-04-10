@@ -22,6 +22,10 @@ export class DataProvider {
         }
     }
 
+    isEmpty(){
+        return (this.provider instanceof MultiDataProvider) && Object.keys(this.provider.providers).length === 0;
+    }
+
     *[Symbol.iterator]() {
         if(isMultiView()){
             for(const id in this.provider.providers){

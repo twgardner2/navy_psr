@@ -11,13 +11,15 @@ export class MultiDataProvider extends AbstractProvider{
     constructor(){
         super();
         const state=getState();
+        this.providers={};
 
-        const hiddenRecords=state.view.hiddenRecords;
         this.comparisonMode=state.view.comparisonMode;
 
         const shownRecords=Object.keys(state.records).filter(id=>!isHiddenId(id));
 
-        this.providers={};
+        if(shownRecords.length === 0){
+            return;
+        }
 
         for(let id of shownRecords){
             this.providers[id]=new SingleDataProvider(id, this.parse(state.records[id]));

@@ -19,28 +19,21 @@ export function scrubNames(names){
                 .append('div')
                 .attr('id', (d)=>nameToId(d) )
                 .attr('data-individual', (d)=>nameToId(d))
-                .attr('class', (d)=>{
-                    let cssClass='record-name'
-                    const id=nameToId(d);
-                    if(isHiddenId(id)){
-                        cssClass += ' multi-hidden';
-                    }
-                    return cssClass;
-                })
+                .attr('class', nameToClass)
                 .on('click', (e)=>{
                     const elem=e.currentTarget
                     const name=elem.id;
-                    
+                    const currentlyHidden= isHiddenId(name);
                     if(!isMultiView()){
                         
                         showSingleRecord(name);
                     } else {
-                        if(elem.classList.contains('multi-hidden')){
-                            multiShow(name);
+                        if(currentlyHidden){
                             elem.classList.remove('multi-hidden');
+                            multiShow(name);
                         } else {
-                            multiHide(name);
                             elem.classList.add('multi-hidden');
+                            multiHide(name);
                         }
                     }
                 })
@@ -65,6 +58,7 @@ export function scrubNames(names){
                 return update
                     .attr('id', (d)=>nameToId(d) )
                     .attr('data-individual', (d)=>nameToId(d))
+                    .attr('class', nameToClass)
                     .html(d=>d)
                     .call(chickletChildren)
             },
@@ -79,6 +73,15 @@ export function scrubNames(names){
                 const name = checkbox.attr('data-name');
                 checkbox.property('checked', !isHiddenId(nameToId(name)));
             });
+}
+
+function nameToClass(name){
+    let cssClass='record-name'
+    const id=nameToId(name);
+    if(isHiddenId(id)){
+        cssClass += ' multi-hidden';
+    }
+    return cssClass;
 }
 
 function chickletChildren(parent){

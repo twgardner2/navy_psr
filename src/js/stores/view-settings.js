@@ -2,7 +2,7 @@ import { deserify } from '@karmaniverous/serify-deserify';
 import * as d3 from 'd3';
 
 import { appStore } from './app-state';
-import { addHiddenRecord, lockTable, setActiveRecord, setComparisonMode, setMeasureModeGroup, setMeasureModeRSCA, setViewMode, showHiddenRecord, updateFlatPickr } from  './slices/view-slice';
+import { addHiddenRecord, lockTable, setActiveRecord, setComparisonMode, setMeasureModeGroup, setMeasureModeRSCA, setViewMode, showAllRecords, showHiddenRecord, updateFlatPickr } from  './slices/view-slice';
 
 
 export function showSingleRecord(id){
@@ -33,6 +33,8 @@ export function getFlatPickr(){
 }
 
 export function setSingleViewMode(){
+    appStore.dispatch(showAllRecords());
+    
     appStore.dispatch(setViewMode({
         viewMode:'single'
     }));
