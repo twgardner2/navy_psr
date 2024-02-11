@@ -32,43 +32,93 @@ drawing insights from a Naval Officer's Performance Summary Record (PSR). It
 automatically converts the PSR's dense, tabular text into a rich, intuitive, 
 and interactive display \textcolor{red}{"dashboard"?}. All end-users of the PSR
 can benefit from NavyRecordReview's functionality, from an individual Officer 
-scrubbing their recrod, to mentors conducting menotoring sessions 
-\textcolor{red}{reword?}, to Board Members doing record review. 
-
+preparing their Letter-to-the-Board, to mentors conducting record reviews, to
+Board Members preparing a record for briefing in "the tank." 
 \end{abstract}
 
 
 
- \begin{figure}[h!]
-
+\begin{figure}[h!]
  \centering
-
-  \includegraphics[width=0.75\textwidth]{nrr_dashboard.png}
-
+ \includegraphics[width=0.75\textwidth]{nrr_dashboard.png}
  \caption{Sample NavyRecordReview PSR Visualization}
-
- \end{figure}
+\end{figure}
 
 
 \section{Background}
+NavyRecordReview was born in March 2021 while Tom was serving as an Assistant
+Recorder for the Fiscal Year 2022 FTS/RES O-6/O-5/O-4 CONT URL Selection Boards.
+Due to the ongoing Covid-19 pandemic, these Boards were consolidated and
+conducted by a single group of Recorders and Members. Consequently, Tom spent an
+entire month at the Bureau of Naval Personnel, much of which was spent
+observing Members review and brief PSRs. This process struck Tom as wildly
+inefficient, sometimes ineffective, and in all cases, ripe for improvement.\\
 
+For anyone who participates in a promotion Board, it quickly becomes apparent
+that the goal of a Board Member's record review is to gain an understanding of
+an Eligible's demonstrated performance and convey that understanding to the
+other Board Members. This understanding comes not from personal knowledge of
+Eligible, but from reviewing documents in their official record - primarily the
+PSR and Fitness Reports (FITREPs).\\
+
+%The PSR (figure 2) is a table of column and rows of data summarizing all of the
+%FITREPs an officer has recieved over the course of their career. 
+
+Board Members perform tasks during record review that we categorize into two
+types:
+\textit{\textbf{rote}} and \textit{\textbf{expert}}. Examples of each follow:\\
+
+\textit{\textbf{Rote}} tasks: 
+\begin{itemize}
+  \item Checking each FITREP for continuity with the previous FITREP.
+  \item Comparing each FITREP Trait Average to the Reporting Senior's Cumulative
+  Average (RSCA).
+  \item Checking for Promotion Recommendations that "break right."
+  \item Checking for increasing Trait Averages among successive FITREPs from the
+  same Reporting Senior. 
+\end{itemize}
+
+\textit{\textbf{Expert}} tasks: 
+\begin{itemize}
+  \item Evaluating career progression through demonstrated performance in
+  demanding positions.
+  \item Evaluating the comments in Block 41 of FITREPs to gain insight into 
+  performance during specific periods of an Eligible's career
+  \item Deciding what elements of the applicable Community Brief the Eligible
+  has satisfied and whether there may be any amplifying information for
+  shortcomings.
+\end{itemize}
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=0.95\textwidth]{blurred_psr.png}
+ \caption{Sample PSR (redacted)}
+\end{figure}
+
+Doing that by looking at a rectangular table of data, doing some "arts and crafts" on it, and showing them the marked up rectangle of data is neither efficient nor effective. What they needed was an automated, consistent, and intuitive way to visualize the data contained in a PSR.
+
+I saw first hand that Board Members marked up PSRs differently from each other, causing the other Members to have to mentally switch each time a different Member stood up to brief a record, remembering things like how that particular Member annotates FITREP trait averages with respect to RSCA (e.g., does this guy draw an arrow high-to-low, an arrow low-to-high, circle the higher number, or circle the lower number). I saw many times that a Member's annotations were wrong (e.g., they said a FITREP trait average was below RSCA when it wasn't). I watched as Members painstakingly looked for FITREP continuity gaps, mind-numbingly comparing thousands of dates, written on different lines in MMDDYY format, to each other to to see if there are any days in between, trying to keep straight how many days are in a given month, what years are leap-years, etc. Let's just say, "mistakes were made," and it took days or weeks longer than it should have.
+
+I worked on a prototype to demonstrate the idea. I cornered anyone I could, trying to sell them on my idea. I talked with NPC Staff, Board Members, my Board President. Some of them had a lot of Board experience and seemed resistant to any change. Some people though it made sense in principal, but wouldn't work on a real PSR, so I hand-drew the visualization of my personal PSR, which is attached. RADM (ret) Lennon was in the building as a Member on a different Boards, and I knew he would be interested, so I took an opportunity to present my idea to him in the break room. He was the first person who, rather than saying, "That's a great idea," and handing my prototype back to me said, "That's a great idea, can I have this?" He shared the idea with VADM Mustin, who was also present for a Board. VADM Mustin liked the idea and, I believe, encouraged RADM Lennon to champion it in his capacity as Vice Director of the Naval Staff.
+
+Seeing that the idea was gaining traction at the highest levels of the Navy, I got to work further implementing (programming) the idea. Eventually I was able to recruit Chase, an extremely skilled web developer, to work on the idea with me. We setup some infrastructure for version control and deployment of our code and bought a domain. We have continued to develop the project, which is what you see at www.navyrecordreview.com.
 
 \section{Functionality}
 \begin{itemize}
-  \item \textbf{Automated parsing} The system will automatically build a reporting by scanning a PSR PDF. While it says "upload," this is a bit of a misnomer, as nothing is ever sent to our servers and all code runs inside the user's browser (ie "client-side" processing).
+  \item \textbf{Automated Parsing} The system will automatically build a reporting by scanning a PSR PDF. While it says "upload," this is a bit of a misnomer, as nothing is ever sent to our servers and all code runs inside the user's browser (ie "client-side" processing).
   \item \textbf{Trait Average Comparision} The system allows comparison of the individuals trait average to the reporting senior cumulative average (RCSA) or the summary group average, creating a contextual view of the individual's performance.
   \item \textbf{Performance Trend Lines} Evaluations by the same reporting senior, at the same command are connected by solid trend lines showing if performance has trended upward or downwards.
-  \item \textbf{Fitrep Gap identification} Gaps in an indiviuals record are highlighted in red, quickly identifying any periods of time that might need to be addressed.
-  \item \textbf{Manual Entry and Editting} Records can be completely manually entered as well. The PSR table allows manual entry of performance data. Additionally, this table can be used to correct errors in the PSR, such as misspellings in the Command Name (discussed further in the Goals and Backlog section).
+  \item \textbf{FITREP Gap Identification} Gaps in an indiviuals record are highlighted in red, quickly identifying any periods of time that might need to be addressed.
+  \item \textbf{Manual Entry and Editing} Records can be completely manually entered as well. The PSR table allows manual entry of performance data. Additionally, this table can be used to correct errors in the PSR, such as misspellings in the Command Name (discussed further in the Goals and Backlog section).
   \item \textbf{Date Range Selection} It's rare to need to review an individuals entire record, so the "Start Date" selector allows reviewers to zoom in on a specified period of time so the individuals most recent performance trends are clearer.
-  \item \textbf{Multiple Fitrep comparison} One of our newer features, this allows multiple PSRs to be enetered at once. Reviewers can quickly toggle between PSRs by selecting the individuals name, or view multiple records side by side. In Multiview, records can either be compared across the past 2 paygrades, or the past 5 years.
+  \item \textbf{Multiple FITREP Comparison} One of our newer features, this allows multiple PSRs to be enetered at once. Reviewers can quickly toggle between PSRs by selecting the individuals name, or view multiple records side by side. In Multiview, records can either be compared across the past 2 paygrades, or the past 5 years.
 \end{itemize}
 
 \section{Use Cases}
 Presently, the NavyRecordReview PSR Visualization project envisions 3 distinct use cases:
 \begin{enumerate}
 \item \textbf{Board Reviews} The insipiration, and primary purpose for the project is to provide a better way to visualize the trait avergae performance and promotion recommendations for an individual service member and assist with assessing their historic level of performance. To be clear, this system is not intended to replace the need for the human review of an individual service record during a board. It is intended to provide a clear assessment of the discrete numerical information in a performance record including promotion recommendations, trait averages vs. reporting senior cumulative averages, trait averages vs summary group averages, and performance trends across reporting seniors and commands. This should free board members' time in processing records to spend less time comparing numbers on a PSR, and more time for reviewing the context (e.g. Block 41 information), of the service member's performance.
-\item \textbf{Reporting Senior Assessments} By their very nature, fitreps are comparative evaluations, with the burdern of assessing which individuals are most suitable for promtion falling to the reporting senior. In assessing each summary groups rankings, reporting seniors no only assess performance for the period of report, but also the overall suitablility of the individual for promotion which may include additional factors such as time in grade, history of performance, history of assignments, additional qualification, and others. To provide reporting seniors with and additional tool to assess these additional factors, the NavyRecordReview PSR project provides the option to upload multiple PSRs from individuals, and see them compared side by side, saving time and providing a graphical representation of these additional factors that may assist in ranking personnel within a summary group.
+\item \textbf{Reporting Senior Assessments} By their very nature, FITREPs are comparative evaluations, with the burdern of assessing which individuals are most suitable for promtion falling to the reporting senior. In assessing each summary groups rankings, reporting seniors no only assess performance for the period of report, but also the overall suitablility of the individual for promotion which may include additional factors such as time in grade, history of performance, history of assignments, additional qualification, and others. To provide reporting seniors with and additional tool to assess these additional factors, the NavyRecordReview PSR project provides the option to upload multiple PSRs from individuals, and see them compared side by side, saving time and providing a graphical representation of these additional factors that may assist in ranking personnel within a summary group.
 \item \textbf{Individual Record Reviews} By extension of use cases 1 and 2, the ability for individuals and the mentors to get a quick snapshot of the career performance is valuable when preparing for boards, or mapping out the next waypoints in their career. The PSR visualization project provides the opportunty for the boards, reporting seniors, and individual to all share the same graphical view of the individual's performance throughout their career.
 \end{enumerate}
 
