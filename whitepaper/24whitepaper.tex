@@ -1,58 +1,39 @@
-```
-
-%\documentclass[UTF8]{ctexart}
-
 \documentclass[UTF8]{article}
-
 \usepackage{xcolor}
-
 \usepackage{amsmath}
-
 \usepackage{amssymb}
-
 \usepackage{graphicx}
-
 \usepackage{epstopdf}
-
 \usepackage{inputenc}
-
 \usepackage{geometry}
-
 \geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
 
-
+% For adding figures
 \usepackage{graphicx}
+\graphicspath{{./img/}}
 
-\graphicspath{{./img/}{/home/tom/Documents/nrr_whitepaper/img}}
-
-
-%\newcommand{\highlight}[1]{{\color{red}{#1}}}
-
-%\newcommand{\inline}[1]{{\color{red}{#1}} \addcontentsline{tdo}{todo}{#1}}
 
 
 \begin{document}
 
-
-\title{%
-
+\title{
   NavyRecordReview \\
-
-  \large A Performance Summary Report Visualization Tool}
-
+  \large A Performance Summary Report Visualization Tool
+}
 
 \author{CDR Tom Gardner and CDR Chase Gruszewski}
-
 \date{15 March 2024}
-
 \maketitle
 
 
 \begin{abstract}
-
-%\blindtext
-
-NavyRecordReview (NRR) is a data visualization tool to streamline the process of drawing insights from a Naval Officer's Performance Summary Record (PSR). It automatically converts the PSR's dense, tabular text into a rich, intuitive, and interactive display \textcolor{red}{"dashboard"?}. All end-users of the PSR can benefit from NavyRecordReview's functionality, from an individual Officer scrubbing their recrod, to mentors conducting menotoring sessions \textcolor{red}{reword?}, to Board Members doing record review. 
+NavyRecordReview (NRR) is a data visualization tool to streamline the process of
+drawing insights from a Naval Officer's Performance Summary Record (PSR). It 
+automatically converts the PSR's dense, tabular text into a rich, intuitive, 
+and interactive display \textcolor{red}{"dashboard"?}. All end-users of the PSR
+can benefit from NavyRecordReview's functionality, from an individual Officer 
+scrubbing their recrod, to mentors conducting menotoring sessions 
+\textcolor{red}{reword?}, to Board Members doing record review. 
 
 \end{abstract}
 
@@ -84,7 +65,7 @@ NavyRecordReview (NRR) is a data visualization tool to streamline the process of
 \end{itemize}
 
 \section{Use Cases}
-Presently, the NavyRecordReview PSR Visualization project envisions 3 dstinct use cases:
+Presently, the NavyRecordReview PSR Visualization project envisions 3 distinct use cases:
 \begin{enumerate}
 \item \textbf{Board Reviews} The insipiration, and primary purpose for the project is to provide a better way to visualize the trait avergae performance and promotion recommendations for an individual service member and assist with assessing their historic level of performance. To be clear, this system is not intended to replace the need for the human review of an individual service record during a board. It is intended to provide a clear assessment of the discrete numerical information in a performance record including promotion recommendations, trait averages vs. reporting senior cumulative averages, trait averages vs summary group averages, and performance trends across reporting seniors and commands. This should free board members' time in processing records to spend less time comparing numbers on a PSR, and more time for reviewing the context (e.g. Block 41 information), of the service member's performance.
 \item \textbf{Reporting Senior Assessments} By their very nature, fitreps are comparative evaluations, with the burdern of assessing which individuals are most suitable for promtion falling to the reporting senior. In assessing each summary groups rankings, reporting seniors no only assess performance for the period of report, but also the overall suitablility of the individual for promotion which may include additional factors such as time in grade, history of performance, history of assignments, additional qualification, and others. To provide reporting seniors with and additional tool to assess these additional factors, the NavyRecordReview PSR project provides the option to upload multiple PSRs from individuals, and see them compared side by side, saving time and providing a graphical representation of these additional factors that may assist in ranking personnel within a summary group.

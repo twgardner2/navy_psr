@@ -8,3 +8,6 @@ dist/
 
 data/
 !src/js/data/
+whitepaper/*
+!whitepaper/*.tex
+!whitepaper/img/
