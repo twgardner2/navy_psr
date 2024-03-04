@@ -4,7 +4,7 @@ import * as lib from '../../lib';
 import { getActiveRecordName } from '../../stores/records';
 import { getMeasureMode, isMultiView } from '../../stores/view-settings';
 
-const { getPageElements } = require('../page-components');
+import { getPageElements } from '../page-components';
 
 let fitrep_highlight;
 

@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     let sampleData=require('../../sample_psr.json');
     // Attach original data to ghost <g> to retain it
-    d3.select('body')
+    d3.select(this._container)
         .append('g')
         .attr('id', 'original_data')
         .attr('original_data', sampleData)
