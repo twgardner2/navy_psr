@@ -15,36 +15,49 @@ export function appendPDFUploadForm(parent) {
         .append('div')
         .attr('id', 'pdf-parser-wrapper')
         .style('display', 'flex')
-        .style('justify-content', 'space-evenly')
         .style('align-items', 'center');
 
-    wrapper
+    let label=wrapper
         .append('label')
         .attr('for', 'pdf-parser')
-        .html('Upload PSR PDF:')
+        .html(`Add PSRs:`)
         .style('font-weight', 'bold')
-        .style('font-size', 'larger');
+        .style('font-size', 'larger')
+        .style('margin-right', '0.5em');
+        label
+            .append('p')
+            .html('(you can add several <br>to compare individuals)')
+            .style('margin-top', '0')
+            .style('font-size', '0.75em')
 
     wrapper
         .append('input')
         .attr('type', 'file')
         .attr('accept', '.pdf')
+        .attr('multiple', true) // Allow multiple file selection
         .on('change', updateFromPdfInputChange);
 }
 
 async function updateFromPdfInputChange(event) {
     let elem = event.target;
-    let data = await parseFileInputToEntries(elem);
-    let psrName = await parseFileInputToName(elem);
+    let files = elem.files; // Get all selected files
 
-    let loader = new DataLoader(data);
+    for (let i = 0; i < files.length; i++) {
+        let file = files[i];
 
-    loader.setRecordName(nameToId(psrName));
-    loader.load();
+        // Assuming parseFileInputToEntries and parseFileInputToName can handle individual files
+        let data = await parseFileInputToEntries(file);
+        let psrName = await parseFileInputToName(file);
 
-    if (document.getElementById(sample_name)) {
-        removeRecordByName(sample_name);
+        let loader = new DataLoader(data);
+
+        loader.setRecordName(nameToId(psrName));
+        loader.load();
+
+        if (document.getElementById(sample_name)) {
+            removeRecordByName(sample_name);
+        }
     }
 
-    elem.value = '';
+    elem.value = ''; // Clear the input after processing all files
 }

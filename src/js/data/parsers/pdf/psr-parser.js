@@ -91,8 +91,8 @@ function getEntryRows(page, cols) {
 }
 
 
-export async function parseFileInputToEntries(input){
-    let file = input.files[0]; 
+export async function parseFileInputToEntries(file){
+    // let file = input.files[0]; 
     return new Promise((resolve, reject)=>{
         file.arrayBuffer().then( arrayBuffer=>{
             let buffer = Buffer.from(arrayBuffer);
@@ -106,8 +106,8 @@ export async function parseFileInputToEntries(input){
     });
 }
 
-export async function parseFileInputToName(input){
-    let file = input.files[0];
+export async function parseFileInputToName(file){
+    // let file = input.files[0];
     return new Promise((resolve, reject)=>{
         file.arrayBuffer().then( arrayBuffer=>{
             let buffer = Buffer.from(arrayBuffer);
